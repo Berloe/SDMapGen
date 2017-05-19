@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+       <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            adaptable="true"
+            id="mapperGen.contribution1">
+         <menu
+               label="SDMapGen"
+               path="additions"
+               id="mapperGen.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="DTO Mapping"
+               tooltip="DTO Mapping"
+               class="org.smapgen.plugin.action.ActionLauncher"
+               menubarPath="mapperGen.menu/group1"
+               enablesFor="1"
+               id="mapperGen.newAction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="mapperGen.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               label="SDMapGen"
+               path="additions"
+               id="mapperGen.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="DTO Mapping"
+               class="org.smapgen.plugin.action.ActionLauncher"
+               menubarPath="mapperGen.menu/group1"
+               enablesFor="1"
+               id="mapperGen.newAction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="mapperGen.contribution1"
+            objectClass="org.eclipse.jdt.core.IPackageFragmentRoot">
+         <menu
+               label="SDMapGen"
+               path="additions"
+               id="mapperGen.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="DTO Mapping"
+               class="org.smapgen.plugin.action.ActionLauncher"
+               menubarPath="mapperGen.menu/group1"
+               enablesFor="1"
+               id="mapperGen.newAction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="mapperGen.contribution1"
+            objectClass="org.eclipse.jdt.core.IPackageFragment">
+         <menu
+               label="SDMapGen"
+               path="additions"
+               id="mapperGen.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="DTO Mapping"
+               class="org.smapgen.plugin.action.ActionLauncher"
+               menubarPath="mapperGen.menu/group1"
+               enablesFor="1"
+               id="mapperGen.newAction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="mapperGen.contribution1"
+            objectClass="org.eclipse.jdt.core.IJavaProject">
+         <menu
+               label="SDMapGen"
+               path="additions"
+               id="mapperGen.menu">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="DTO Mapping"
+               class="org.smapgen.plugin.action.ActionLauncher"
+               menubarPath="mapperGen.menu/group1"
+               enablesFor="1"
+               id="mapperGen.newAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.smapgen.config.preferences.PreferencePage"
+            id="org.smapgen.config.preferences.PreferencePage"
+            name="SDMapper Generator">
+      </page>
+   </extension>
+</plugin>
