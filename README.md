@@ -1,6 +1,6 @@
 # Scalable Dto Mapper Generator
 ## What is SDMapGen? 
-  It is a code generator for mapping between Data Transfer Object  from an approach of simplicity of use,  that is the reason for being integrated in Eclipse as a plugin.
+  It is a code generator for mapping between beans from an approach of simplicity of use,  that is the reason for being integrated in Eclipse as a plugin.
 ## Why SDMapGen? 
   Because it generates while you are coding so you can review the mapping and adjust it while coding, directly in Java and into the classes where it should be.
   The coding of these mappings is tedious and frequent source of errors, by automating it we can avoid both problems and allow us to focus on the most complex and important parts.
@@ -10,7 +10,7 @@
   No. This plugin contains two interfaces, one to define dependency resolution as easily as possible and another to incorporate new mappings. By an xml configuration file we can change the resolution of dependencies  or  we can incorporate,  even change, the classes of mapping. This makes this plugin easily scalable and adaptable
 
 ## ¿Qué es SDMapGen?
-  Es un generador de código para el mapeo entre Data Transfer Object desde enfoque de simplicidad de uso, esa es la razón de estar integrado en Eclipse a modo de plugin.
+  Es un generador de código para el mapeo entre beans desde enfoque de simplicidad de uso, esa es la razón de estar integrado en Eclipse a modo de plugin.
 ## ¿Por qué SDMapGen?
   Porque genera mientras que se está codificando de forma que se puede repasar el mapeo y ajustarlo mientras que se codifica, directamente en Java y en las clases donde debe estar.
   La codificación de estos mapeos es tediosa y una frecuente fuente de errores, al automatizarla evitamos ambos problemas y nos permite enfocarnos en las partes más complejas e importantes.
