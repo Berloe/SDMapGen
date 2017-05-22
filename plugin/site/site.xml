@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/sdmapgen_1.0.0.0.jar" id="sdmapgen" version="1.0.0.0" os="win32" ws="win32" arch="x86,x86_64"/>
+</site>
