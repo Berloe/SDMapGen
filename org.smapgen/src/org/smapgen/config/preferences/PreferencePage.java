@@ -3,7 +3,6 @@ package org.smapgen.config.preferences;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -47,7 +46,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     public void createFieldEditors() {
         addField(new DirectoryFieldEditor(PreferenceConstants.P_PATHCLASSREPO, Messages.PreferencePage_0,
                 getFieldEditorParent()));
-        addField(new IntegerFieldEditor(PreferenceConstants.DEPTH, Messages.PreferencePage_1, getFieldEditorParent()));
         addField(new StringFieldEditor(PreferenceConstants.INPUT_SUFFIX, Messages.PreferencePage_2, -1,
                 StringFieldEditor.VALIDATE_ON_KEY_STROKE, getFieldEditorParent()));
         addField(new StringFieldEditor(PreferenceConstants.OUTPUT_SUFFIX, Messages.PreferencePage_3, -1,
@@ -87,8 +85,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         final String texto = ((Text) getFieldEditorParent().getTabList()[0]).getText();
         final IPreferenceStore store = getPreferenceStore();
         store.setValue(PreferenceConstants.P_PATHCLASSREPO, texto);
-        final String textoDepth = ((Text) getFieldEditorParent().getTabList()[2]).getText();
-        store.setValue(PreferenceConstants.DEPTH, textoDepth);
         final String textoIn = ((Text) getFieldEditorParent().getTabList()[3]).getText();
         store.setValue(PreferenceConstants.INPUT_SUFFIX, textoIn);
         final String textoOut = ((Text) getFieldEditorParent().getTabList()[4]).getText();

@@ -89,7 +89,6 @@ class MapperSelectionListener implements SelectionListener{
     public void widgetSelected(final SelectionEvent e) {
         try {
             final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
-            final Integer depth = Integer.valueOf(prop.getInt(PreferenceConstants.DEPTH));
             final String input = prop.getString(PreferenceConstants.INPUT_SUFFIX);
             final String output = prop.getString(PreferenceConstants.OUTPUT_SUFFIX);
             
@@ -117,7 +116,7 @@ class MapperSelectionListener implements SelectionListener{
                     if (localTargetFromFields.containsKey(nameSource) && !localSourcesClasses.get(nameSource)
                             .equals(localTargetFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesClasses.get(nameSource),
-                                localTargetFromFields.get(nameSource), depth, input, output, javaClass,Boolean.TRUE);
+                                localTargetFromFields.get(nameSource), input, output, javaClass,Boolean.TRUE);
                         progressBar.setSelection(Double.valueOf(++count*factor).intValue());
                    }
                 }
@@ -126,13 +125,13 @@ class MapperSelectionListener implements SelectionListener{
                     if (localSourcesFromFields.containsKey(nameSource) && !localTargetClasses.get(nameSource)
                             .equals(localSourcesFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesFromFields.get(nameSource),
-                                localTargetClasses.get(nameSource), depth, input, output, javaClass,Boolean.TRUE);
+                                localTargetClasses.get(nameSource), input, output, javaClass,Boolean.TRUE);
                         progressBar.setSelection(Double.valueOf(++count*factor).intValue());
                     }
                 }
             } else {
                 progressBar.setSelection(1);
-                support.generate(rootPkg.getText(), source.getText(), target.getText(), depth, input, output, javaClass,Boolean.valueOf(javaClass!=null));
+                support.generate(rootPkg.getText(), source.getText(), target.getText(), input, output, javaClass,Boolean.valueOf(javaClass!=null));
             }
             progressBar.setSelection(100);
 

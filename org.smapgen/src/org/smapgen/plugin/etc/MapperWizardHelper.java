@@ -94,15 +94,14 @@ public class MapperWizardHelper {
      * @return
      * @throws Throwable
      */
-    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam,
-            final Integer depth, final String input, final String output,ICompilationUnit cu, Boolean isMainPrivate) throws Throwable {
+    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam, final String input, final String output,ICompilationUnit cu, Boolean isMainPrivate) throws Throwable {
         final String source = sourceParam;
         final String target = targetParam;
-        StringBuffer[] fileStB = getFileString(source, target, simpleCl, depth.longValue(), input, output,cu,rootPKG, isMainPrivate);
+        StringBuffer[] fileStB = getFileString(source, target, simpleCl, input, output,cu,rootPKG, isMainPrivate);
         return fileStB == null || genfile(fileStB, rootPKG,cu);
     }
     public StringBuffer[] getFileString(final String sourceName, final String targetName,
-            final SimpleClassLoader l, final Long depth, final String input, final String output, ICompilationUnit cu, String rootPKG, Boolean isMainPrivate)
+            final SimpleClassLoader l, final String input, final String output, ICompilationUnit cu, String rootPKG, Boolean isMainPrivate)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, Throwable {
         if (sourceName != null && !"".equals(sourceName.trim())) {
