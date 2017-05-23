@@ -1,4 +1,4 @@
-# Scalable Dto Mapper Generator
+# Scalable DMapper Generator
 ## What is SDMapGen? 
   It is a code generator for mapping between beans from an approach of simplicity of use,  that is the reason for being integrated in Eclipse as a plugin.
 ## Why SDMapGen? 
