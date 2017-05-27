@@ -10,6 +10,7 @@
   No. This plugin contains two interfaces, one to define dependency resolution as easily as possible and another to incorporate new mappings. By an xml configuration file we can change the resolution of dependencies  or  we can incorporate,  even change, the classes of mapping. This makes this plugin easily scalable and adaptable
 ## Links 
 Configuration and use: https://github.com/Berloe/SDMapGen/wiki#sdmapgen
+
 Source code: https://github.com/Berloe/SDMapGen/tree/master/org.smapgen
 
 ## ¿Qué es SDMapGen?
@@ -23,4 +24,5 @@ Source code: https://github.com/Berloe/SDMapGen/tree/master/org.smapgen
   No. Este plugin contiene dos interfaces, una para definir la resolución de dependencia lo más fácilmente posible y otra para incorporar nuevas asignaciones. Medianteun archivo de configuración xml podemos cambiar la resolución de dependencias o podemos incorporar, incluso cambiar, las clases de mapeo. Esto hace que este plugin sea fácilmente escalable y adaptable
 ## Links 
 Configuración y uso: https://github.com/Berloe/SDMapGen/wiki#sdmapgen
+
 Código fuente: https://github.com/Berloe/SDMapGen/tree/master/org.smapgen
