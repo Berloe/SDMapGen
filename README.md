@@ -8,6 +8,9 @@
   SDMapGen is based on a minimal configuration, accessing a class repository to resolve dependencies, the source class and the target class. Of course, the result code should be reviewed and, when appropriate, completed.
 ## It Is complete? 
   No. This plugin contains two interfaces, one to define dependency resolution as easily as possible and another to incorporate new mappings. By an xml configuration file we can change the resolution of dependencies  or  we can incorporate,  even change, the classes of mapping. This makes this plugin easily scalable and adaptable
+## Links 
+Configuration and use: https://github.com/Berloe/SDMapGen/wiki#sdmapgen
+Source code: https://github.com/Berloe/SDMapGen/tree/master/org.smapgen
 
 ## ¿Qué es SDMapGen?
   Es un generador de código para el mapeo entre beans desde enfoque de simplicidad de uso, esa es la razón de estar integrado en Eclipse a modo de plugin.
@@ -18,3 +21,6 @@
   SDMapGen se basa en una configuración mínima, accediendo a un repositorio de clases para resolver las dependencias, la clase de origen y la clase de destino. Por supuesto, el código de resultado debe ser revisado y, cuando sea apropiado, completado.
 ## ¿Está completo?
   No. Este plugin contiene dos interfaces, una para definir la resolución de dependencia lo más fácilmente posible y otra para incorporar nuevas asignaciones. Medianteun archivo de configuración xml podemos cambiar la resolución de dependencias o podemos incorporar, incluso cambiar, las clases de mapeo. Esto hace que este plugin sea fácilmente escalable y adaptable
+## Links 
+Configuración y uso: https://github.com/Berloe/SDMapGen/wiki#sdmapgen
+Código fuente: https://github.com/Berloe/SDMapGen/tree/master/org.smapgen
