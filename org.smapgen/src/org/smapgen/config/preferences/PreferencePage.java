@@ -85,9 +85,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         final String texto = ((Text) getFieldEditorParent().getTabList()[0]).getText();
         final IPreferenceStore store = getPreferenceStore();
         store.setValue(PreferenceConstants.P_PATHCLASSREPO, texto);
-        final String textoIn = ((Text) getFieldEditorParent().getTabList()[3]).getText();
+        final String textoIn = ((Text) getFieldEditorParent().getTabList()[2]).getText();
         store.setValue(PreferenceConstants.INPUT_SUFFIX, textoIn);
-        final String textoOut = ((Text) getFieldEditorParent().getTabList()[4]).getText();
+        final String textoOut = ((Text) getFieldEditorParent().getTabList()[3]).getText();
         store.setValue(PreferenceConstants.OUTPUT_SUFFIX, textoOut);
         setPreferenceStore(store);
         if (texto != null && texto.trim().length() > 0)
