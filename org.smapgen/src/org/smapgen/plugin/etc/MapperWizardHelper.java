@@ -4,13 +4,10 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,22 +65,7 @@ public class MapperWizardHelper {
         simpleCl = new SimpleClassLoader();
     }
 
-    public Map<String, URL> genClassMapFile(final String texto) throws Throwable {
-        try {
-            getSimpleCl().loadlib(texto);
-            final Map<String, URL> ret = getSimpleCl().getClassMap();
-            final FileOutputStream fileOut = new FileOutputStream(texto + Constants.SupportMapper_cacheFile);
-            final ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(ret);
-            out.close();
-            fileOut.close();
-            return ret;
-        } catch (final IOException e) {
-            e.printStackTrace();
-            return null;
-        }
 
-    }
     /**
      * @param output
      * @param input
@@ -189,34 +171,6 @@ public class MapperWizardHelper {
             e.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * 
-     * @param String
-     *            value.
-     * @return Map<String,URL>
-     * @throws Throwable 
-     */
-    public Map<String, URL> getserializedMap(final String value) throws Throwable {
-        FileInputStream fileIn;
-        try {
-            fileIn = new FileInputStream(value + Constants.SupportMapper_cacheFile);
-        } catch (final FileNotFoundException e) {
-            return genClassMapFile(value);
-        }
-        ObjectInputStream in;
-        try {
-            in = new ObjectInputStream(fileIn);
-            @SuppressWarnings("unchecked")
-            final Map<String, URL> map = (Map<String, URL>) in.readObject();
-            in.close();
-            fileIn.close();
-            return map;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**
