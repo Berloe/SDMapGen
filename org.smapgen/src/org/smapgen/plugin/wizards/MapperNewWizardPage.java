@@ -92,17 +92,6 @@ public class MapperNewWizardPage extends WizardPage {
         final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
         final String value = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
         final SimpleClassLoader reposcl = new SimpleClassLoader(value);
-        if (value != null && value.length() > 0)
-            try {
-                // final String repo = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
-                // List<File> dependencies = suport.getResolvedTransitiveDependendencies(suport.getRepoConfig(javacls.getJavaProject()), repo);
-                // for (File file : dependencies) {
-                // suport.getSimpleCl().loadlib(file.getPath());
-                // }
-                reposcl.setClassMap(support.getserializedMap(value));
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
         support.getSimpleCl().setRepoClassLoader(reposcl);
         this.javaClass = javacls;
     }

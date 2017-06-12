@@ -22,11 +22,6 @@ import org.smapgen.plugin.etc.MapperWizardHelper;
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     /**
-     * SupportMapper suport .
-     */
-    private final MapperWizardHelper suport;
-
-    /**
      * .
      * 
      * @return void
@@ -35,7 +30,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
         setDescription(""); //$NON-NLS-1$
-        suport = new MapperWizardHelper();
+        new MapperWizardHelper();
     }
 
     /**
@@ -90,13 +85,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         final String textoOut = ((Text) getFieldEditorParent().getTabList()[3]).getText();
         store.setValue(PreferenceConstants.OUTPUT_SUFFIX, textoOut);
         setPreferenceStore(store);
-        if (texto != null && texto.trim().length() > 0)
-            try {
-                suport.genClassMapFile(texto);
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-
         return super.performOk();
     }
 
