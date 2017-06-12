@@ -15,9 +15,7 @@ public interface IMapper {
      * @param targetField
      * @return
      */
-    default Boolean isAplicable(MappingField sourceField, MappingField targetField){
-        return true;
-    }
+    Boolean isAplicable(MappingField sourceField, MappingField targetField);
 
     /**
      * @param sourceName
