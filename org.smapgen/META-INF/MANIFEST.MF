@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SDMapGen
 Bundle-SymbolicName: org.smapgen;singleton:=true
-Bundle-Version: 1.0.0.0
+Bundle-Version: 1.0.0.1
 Bundle-Activator: org.smapgen.plugin.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
  JavaSE-1.7,
