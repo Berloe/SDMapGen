@@ -392,10 +392,10 @@ public class SimpleClassLoader extends ClassLoader {
         if (!pkgToUri.contains("\\")) {
             return null;
         }
-        pkgToUri = pkgToUri.substring(0, pkgToUri.lastIndexOf("\\"));
+        String newPkgToUri = pkgToUri.substring(0, pkgToUri.lastIndexOf("\\"));
         for (final String k : keys) {
-            if (k.contains(pkgToUri)) {
-                response.add(pkgToUri);
+            if (k.contains(newPkgToUri)) {
+                response.add(newPkgToUri);
             }
         }
         if (!response.isEmpty()) {
@@ -404,8 +404,8 @@ public class SimpleClassLoader extends ClassLoader {
         if (!pkgToUri.contains("\\")) {
             return null;
         }
-        final String auxPkgToUri = pkgToUri.substring(0, pkgToUri.lastIndexOf("\\"));
-        return auxPkgToUri.equals(pkgToUri) ? null : findRootUri(auxPkgToUri, paths.keySet());
+        final String auxPkgToUri = newPkgToUri.substring(0, newPkgToUri.lastIndexOf("\\"));
+        return auxPkgToUri.equals(newPkgToUri) ? null : findRootUri(auxPkgToUri, paths.keySet());
     }
 
     /**

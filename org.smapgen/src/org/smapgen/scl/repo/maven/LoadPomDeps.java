@@ -31,10 +31,10 @@ public class LoadPomDeps {
         while(reader.hasNext()){
           int event = reader.next();
           if (XMLStreamConstants.START_ELEMENT==event && "dependencies".equals(reader.getLocalName())){
-              artifacts.addAll(dependencyBlock(reader, event));
+              artifacts.addAll(dependencyBlock(reader));
           }
           if (XMLStreamConstants.START_ELEMENT==event && "dependencyManagement".equals(reader.getLocalName())){
-              artifacts.addAll(dependencyBlock(reader, event));
+              artifacts.addAll(dependencyBlock(reader));
           }
         }
         return artifacts;
@@ -46,8 +46,9 @@ public class LoadPomDeps {
      * @param event 
      * @throws XMLStreamException
      */
-    public static ArrayList<Artifact> dependencyBlock(XMLStreamReader reader, int event)
+    public static ArrayList<Artifact> dependencyBlock(XMLStreamReader reader)
             throws XMLStreamException {
+        int event=0;
         ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
         while(reader.hasNext()){
           if (XMLStreamConstants.START_ELEMENT==event && "dependencies".equals(reader.getLocalName())){

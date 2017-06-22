@@ -1,18 +1,14 @@
 package org.smapgen.plugin.etc;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -92,7 +88,8 @@ public class MapperWizardHelper {
                 final Class<?> target = l.loadClassByName(targetName.trim());
                 SDataObjMapperConfig conf = new SDataObjMapperConfig(input, output);
                 final SimpleDataObjMapper sm = new SimpleDataObjMapper(conf);
-                loadFunctionsFromCu(cu,rootPKG,sm);
+                ICompilationUnit jClss = (cu==null?getCompilationUnitFromPKG(rootPKG):cu);
+                loadFunctionsFromCu(jClss,rootPKG,sm);
                 final StringBuffer[] s = sm.mappers( source, target, isMainPrivate);
                 if (s.length > 0) {
                     return s;
@@ -109,10 +106,21 @@ public class MapperWizardHelper {
         return project;
     }
 
+	/**
+	 * @param prj
+	 * @return
+	 * @throws Throwable
+	 */
 	public File getRepoConfig (IJavaProject prj) throws Throwable{
         return new File(prj.getProject().getFile(Dconf.getInstance().getRepoImpl().getConfigFileName()).getLocationURI());
     }
 
+    /**
+     * @param conf
+     * @param repo
+     * @return
+     * @throws Throwable
+     */
     public Map<String, File> getResolvedDependendencies (File conf,String repo) throws Throwable{
         IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
         Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependencies(conf), new File(repo).toPath());
@@ -123,6 +131,29 @@ public class MapperWizardHelper {
         return result;
     }
 
+    /**
+     * @param repoConfig
+     * @param repo
+     * @return
+     * @throws XMLStreamException 
+     * @throws FileNotFoundException 
+     */
+    public Map<String, File> getResolvedDependendencyTree(File conf, String repo) throws Throwable {
+        IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
+        Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependenciesTree(conf, new File(repo).toPath()), new File(repo).toPath());
+        Map<String, File> result = new HashMap<String, File>();
+        for (Entry<String, URI> uri : filesURI.entrySet()) {
+            result.put(uri.getKey(),new File(uri.getValue()));
+        }
+        return result;
+    }
+    
+    /**
+     * @param conf
+     * @param repo
+     * @return
+     * @throws Throwable
+     */
     public Map<String, File> getResolvedTransitiveDependendencies (File conf,String repo) throws Throwable{
         IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
         Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getTransitiveDependencies(conf), new File(repo).toPath());
@@ -131,46 +162,6 @@ public class MapperWizardHelper {
             result.put(uri.getKey(),new File(uri.getValue()));
         }
         return result;
-    }
-
-    /**
-     * 
-     * @param String
-     *            value.
-     * @return Map<String,URL>
-     */
-    public Class<?>[] getserializedHash(final String value) {
-        FileInputStream fileIn;
-        try {
-            fileIn = new FileInputStream(value + "/ClassCache.ser");
-        } catch (final FileNotFoundException e) {
-            return null;
-        }
-        ObjectInputStream in;
-        try {
-            List<Class<?>> hashList = new ArrayList<Class<?>>();
-            in = new ObjectInputStream(fileIn);
-            try {
-                while (true) {
-                    try {
-                        final Class<?> hash = (Class<?>) in.readObject();
-                        if (hash != null) {
-                            hashList.add(hash);
-                        }
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (EOFException e1) {
-                e1.printStackTrace();
-            }
-            in.close();
-            fileIn.close();
-            return hashList.toArray(new Class<?>[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**

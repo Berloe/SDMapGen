@@ -12,7 +12,19 @@ import java.util.List;
  *
  */
 public class Registry {
-    
+    private static Registry registry;
+    /**
+     * List<StringBuffer> functionList.
+     */
+    private List<StringBuffer> functionList;
+    /**
+     * HashMap<String,HashMap<String,String>> functionsRegistry.
+     */
+    private HashMap<String, HashMap<String, String>> functionsRegistry;
+    /**
+     * HashMap<String,Integer> namesRegistry.
+     */
+    private HashMap<String, Integer> namesRegistry;
     /**
      * 
      */
@@ -39,19 +51,7 @@ public class Registry {
         registry.functionsRegistry=null;
         registry=null;
     }
-    private static Registry registry;
-    /**
-     * List<StringBuffer> functionList.
-     */
-    private List<StringBuffer> functionList;
-    /**
-     * HashMap<String,HashMap<String,String>> functionsRegistry.
-     */
-    private HashMap<String, HashMap<String, String>> functionsRegistry;
-    /**
-     * HashMap<String,Integer> namesRegistry.
-     */
-    private HashMap<String, Integer> namesRegistry;
+
     /**
      * @return the functionList
      */

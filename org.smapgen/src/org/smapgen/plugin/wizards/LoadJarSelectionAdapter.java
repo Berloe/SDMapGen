@@ -23,7 +23,7 @@ class LoadJarSelectionAdapter extends SelectionAdapter {
              * String[] selection .
              */
             private String[] selection;
-            private org.eclipse.swt.widgets.Shell shell;
+            private Shell shell;
             
             private MapperWizardHelper support;
             /**

@@ -29,6 +29,15 @@ import org.smapgen.plugin.etc.MapperWizardHelper;
  *
  */
 public class MapperNewWizard extends Wizard implements INewWizard {
+    private ICompilationUnit javaclass;
+    /**
+     * String[] selectionData .
+     */
+    private String[] selectionData;
+    /**
+     * SupportMapper suport .
+     */
+    private final MapperWizardHelper suport;
     /**
      * 
      * @param IJavaProject
@@ -83,22 +92,6 @@ public class MapperNewWizard extends Wizard implements INewWizard {
         return $;
     }
 
-    private ICompilationUnit javaclass;
-
-    /**
-     * MapperNewWizardPage page .
-     */
-    private MapperNewWizardPage page;
-    
-    /**
-     * String[] selectionData .
-     */
-    private String[] selectionData;
-    /**
-     * SupportMapper suport .
-     */
-    private final MapperWizardHelper suport;
-
     /**
      * Constructor for MapperNewWizard.
      */
@@ -113,9 +106,12 @@ public class MapperNewWizard extends Wizard implements INewWizard {
 
     @Override
     public void addPages() {
-
-        page = new MapperNewWizardPage(selectionData, suport,javaclass);
-        addPage(page);
+        try {
+            MapperNewWizardPage page = new MapperNewWizardPage(selectionData, suport,javaclass);
+            addPage(page);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -194,19 +190,12 @@ public class MapperNewWizard extends Wizard implements INewWizard {
                         .loadlib(p.getProject().getLocation().toOSString()
                                 + iClasspathEntry.getOutputLocation().toOSString()
                                         .substring(iClasspathEntry.getOutputLocation().toOSString().indexOf('\\', 1)));
-//                suport.getSimpleCl().initDeps();
             }
             else{
                 for (final String importPrj : importer)
                     if (iClasspathEntry.getPath().toOSString().contains(importPrj))
                         suport.getSimpleCl().loadlib(iClasspathEntry.getPath().toOSString());
             }
-//        final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
-//        final String repo = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
-//        List<File> dependencies = suport.getResolvedDependendencies(suport.getRepoConfig(p), repo);
-//        for (File file : dependencies) {
-//            suport.getSimpleCl().loadlib(file.getPath());
-//        }
         suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString()
                 + p.getOutputLocation().toOSString().substring(p.getOutputLocation().toOSString().indexOf('\\', 1)));
         suport.getSimpleCl().initDeps();

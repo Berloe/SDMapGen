@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.smapgen.scl.repo.maven.Artifact;
+
 /**
  * @author Alberto Fuentes Gómez
  *
@@ -44,5 +46,14 @@ public interface IRepoProvider {
      * @return
      */
     String getConfigFileName();
+
+    /**
+     * @param conf
+     * @param repo
+     * @return
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    List<Artifact> getDependenciesTree(File conf, Path repo) throws FileNotFoundException, XMLStreamException;
 
 }

@@ -5,7 +5,7 @@ import org.smapgen.sdm.common.ConstantValues;
 import org.smapgen.sdm.config.SDataObjMapperConfig;
 import org.smapgen.sdm.factory.ObjectFactory;
 import org.smapgen.sdm.map.MapperClassElement;
-import org.smapgen.sdm.registry.Registry;;
+import org.smapgen.sdm.registry.Registry;
 
 /**
  * @author Alberto Fuentes Gómez

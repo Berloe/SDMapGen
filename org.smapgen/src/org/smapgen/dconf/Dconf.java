@@ -17,76 +17,100 @@ import org.smapgen.sdm.map.mappers.common.IMapper;
  *
  */
 public class Dconf {
-    static Dconf dconf= null;
-    public static synchronized Dconf getInstance () throws Throwable{
-        if (null !=dconf){
+    private static Dconf dconf = null;
+    private List<IMapper> mapper = new ArrayList<IMapper>();
+    private List<IMapper> mapperAbs = new ArrayList<IMapper>();
+    private IRepoProvider repoImpl = null;
+    
+    private Dconf() {
+        super();
+    }
+    
+    /**
+     * @return
+     * @throws Throwable
+     */
+    public static synchronized Dconf getInstance() throws Throwable {
+        if (null != dconf) {
             return dconf;
         }
         dconf = new Dconf();
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader =  factory.createXMLStreamReader(Dconf.class.getResource("mapperConfig.xml").openStream());
-        while(reader.hasNext()){
-          int event = reader.next();
-          if (XMLStreamConstants.START_ELEMENT==event && "repoLoader".equals(reader.getLocalName())){
-              String className = getContent(reader);
-              dconf.repoImpl =  (IRepoProvider) Class.forName(className).newInstance();
-          }
-          if (XMLStreamConstants.START_ELEMENT==event && "mapper".equals(reader.getLocalName())){
-              String className = getContent(reader);
-              dconf.mapper.add((IMapper)Class.forName(className).newInstance());
-          }
-          if (XMLStreamConstants.START_ELEMENT==event && "mapperAbs".equals(reader.getLocalName())){
-              String className = getContent(reader);
-              dconf.mapperAbs.add((IMapper)Class.forName(className).newInstance());
-          }
+        XMLStreamReader reader = factory
+                .createXMLStreamReader(Dconf.class.getResource("mapperConfig.xml").openStream());
+        while (reader.hasNext()) {
+            int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && "repoLoader".equals(reader.getLocalName())) {
+                String className = getContent(reader);
+                dconf.repoImpl = (IRepoProvider) Class.forName(className).newInstance();
+            }
+            if (XMLStreamConstants.START_ELEMENT == event && "mapper".equals(reader.getLocalName())) {
+                String className = getContent(reader);
+                dconf.mapper.add((IMapper) Class.forName(className).newInstance());
+            }
+            if (XMLStreamConstants.START_ELEMENT == event && "mapperAbs".equals(reader.getLocalName())) {
+                String className = getContent(reader);
+                dconf.mapperAbs.add((IMapper) Class.forName(className).newInstance());
+            }
         }
         return dconf;
     }
+
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
     private static String getContent(XMLStreamReader reader) throws XMLStreamException {
-        int event=0;
+        int event = 0;
         String result = null;
-        while(reader.hasNext() && XMLStreamConstants.END_ELEMENT!= event){
+        while (reader.hasNext() && XMLStreamConstants.END_ELEMENT != event) {
             event = reader.next();
-            if (XMLStreamConstants.CHARACTERS==event){
+            if (XMLStreamConstants.CHARACTERS == event) {
                 result = reader.getText().trim();
-                
+
             }
         }
         return result;
     }
-    List<IMapper> mapper = new ArrayList<IMapper>();
-    List<IMapper> mapperAbs = new ArrayList<IMapper>();
-    IRepoProvider repoImpl = null;
-    private Dconf() {
-        super();
+
+    /**
+     * 
+     */
+    public void dispose() {
+        dconf = null;
     }
-    
-    public void dispose(){
-        dconf=null;
-    }
-    
+
     /**
      * @return the mapper
      */
     public List<IMapper> getMapper() {
         return mapper;
     }
+
     /**
      * @return the mapperAbs
      */
     public List<IMapper> getMapperAbs() {
         return mapperAbs;
     }
+
     /**
      * @return the repoImpl
      */
     public IRepoProvider getRepoImpl() {
         return repoImpl;
     }
-    public IRepoProvider getRepoNewInstance(Path path) throws Throwable{
-        dconf.repoImpl =Dconf.getInstance().getRepoImpl().getClass().getConstructor(Path.class).newInstance(path);
+
+    /**
+     * @param path
+     * @return
+     * @throws Throwable
+     */
+    public IRepoProvider getRepoNewInstance(Path path) throws Throwable {
+        dconf.repoImpl = Dconf.getInstance().getRepoImpl().getClass().getConstructor(Path.class).newInstance(path);
         return dconf.repoImpl;
-        
+
     }
 }

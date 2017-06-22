@@ -36,26 +36,9 @@ public class ObjectFactory {
      */
     public static Object loader(final Class<?> classTarget)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
-            ClassNotFoundException, ClassLoaderException, NoSuchMethodException, SecurityException {
-        Constructor<?> defConstructor = null;
+            ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
         Object $ = null;
-
-        try {
-            defConstructor = classTarget.getConstructor();
-        } catch (final NoSuchMethodException e) {
-
-        } catch (final SecurityException e) {
-
-        }
-        if (defConstructor == null) {
-            final Constructor<?>[] targetLoad = classTarget.getConstructors();
-            for (final Constructor<?> constructor : targetLoad) {
-                // If the constructor has no parameter, it is the default constructor
-                if (constructor.getParameterTypes().length == 0) {
-                    defConstructor = constructor;
-                }
-            }
-        }
+        Constructor<?> defConstructor = getConstructor(classTarget);
         // Verificamos si estamos ante un array
 
         if (defConstructor == null && classTarget.isArray()) {
@@ -68,14 +51,8 @@ public class ObjectFactory {
                 $.getClass().getMethods();
                 return $;
             } catch (final NoClassDefFoundError e) {
-                String classname = e.getMessage().replace("/", ".");
-                if (classname.startsWith("[L")) {
-                    classname = classname.replace("[L", "");
-                }
-                if (classname.endsWith(";")) {
-                    classname = classname.replace(";", "");
-                }
                 try {
+                    String classname = extractDependency(e);
                     ((SimpleClassLoader) classTarget.getClassLoader()).loadClassByName(classname);
                 } catch (final Exception e2) {
                     throw e;
@@ -85,6 +62,46 @@ public class ObjectFactory {
         }
 
         return null;
+    }
+
+    /**
+     * @param e
+     * @return
+     */
+    private static String extractDependency(final NoClassDefFoundError e) {
+        String classname = e.getMessage().replace("/", ".");
+        if (classname.startsWith("[L")) {
+            classname = classname.replace("[L", "");
+        }
+        if (classname.endsWith(";")) {
+            classname = classname.replace(";", "");
+        }
+        return classname;
+    }
+
+    /**
+     * @param classTarget
+     * @param defConstructor
+     * @return
+     * @throws SecurityException
+     */
+    private static Constructor<?> getConstructor(final Class<?> classTarget)
+            throws SecurityException {
+        Constructor<?> defConstructor = null;
+        try {
+            defConstructor  = classTarget.getConstructor();
+        } catch (final NoSuchMethodException | SecurityException e) {
+        }
+        if (defConstructor == null) {
+            final Constructor<?>[] targetLoad = classTarget.getConstructors();
+            for (final Constructor<?> constructor : targetLoad) {
+                // If the constructor has no parameter, it is the default constructor
+                if (constructor.getParameterTypes().length == 0) {
+                    defConstructor = constructor;
+                }
+            }
+        }
+        return defConstructor;
     }
 
 }

@@ -22,7 +22,6 @@ import org.smapgen.plugin.etc.MapperWizardHelper;
 public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     /**
-     * .
      * 
      * @return void
      */

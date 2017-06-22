@@ -19,36 +19,15 @@ public class Primitive extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if(targetField.getFieldType().equals(String.class)){
-            if (sourceField.getFieldType().equals(char.class)||
-                sourceField.getFieldType().equals(boolean.class)||
-                sourceField.getFieldType().equals(char[].class)||
-                sourceField.getFieldType().equals(double.class)||
-                sourceField.getFieldType().equals(float.class)||
-                sourceField.getFieldType().equals(int.class)||
-                sourceField.getFieldType().equals(long.class)
-                    ){
+        if(targetField.getFieldType().equals(Boolean.class) && (sourceField.getFieldType().equals(boolean.class)|| sourceField.getFieldType().equals(String.class))){
                 return true;
-            }else if(char.class.isAssignableFrom(sourceField.getFieldType())||
-                    boolean.class.isAssignableFrom(sourceField.getFieldType())||
-                    char[].class.isAssignableFrom(sourceField.getFieldType())||
-                    double.class.isAssignableFrom(sourceField.getFieldType())||
-                    float.class.isAssignableFrom(sourceField.getFieldType())||
-                    int.class.isAssignableFrom(sourceField.getFieldType())||
-                    long.class.isAssignableFrom(sourceField.getFieldType())
-                    ){
-                return true;
-            }
-           
-        }
-        if(char.class.isAssignableFrom(targetField.getFieldType())||
-                boolean.class.isAssignableFrom(targetField.getFieldType())||
-                char[].class.isAssignableFrom(targetField.getFieldType())||
-                double.class.isAssignableFrom(targetField.getFieldType())||
-                float.class.isAssignableFrom(targetField.getFieldType())||
-                int.class.isAssignableFrom(targetField.getFieldType())||
-                long.class.isAssignableFrom(targetField.getFieldType())){
-
+        }else if(targetField.getFieldType().equals(Integer.class) && (sourceField.getFieldType().equals(int.class)|| sourceField.getFieldType().equals(String.class))){
+            return true;(new Integer()).
+        }else if(targetField.getFieldType().equals(Double.class) && (sourceField.getFieldType().equals(double.class)|| sourceField.getFieldType().equals(String.class))){
+            return true;  (new Double())
+        }else if(targetField.getFieldType().equals(Long.class) && (sourceField.getFieldType().equals(long.class)|| sourceField.getFieldType().equals(String.class))){
+            return true; (new Long()).
+            
         }
         return false;
     }
@@ -58,7 +37,12 @@ public class Primitive extends Mapper implements IMapper {
      */
     @Override
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
-        return Common.valueAssign(sourceField, targetField);
+        if(sourceField.getFieldType().equals(byte[].class)){
+            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+                    + "(new String("+sourceField.getVarName()+"));");
+        }
+        return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+                + "(new String().valueOf(" +sourceField.getVarName()+"));");
     }
     
 }
