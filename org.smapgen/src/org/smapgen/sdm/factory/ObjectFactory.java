@@ -37,9 +37,8 @@ public class ObjectFactory {
     public static Object loader(final Class<?> classTarget)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
-        Constructor<?> defConstructor = null;
         Object $ = null;
-        defConstructor = getConstructor(classTarget, defConstructor);
+        Constructor<?> defConstructor = getConstructor(classTarget);
         // Verificamos si estamos ante un array
 
         if (defConstructor == null && classTarget.isArray()) {
@@ -86,10 +85,11 @@ public class ObjectFactory {
      * @return
      * @throws SecurityException
      */
-    private static Constructor<?> getConstructor(final Class<?> classTarget, Constructor<?> defConstructor)
+    private static Constructor<?> getConstructor(final Class<?> classTarget)
             throws SecurityException {
+        Constructor<?> defConstructor = null;
         try {
-            defConstructor = classTarget.getConstructor();
+            defConstructor  = classTarget.getConstructor();
         } catch (final NoSuchMethodException | SecurityException e) {
         }
         if (defConstructor == null) {

@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 public class ArtifactsBlock implements IArtifactsBlock {
 
     private Map<String, String> properties = new HashMap<String, String>();
-    HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<Entry<String, String>, Artifact>();
+    private HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<Entry<String, String>, Artifact>();
 
     @SuppressWarnings("serial")
     private class ArtifactEntry extends SimpleEntry<String, String> {

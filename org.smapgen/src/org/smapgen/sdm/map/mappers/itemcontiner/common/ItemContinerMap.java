@@ -5,7 +5,7 @@ import org.smapgen.sdm.factory.ObjectFactory;
 import org.smapgen.sdm.map.mappers.common.Mapper;
 import org.smapgen.sdm.map.mappers.itemcontiner.abstractitem.AbstractItemMap;
 import org.smapgen.sdm.metadata.MappingField;
-import org.smapgen.sdm.utils.Utils;;
+import org.smapgen.sdm.utils.Utils;
 
 /**
  * @author Alberto Fuentes Gómez
