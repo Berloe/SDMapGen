@@ -8,7 +8,20 @@ public class Artifact {
 private String group;
 private String artifact;
 private String version;
+private String scope;
 
+/**
+ * @return the scope
+ */
+protected String getScope() {
+    return scope;
+}
+/**
+ * @param scope the scope to set
+ */
+protected void setScope(String scope) {
+    this.scope = scope;
+}
 /**
  * @return the group
  */

@@ -18,6 +18,10 @@ import org.smapgen.scl.repo.IRepoProvider;
  *
  */
 public class MvnRepoProvider implements IRepoProvider {
+    private Path repo;
+
+    private IArtifactsBlock artifactBlock = null;
+    
     /**
      * @param repo
      */
@@ -28,14 +32,63 @@ public class MvnRepoProvider implements IRepoProvider {
     public MvnRepoProvider() {
         super();
     }
-    private Path repo;
+
     /* (non-Javadoc)
      * @see org.scl.repo.maven.IRepoProvider#getDependencies(java.io.File)
      */
     @Override
     public List<Artifact> getDependencies(File conf) throws FileNotFoundException, XMLStreamException{
-        return loadPomDeps.loadDepsXmlFile(conf);
+        return LoadPomDeps.loadDepsXmlFile(conf);
     }
+    /* (non-Javadoc)
+     * @see org.smapgen.scl.repo.IRepoProvider#getDependenciesTree(java.io.File, java.nio.file.Path)
+     */
+    @Override
+    public List<Artifact> getDependenciesTree(File conf,Path repo) throws FileNotFoundException, XMLStreamException{
+        artifactBlock = new ArtifactsBlock();
+        recursiveLoadDependencies(conf, repo);
+ 
+        return artifactBlock.values();
+    }
+    /**
+     * @param conf
+     * @param repo
+     * @return
+     * @throws FileNotFoundException
+     */
+    public void recursiveLoadDependencies(File conf, Path repo) throws FileNotFoundException {
+
+        ArrayList<Artifact> deps = null;
+        try{
+            Artifact parentArt = LoadPomDeps.loadParentXmlFile(conf);
+            if(null != parentArt && !artifactBlock.contains(parentArt)){
+                artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(conf));
+                File parent = getDepPom(repo, parentArt);
+                if(null != parent){
+                    recursiveLoadDependencies(parent,repo);
+                }
+            }
+            deps = LoadPomDeps.loadDepsXmlFile(conf);
+            for (Artifact artifact : deps) {
+                if(artifact.getArtifact().equals("jaxb2-basics-runtime")){
+                    artifact.getArtifact();
+                }
+                if(!artifactBlock.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
+                    artifactBlock.add(artifact);
+                    File parent = getDepPom(repo, artifact);
+                    if(null != parent){
+                        artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
+                        recursiveLoadDependencies(parent,repo);
+                    }
+                }
+            }
+        }catch(XMLStreamException e){
+            // Omit artifact
+            deps= new ArrayList<Artifact>();
+        }
+    }
+    
+    
     /* (non-Javadoc)
      * @see org.scl.repo.maven.IRepoProvider#getTransitiveDependencies(java.io.File)
      */
@@ -69,7 +122,9 @@ public class MvnRepoProvider implements IRepoProvider {
         Map<String,URI> uriList = new HashMap<String, URI>();
         for (Artifact artifact : artifactList) {
             File tmpFile = getDepPom(repo, artifact);
-            uriList.put(artifact.getArtifact(),tmpFile.getParentFile().toURI());
+            if(tmpFile!=null){
+                uriList.put(artifact.getArtifact(),tmpFile.getParentFile().toURI());
+            }
         }
         return uriList;
 
@@ -81,17 +136,29 @@ public class MvnRepoProvider implements IRepoProvider {
      */
     private File getDepPom(Path repo, Artifact artifact) {
         File file = new File(repo.toString().concat(artifact.getRelativePath()));
-        File tmpFile = null;
+        return findPom(artifact, file);
+    }
+    /**
+     * @param artifact
+     * @param file
+     * @return
+     */
+    public File findPom(Artifact artifact, File file) {
+        if(!file.exists()){
+            return null;
+        }
         for (final File fileElement : file.listFiles()){
             if(artifact.getVersion()!=null){
                 if (fileElement.exists() && fileElement.getName().equals(artifact.getPomName())) {
-                    tmpFile =  fileElement;
+                    return fileElement;
                 }
-            } else if(tmpFile==null || (fileElement.lastModified()>tmpFile.lastModified() && fileElement.getName().startsWith(artifact.getArtifact()) && fileElement.getName().endsWith(".pom"))) {
-                tmpFile=fileElement;
+            } else if(fileElement.isDirectory()) {
+                return findPom(artifact, fileElement);
+            } else if(fileElement.isFile() && fileElement.getName().startsWith(artifact.getArtifact()) && fileElement.getName().endsWith(".pom")) {
+                return fileElement;
             }
         }
-        return tmpFile;
+        return null;
     }
     
     /* (non-Javadoc)

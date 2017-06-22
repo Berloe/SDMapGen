@@ -14,21 +14,24 @@ public class NewAction implements IObjectActionDelegate {
      */
     private Shell shell;
 
-    /**
-     * Constructor for Action1.
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public NewAction() {
-    }
-
     @Override
     public void run(final IAction a) {
         MessageDialog.openInformation(shell, "JavaMappingGenerator", "JavaMappingGenerator");
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+     */
     @Override
     public void selectionChanged(final IAction a, final ISelection s) {
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+     */
     @Override
     public void setActivePart(final IAction a, final IWorkbenchPart targetPart) {
         shell = targetPart.getSite().getShell();

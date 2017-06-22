@@ -56,8 +56,7 @@ public class ClassLoaderException extends Throwable {
         super(cause.getMessage(), cause);
         if (classCanonicalName == null || classCanonicalName.trim().length() <= 0)
             return;
-        classCanonicalName=classCanonicalName.replace('/', '.');
-        setClassCanonicalName(classCanonicalName);
+        setClassCanonicalName(classCanonicalName.replace('/', '.'));
         setClassName(classCanonicalName.substring(classCanonicalName.lastIndexOf('.'), classCanonicalName.length()));
     }
 

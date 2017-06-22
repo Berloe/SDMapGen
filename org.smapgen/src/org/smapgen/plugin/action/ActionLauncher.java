@@ -24,9 +24,6 @@ public class ActionLauncher extends ActionDelegate implements IObjectActionDeleg
      */
     private IWorkbench workbench;
 
-    public ActionLauncher() {
-    }
-
     /**
      * 
      * @param IAction

@@ -32,9 +32,6 @@ public class MappingField {
     
     private Boolean mapped;
 
-    public MappingField() {
-    }
-
     public Field getField() {
         return field;
     }
