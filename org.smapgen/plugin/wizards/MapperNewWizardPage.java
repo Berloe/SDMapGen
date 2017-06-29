@@ -213,8 +213,6 @@ public class MapperNewWizardPage extends WizardPage {
         final Button button = new Button(container, SWT.PUSH);
         button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
         button.setText(Messages.MapperNewWizardPage_7);
-        loadJars = new LoadJarSelectionAdapter(support, getShell(), selection, lblNewLabel);
-        button.addSelectionListener(loadJars);
 
         Combo combo_1 = new Combo(container, SWT.NONE);
         combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -254,6 +252,8 @@ public class MapperNewWizardPage extends WizardPage {
         lblNewLabel = new CLabel(container, SWT.NONE);
         lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
         lblNewLabel.setText(Messages.MapperNewWizardPage_8);
+        loadJars = new LoadJarSelectionAdapter(support, getShell(), selection, lblNewLabel);
+        button.addSelectionListener(loadJars);
         new Label(container, SWT.NONE);
         final Label label_1 = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
         label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));

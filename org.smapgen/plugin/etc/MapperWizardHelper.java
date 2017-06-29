@@ -88,7 +88,8 @@ public class MapperWizardHelper {
                 final Class<?> target = l.loadClassByName(targetName.trim());
                 SDataObjMapperConfig conf = new SDataObjMapperConfig(input, output);
                 final SimpleDataObjMapper sm = new SimpleDataObjMapper(conf);
-                loadFunctionsFromCu(cu,rootPKG,sm);
+                ICompilationUnit jClss = (cu==null?getCompilationUnitFromPKG(rootPKG):cu);
+                loadFunctionsFromCu(jClss,rootPKG,sm);
                 final StringBuffer[] s = sm.mappers( source, target, isMainPrivate);
                 if (s.length > 0) {
                     return s;
