@@ -1,4 +1,4 @@
-package org.smapgen.sdm.map.mappers.staticTypesMap;
+package org.smapgen.sdm.map.mappers.statictypesmap;
 
 import org.smapgen.sdm.map.mappers.common.IMapper;
 import org.smapgen.sdm.metadata.MappingField;
