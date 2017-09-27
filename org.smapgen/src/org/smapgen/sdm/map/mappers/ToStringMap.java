@@ -5,7 +5,7 @@ import org.smapgen.sdm.map.mappers.common.Mapper;
 import org.smapgen.sdm.metadata.MappingField;
 
 /**
- * @author Alberto Fuentes GÃ³mez
+ * @author Alberto Fuentes Gómez
  *
  */
 public class ToStringMap extends Mapper implements IMapper {
@@ -29,7 +29,6 @@ public class ToStringMap extends Mapper implements IMapper {
                 return isAssignablePrimitive(sourceField);
             }
         }
-
         return false;
     }
 
@@ -65,7 +64,5 @@ public class ToStringMap extends Mapper implements IMapper {
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                 + "(new String().valueOf(" +sourceField.getVarName()+"));");
         }
-
     }
-    
 }
