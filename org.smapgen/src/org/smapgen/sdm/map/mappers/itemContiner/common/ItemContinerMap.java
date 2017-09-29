@@ -1,9 +1,9 @@
-package org.smapgen.sdm.map.mappers.itemcontiner.common;
+package org.smapgen.sdm.map.mappers.itemContiner.common;
 
 import org.smapgen.sdm.common.Common;
 import org.smapgen.sdm.factory.ObjectFactory;
 import org.smapgen.sdm.map.mappers.common.Mapper;
-import org.smapgen.sdm.map.mappers.itemcontiner.abstractitem.AbstractItemMap;
+import org.smapgen.sdm.map.mappers.itemContiner.abstractItem.AbstractItemMap;
 import org.smapgen.sdm.metadata.MappingField;
 import org.smapgen.sdm.utils.Utils;
 

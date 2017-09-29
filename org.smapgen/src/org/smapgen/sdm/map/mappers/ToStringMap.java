@@ -5,7 +5,7 @@ import org.smapgen.sdm.map.mappers.common.Mapper;
 import org.smapgen.sdm.metadata.MappingField;
 
 /**
- * @author Alberto Fuentes Gómez
+ * @author Alberto Fuentes Gï¿½mez
  *
  */
 public class ToStringMap extends Mapper implements IMapper {
@@ -15,38 +15,37 @@ public class ToStringMap extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if(targetField.getFieldType().equals(String.class)){
-            if (sourceField.getFieldType().equals(char.class)||
-                sourceField.getFieldType().equals(boolean.class)||
-                sourceField.getFieldType().equals(char[].class)||
-                sourceField.getFieldType().equals(double.class)||
-                sourceField.getFieldType().equals(float.class)||
-                sourceField.getFieldType().equals(int.class)||
-                sourceField.getFieldType().equals(long.class)
-                    ){
-                return true;
-            } else{
-                return isAssignablePrimitive(sourceField);
-            }
+        if((targetField.getFieldType().equals(String.class))&& (isPrimitive(sourceField) || isAssignablePrimitive(sourceField))){
+            return true;
         }
         return false;
     }
 
     /**
      * @param sourceField
+     * @return
+     */
+    private boolean isPrimitive(MappingField sourceField) {
+        return sourceField.getFieldType().equals(char.class)||
+            sourceField.getFieldType().equals(boolean.class)||
+            sourceField.getFieldType().equals(char[].class)||
+            sourceField.getFieldType().equals(double.class)||
+            sourceField.getFieldType().equals(float.class)||
+            sourceField.getFieldType().equals(int.class)||
+            sourceField.getFieldType().equals(long.class);
+    }
+
+    /**
+     * @param sourceField
      */
     private Boolean isAssignablePrimitive(MappingField sourceField) {
-        if(char.class.isAssignableFrom(sourceField.getFieldType())||
+        return char.class.isAssignableFrom(sourceField.getFieldType())||
                 boolean.class.isAssignableFrom(sourceField.getFieldType())||
                 char[].class.isAssignableFrom(sourceField.getFieldType())||
                 double.class.isAssignableFrom(sourceField.getFieldType())||
                 float.class.isAssignableFrom(sourceField.getFieldType())||
                 int.class.isAssignableFrom(sourceField.getFieldType())||
-                long.class.isAssignableFrom(sourceField.getFieldType())
-                ){
-            return true;
-        }
-        return false;
+                long.class.isAssignableFrom(sourceField.getFieldType());
     }
  
     /* (non-Javadoc)
@@ -57,7 +56,7 @@ public class ToStringMap extends Mapper implements IMapper {
         if(sourceField.getFieldType().equals(byte[].class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "(new String("+sourceField.getVarName()+"));");
-        }else if(isAssignablePrimitive(sourceField)){
+        }else if(isAssignablePrimitive(sourceField) && !isPrimitive(sourceField)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "("+sourceField.getVarName()+".toString());");
         }else{

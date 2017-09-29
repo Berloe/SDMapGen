@@ -79,7 +79,7 @@ class MapperSelectionListener implements SelectionListener{
      */
     @Override
     public void widgetDefaultSelected(SelectionEvent arg0) {
-        
+        /*Not implemented*/
     }
 
     /* (non-Javadoc)
@@ -248,7 +248,7 @@ class MapperSelectionListener implements SelectionListener{
      * @throws JavaModelException
      * @throws Throwable
      */
-    void getSourcesFromClass(ICompilationUnit javaClass, HashMap<String, String> localSourcesClasses,
+    private void getSourcesFromClass(ICompilationUnit javaClass, HashMap<String, String> localSourcesClasses,
             Map<String, String> localTargetClasses) throws JavaModelException, Throwable {
         for (IType type : javaClass.getAllTypes()) {
             for (IMethod method : type.getMethods()) {

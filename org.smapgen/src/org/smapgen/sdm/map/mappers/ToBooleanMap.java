@@ -5,7 +5,7 @@ import org.smapgen.sdm.map.mappers.common.Mapper;
 import org.smapgen.sdm.metadata.MappingField;
 
 /**
- * @author Alberto Fuentes Gómez
+ * @author Alberto Fuentes Gï¿½mez
  *
  */
 public class ToBooleanMap extends Mapper implements IMapper {
@@ -15,10 +15,8 @@ public class ToBooleanMap extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if((targetField.getFieldType().equals(Boolean.class)||targetField.getFieldType().equals(boolean.class))&&(!targetField.getFieldType().equals(sourceField.getFieldType()))){
-            if (sourceField.getFieldType().equals(boolean.class)||sourceField.getFieldType().equals(Boolean.class)||sourceField.getFieldType().equals(String.class)){
-                return true;
-            }
+        if (((targetField.getFieldType().equals(Boolean.class)||targetField.getFieldType().equals(boolean.class))&&(!targetField.getFieldType().equals(sourceField.getFieldType())))&&((sourceField.getFieldType().equals(boolean.class)||sourceField.getFieldType().equals(Boolean.class)||sourceField.getFieldType().equals(String.class)))){
+            return true;
         }
         return false;
     }

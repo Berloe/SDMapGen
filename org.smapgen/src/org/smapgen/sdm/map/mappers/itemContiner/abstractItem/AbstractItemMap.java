@@ -1,4 +1,4 @@
-package org.smapgen.sdm.map.mappers.itemcontiner.abstractitem;
+package org.smapgen.sdm.map.mappers.itemContiner.abstractItem;
 
 import java.lang.reflect.InvocationTargetException;
 
