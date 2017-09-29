@@ -7,6 +7,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+/**
+ * @author Alberto Fuentes
+ *
+ */
 public class NewAction implements IObjectActionDelegate {
 
     /**
@@ -27,6 +31,7 @@ public class NewAction implements IObjectActionDelegate {
      */
     @Override
     public void selectionChanged(final IAction a, final ISelection s) {
+        /*Not implemented*/
     }
 
     /* (non-Javadoc)
