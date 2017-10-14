@@ -19,5 +19,6 @@ Export-Package: org.smapgen.config.preferences;
    org.eclipse.jface.preference,
    org.eclipse.core.runtime.preferences",
  org.smapgen.plugin;uses:="org.osgi.framework,org.eclipse.jface.resource,org.eclipse.ui.plugin"
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ swing2swt.jar
 

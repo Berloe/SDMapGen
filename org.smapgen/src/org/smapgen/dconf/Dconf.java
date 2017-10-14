@@ -21,6 +21,7 @@ public class Dconf {
     private List<IMapper> mapper = new ArrayList<IMapper>();
     private List<IMapper> mapperAbs = new ArrayList<IMapper>();
     private IRepoProvider repoImpl = null;
+    private List<String> ignoreNullAnotation = new ArrayList<String>();
     
     private Dconf() {
         super();
@@ -52,6 +53,10 @@ public class Dconf {
             if (XMLStreamConstants.START_ELEMENT == event && "mapperAbs".equals(reader.getLocalName())) {
                 String className = getContent(reader);
                 dconf.mapperAbs.add((IMapper) Class.forName(className).newInstance());
+            }
+            if (XMLStreamConstants.START_ELEMENT == event && "notNullAnot".equals(reader.getLocalName())) {
+                String className = getContent(reader);
+                dconf.ignoreNullAnotation.add(className);
             }
         }
         return dconf;
@@ -113,4 +118,14 @@ public class Dconf {
         return dconf.repoImpl;
 
     }
+
+    public boolean containsNotNullAnot(ArrayList<String> anotations){
+        for (String anot : anotations) {
+            if(this.ignoreNullAnotation.contains(anot)){
+                return true;
+            }
+        }
+       return false;
+    }
+
 }

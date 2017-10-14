@@ -2,6 +2,7 @@ package org.smapgen.sdm.map.mappers.instantiable;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.smapgen.dconf.Dconf;
 import org.smapgen.sdm.common.Common;
 import org.smapgen.sdm.factory.ObjectFactory;
 import org.smapgen.sdm.map.MapperClassElement;
@@ -47,7 +48,7 @@ public abstract class InstanceOfMap extends Mapper {
                 ObjectFactory.loader( sourceField.getFieldType()),newSourceName);
         }
 
-        return Common.instanceOfMap( sourceName, newSourceName, sourceClass, classExcluded, objecMapping.toString());
+        return Common.instanceOfMap( sourceName, newSourceName, sourceClass, classExcluded, objecMapping.toString(),Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
     }
 
 }

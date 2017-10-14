@@ -71,6 +71,15 @@ public class Messages extends NLS {
      * String BUNDLE_NAME .
      */
     private static final String BUNDLE_NAME = "org.smapgen.plugin.wizards.messages";
+    public static String MapperNewWizardPage_xpndtmLog_text;
+    public static String MapperNewWizardPage_tbtmMapping_text;
+    public static String MapperNewWizardPage_tbtmNewItem_text;
+    public static String MapperNewWizardPage_tbtmNewItem_text_1;
+    public static String MapperNewWizardPage_tbtmNewItem_1_text;
+    public static String MapperNewWizardPage_tltmDropdownItem_text;
+    public static String MapperNewWizardPage_tltmDropdownItem_1_text;
+    public static String MapperNewWizardPage_tbtmNewItem_text_2;
+    public static String MapperNewWizardPage_tbtmNewItem_1_text_1;
     /** $NON-NLS-1$. */
     static {
         // initialize resource bundle

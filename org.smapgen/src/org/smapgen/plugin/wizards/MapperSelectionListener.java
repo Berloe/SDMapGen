@@ -1,5 +1,7 @@
 package org.smapgen.plugin.wizards;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -41,6 +43,7 @@ class MapperSelectionListener implements SelectionListener{
     protected Text source;
     protected MapperWizardHelper support;
     protected Text target;
+
     /**
      * @param progressBar
      * @param automaticMode
@@ -49,6 +52,7 @@ class MapperSelectionListener implements SelectionListener{
      * @param rootPkg
      * @param source
      * @param target
+     * @param styledText 
      */
     public MapperSelectionListener(ProgressBar progressBar, boolean automaticMode, ICompilationUnit javaClass, MapperWizardHelper support,
             Combo rootPkg, Text source, Text target) {
@@ -139,6 +143,12 @@ class MapperSelectionListener implements SelectionListener{
             e1.printStackTrace();
             progressBar.setSelection(100);
             progressBar.setState(SWT.ERROR);
+            StringWriter err = new StringWriter();
+            // Pring error Log
+            e1.printStackTrace(new PrintWriter(err));
+            // Show error log into a dialog
+            LogDialog dialog = new LogDialog(progressBar.getParent().getShell(),err.toString());
+            dialog.open();
         }
     }
 
@@ -274,4 +284,5 @@ class MapperSelectionListener implements SelectionListener{
             }
         }
     }
+ 
 }

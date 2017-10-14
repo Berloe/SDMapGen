@@ -100,10 +100,12 @@ public class MvnRepoProvider implements IRepoProvider {
                 for (Artifact artifact : deps) {
                     if(artifact.getArtifact()!=null && artifact.getGroup()!=null && artifact.getVersion()!=null){
                         File file = getDepPom(repo, artifact);
-                        List<Artifact> auxDeps = getTransitiveDependencies(file);
-                        for (Artifact artifact2 : auxDeps) {
-                            if(artifact2.getArtifact()!=null && artifact2.getGroup()!=null && artifact2.getVersion()!=null && !deps.contains(artifact2)&&!deps2.contains(artifact2)) {
-                                deps2.add(artifact2);
+                        if(null!=file){
+                            List<Artifact> auxDeps = getTransitiveDependencies(file);
+                            for (Artifact artifact2 : auxDeps) {
+                                if(artifact2.getArtifact()!=null && artifact2.getGroup()!=null && artifact2.getVersion()!=null && !deps.contains(artifact2)&&!deps2.contains(artifact2)) {
+                                    deps2.add(artifact2);
+                                }
                             }
                         }
                     }

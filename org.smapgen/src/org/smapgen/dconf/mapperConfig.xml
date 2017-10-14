@@ -4,10 +4,11 @@
 	<mapper>org.smapgen.sdm.map.mappers.BasicMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.AbstractMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ObjectMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.ArrayMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.IterableMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.ArrayToIterableMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.IterableToArrayMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemContiner.ArrayMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemContiner.IterableMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemContiner.ArrayToIterableMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemContiner.IterableToArrayMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.DateMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.CalendarMap</mapper>
+	<notNullAnot>javax.validation.constraints.NotNull</notNullAnot>
 </config>

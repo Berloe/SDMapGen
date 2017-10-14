@@ -86,11 +86,11 @@ public class SimpleClassLoader extends ClassLoader {
         if (response != null) {
             return response;
         }
-        response = findClassFromPkg(name);
+        response = getClassFromRepo(name);
         if (response != null) {
             return response;
         }
-        response = getClassFromRepo(name);
+        response = findClassFromPkg(name);
         if (response != null) {
             return response;
         }
@@ -402,6 +402,9 @@ public class SimpleClassLoader extends ClassLoader {
             return response;
         }
         if (!pkgToUri.contains("\\")) {
+            return null;
+        }
+        if(newPkgToUri.lastIndexOf("\\")<0){
             return null;
         }
         final String auxPkgToUri = newPkgToUri.substring(0, newPkgToUri.lastIndexOf("\\"));

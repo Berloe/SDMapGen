@@ -2,6 +2,7 @@ package org.smapgen.sdm.metadata;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -31,6 +32,7 @@ public class MappingField {
 //    private Class<?> resolvedAbsClss;
     
     private Boolean mapped;
+    private ArrayList<String> anotations = new ArrayList<String>();
 
     public Field getField() {
         return field;
@@ -123,7 +125,21 @@ public class MappingField {
 	public void setMapped(Boolean mapped) {
 		this.mapped = mapped;
 	}
-
+	
+	/**
+	 * @param anotationsTypes
+	 */
+	public void setAnotations(ArrayList<String> anotationsTypes) {
+	    this.anotations = anotationsTypes;
+    }
+	
+    /**
+     * @return the anotations
+     */
+    public ArrayList<String> getAnotations() {
+        return anotations;
+    }
+    
     /**
      * @return
      */
@@ -141,4 +157,5 @@ public class MappingField {
         newMappingField.setVarName(getVarName());
         return newMappingField;
     }
+
 }

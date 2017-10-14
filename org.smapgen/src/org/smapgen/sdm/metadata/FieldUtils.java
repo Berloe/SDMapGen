@@ -1,5 +1,6 @@
 package org.smapgen.sdm.metadata;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -76,10 +77,11 @@ public class FieldUtils {
                             mapfield.setVarName(name);
                             mapfield.setMapped(Boolean.FALSE);
                             mapFieldColecction.add(mapfield);
+                            mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
                         }
                     }
                 } catch (final Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         }
@@ -190,9 +192,11 @@ public class FieldUtils {
                             mapfield.setVarName(name);
                             response.put(field.getName(), mapfield);
                             mapfield.setMapped(Boolean.FALSE);
+                            mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
                         }
                     }
                 } catch (final Exception e) {
+                    e.printStackTrace();
 
                 }
             }
@@ -203,6 +207,20 @@ public class FieldUtils {
             response.putAll(hashSetMappinField);
         }
         return response;
+    }
+
+//    @SuppressWarnings("unchecked")
+//    private static <T> Class<T> getAnotType(Class<?> T, Class<?> cls) {
+//        
+//        return (Class<T>)cls;
+//    }
+
+    private static ArrayList<String> getAnotationsTypes(Annotation[] annotations) {
+        ArrayList<String> anotTypes = new ArrayList<String>();
+        for (Annotation annotation : annotations) {
+            anotTypes.add(annotation.annotationType().getCanonicalName());
+        }
+        return anotTypes;
     }
 
     /**

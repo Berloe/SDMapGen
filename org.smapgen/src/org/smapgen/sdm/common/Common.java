@@ -349,17 +349,18 @@ public final class Common implements ISimpleDataObjMapper {
      * @param sourceClass
      * @param classExcluded
      * @param objecMapping
+     * @param ignoreNullValid 
      * @return
      */
     public static StringBuffer instanceOfMap(String sourceName, final String newSourceName, String sourceClass,
-            String classExcluded, String objecMapping) {
+            String classExcluded, String objecMapping, boolean ignoreNullValid) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("if(").append(sourceName).append(" instanceof ").append(sourceClass).append(classExcluded).append("){");
         if(classExcluded.length() <= 0){
             buffer.append(sourceClass).append(" ").append(newSourceName).append("= (").append(sourceClass).append(")").append(sourceName)
                     .append(";");
         }
-        mappingObj(newSourceName, objecMapping, buffer);
+        mappingObj(newSourceName, objecMapping, buffer, ignoreNullValid);
         buffer.append(Common.postBlock());
         return buffer;
     }
@@ -394,12 +395,13 @@ public final class Common implements ISimpleDataObjMapper {
      * @param sourceField
      * @param newSourceName
      * @param objMapCode
+     * @param ignoreNullValid 
      * @return
      */
-    public static StringBuffer objMap(MappingField sourceField, final String newSourceName, String objMapCode) {
+    public static StringBuffer objMap(MappingField sourceField, final String newSourceName, String objMapCode, boolean ignoreNullValid) {
         StringBuffer buffer = new StringBuffer();
         Common.createVar(buffer, sourceField, sourceField.getFieldType(), newSourceName);
-        mappingObj(newSourceName, objMapCode, buffer);
+        mappingObj(newSourceName, objMapCode, buffer,ignoreNullValid);
         return buffer;
     }
 
@@ -407,10 +409,15 @@ public final class Common implements ISimpleDataObjMapper {
      * @param newSourceName
      * @param objMapCode
      * @param buffer
+     * @param ignoreNullValid 
      */
-    public static void mappingObj(final String newSourceName, String objMapCode, StringBuffer buffer) {
-        buffer.append(preBlock(newSourceName));
-        buffer.append(objMapCode);
-        buffer.append(postBlock());
+    public static void mappingObj(final String newSourceName, String objMapCode, StringBuffer buffer, boolean ignoreNullValid) {
+        if(!ignoreNullValid){
+            buffer.append(preBlock(newSourceName));
+            buffer.append(objMapCode);
+            buffer.append(postBlock());
+        }else{
+            buffer.append(objMapCode);
+        }
     }
 }

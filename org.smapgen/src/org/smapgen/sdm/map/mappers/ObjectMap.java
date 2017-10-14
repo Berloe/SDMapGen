@@ -1,5 +1,6 @@
 package org.smapgen.sdm.map.mappers;
 
+import org.smapgen.dconf.Dconf;
 import org.smapgen.sdm.common.Common;
 import org.smapgen.sdm.factory.ObjectFactory;
 import org.smapgen.sdm.map.mappers.common.IMapper;
@@ -28,7 +29,7 @@ public class ObjectMap extends Mapper implements IMapper {
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) throws Throwable {
         final String newSourceName = Common.genName(sourceField.getFieldType(), Boolean.TRUE);
         String objMapCode = objectMapping(targetField,targetField.getFieldType(),targetName,sourceField,sourceField.getFieldType(),ObjectFactory.loader(sourceField.getCalculatedFieldType()),newSourceName).toString();
-        return Common.objMap(sourceField, newSourceName, objMapCode);
+        return Common.objMap(sourceField, newSourceName, objMapCode,Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
     }
     
 }
