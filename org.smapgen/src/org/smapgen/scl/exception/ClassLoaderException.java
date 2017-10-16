@@ -68,5 +68,10 @@ public class ClassLoaderException extends Throwable {
     public ClassLoaderException(Throwable cause) {
         super(cause);
     }
-
+    @Override
+    public String toString() {
+        String s = "Class load error";
+        String message = classCanonicalName;
+        return (message != null) ? (s + ": " + message + " or some dependency could not be found") : s;
+    }
 }
