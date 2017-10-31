@@ -5,7 +5,7 @@ import org.smapgen.sdm.map.mappers.common.Mapper;
 import org.smapgen.sdm.metadata.MappingField;
 
 /**
- * @author Alberto Fuentes G�mez
+ * @author Alberto Fuentes Gómez
  *
  */
 public class ToBooleanMap extends Mapper implements IMapper {
