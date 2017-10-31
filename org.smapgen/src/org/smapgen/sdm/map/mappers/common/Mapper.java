@@ -24,7 +24,7 @@ public abstract class Mapper {
      * @param targetName
      * @param sourceMappingField
      * @param sourceClass
-     * @param datoSource
+     * @param computeSrc
      * @param newSourceName
      * @return
      * @throws IllegalArgumentException
@@ -35,7 +35,7 @@ public abstract class Mapper {
      * @throws Throwable
      */
     public StringBuffer objectMapping( MappingField targetMappingField,final Class<?> targetClass, final String targetName,
-            MappingField sourceMappingField, final Class<?> sourceClass, final Object datoSource,final String newSourceName)
+            MappingField sourceMappingField, final Class<?> sourceClass, final Class<?> computeSrc,final String newSourceName)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, Throwable {
         final StringBuffer b = new StringBuffer();
@@ -56,18 +56,17 @@ public abstract class Mapper {
             String fName = null;
             String newtargetName = null;
 
-            Object datoTarget = ObjectFactory.loader(targetClass);
-            newtargetName = Common.createNewVar(fcode, datoTarget);
+            newtargetName = Utils.isAbstract(targetClass)?Common.createNewVarNull(fcode, targetClass):Common.createNewVar(fcode, targetClass);
             fName = Registry.registerName(ConstantValues.ClassMapper_mapPrefix + sourceClass.getSimpleName());
             Registry.registreFunction(sourceClass.getCanonicalName(), targetClass.getCanonicalName(), fName);
-            if (Utils.getConcreteClasses(datoSource.getClass()).length==1) {
-                fcode.append((new MapperClassElement()).mapperInstance( datoSource, datoTarget, newSourceName, newtargetName));
+            if (Utils.getConcreteClasses(computeSrc).length==1 && !Utils.isAbstract(computeSrc) && !Utils.isAbstract(targetClass)) {
+                fcode.append((new MapperClassElement()).mapperInstance( ObjectFactory.loader(computeSrc), ObjectFactory.loader(targetClass), newSourceName, newtargetName));
             } else {
-                fcode.append(mapperClass(datoSource, datoTarget, newSourceName, newtargetName, sourceMappingField,
+                fcode.append(mapperClass(computeSrc, targetClass, newSourceName, newtargetName, sourceMappingField,
                         targetMappingField));
             }
 
-            Common.addMappingMethod(fcode, datoSource.getClass(), targetClass, newtargetName, newSourceName, fName,
+            Common.addMappingMethod(fcode, computeSrc, targetClass, newtargetName, newSourceName, fName,
                     true);
             b.append(targetMappingField.getSetterMethod().getParameterTypes()[0].isAssignableFrom(targetClass)  && targetMappingField.getVarName().equals(targetName)
                     ? Common.valueAssignFunction(targetMappingField, newSourceName, fName)
@@ -93,16 +92,16 @@ public abstract class Mapper {
      * @return Boolean
      * @throws Throwable
      */
-    private StringBuffer mapperClass( final Object source, final Object target, final String sourceName,
+    private StringBuffer mapperClass( final Class<?> source, final Class<?> target, final String sourceName,
             final String targetName, MappingField sourceField, MappingField targetField) throws Throwable {
         StringBuffer b = new StringBuffer();
-        Class<?>[] classExtends = Utils.getConcreteClasses(source.getClass());
+        Class<?>[] classExtends = Utils.getConcreteClasses(source);
             for (int i = 0; i < classExtends.length; ++i) {
                 Class<?> concreteSource = classExtends[i];
-                Class<?> targetExtends = findExtensionsTarget(concreteSource.getSimpleName(), target.getClass());
+                Class<?> targetExtends = findExtensionsTarget(concreteSource.getSimpleName(), target);
                 if (targetExtends != null) {
 
-                    mapResolvedClass(source, sourceName, targetName, sourceField.cloneMappingField(), targetField.cloneMappingField(), b, concreteSource,
+                    mapResolvedClass(sourceName, targetName, sourceField.cloneMappingField(), targetField.cloneMappingField(), b, concreteSource,
                             targetExtends);
                 }
             }
@@ -120,7 +119,7 @@ public abstract class Mapper {
      * @param targetExtends
      * @throws Throwable
      */
-    private void mapResolvedClass(final Object source, final String sourceName, final String targetName,
+    private void mapResolvedClass(final String sourceName, final String targetName,
             MappingField sourceField, MappingField targetField, StringBuffer b, Class<?> concreteSource,
             Class<?> targetExtends) throws Throwable {
         sourceField.setFieldType(concreteSource);

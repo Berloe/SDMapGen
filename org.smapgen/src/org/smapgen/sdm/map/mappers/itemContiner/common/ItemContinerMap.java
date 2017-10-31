@@ -32,7 +32,7 @@ public class ItemContinerMap extends Mapper {
             newTargetName = Common.createNewVar(buffer, ObjectFactory.loader(targetField.getFieldType()));
 
             buffer.append(objectMapping(targetField, targetField.getFieldType(), newTargetName, sourceField,
-                    sourceField.getFieldType(),  ObjectFactory.loader(sourceField.getFieldType()), sourceName));
+                    sourceField.getFieldType(), sourceField.getFieldType(), sourceName));
         }
         buffer.append("list").append(targetName).append(".add(").append(newTargetName).append(");");
         return buffer;
