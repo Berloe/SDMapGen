@@ -15,8 +15,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -52,8 +50,6 @@ public class SimpleClassLoader extends ClassLoader {
      * SimpleClassLoader repoClassLoader .
      */
     private SimpleClassLoader repoClassLoader;
-    ExecutorService executor = Executors.newWorkStealingPool(8);
-
     public SimpleClassLoader() {}
 
     /**
@@ -195,6 +191,20 @@ public class SimpleClassLoader extends ClassLoader {
         if (dependencias == null) {
             return false;
         }
+        final Set<String> eval = formatDepsCanonicalNames(dependencias);
+        for (final String key : eval) {
+            if (depsPath.containsKey(key) && ldepsFromDepsPath(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param dependencias
+     * @return
+     */
+    private Set<String> formatDepsCanonicalNames(final ArrayList<String> dependencias) {
         final Set<String> eval = new HashSet<String>();
         for (final String key : dependencias) {
             if (depsPath.containsKey(key.replace(".", "/"))) {
@@ -204,24 +214,27 @@ public class SimpleClassLoader extends ClassLoader {
                 eval.add(key.replace("/", "."));
             }
         }
-        for (final String key : eval) {
-            if (depsPath.containsKey(key)) {
-                try {
-                    final String name = key.replace("/", ".");
-                    final URL ur = depsPath.get(key);
-                    final InputStream imput = ur.openStream();
-                    final byte[] classData = loadClassData(imput);
-                    imput.close();
-                    addClassCache(defineClass(name, classData, 0, classData.length));
-                    return true;
-                } catch (final Throwable e) {
-                    if (e instanceof NoClassDefFoundError) {
-                        throw e;
-                    }
-                }
-            }
+        return eval;
+    }
+
+    /**
+     * @param key
+     * @throws NoClassDefFoundError
+     */
+    private boolean ldepsFromDepsPath(final String key) throws NoClassDefFoundError {
+        try {
+            final String name = key.replace("/", ".");
+            final URL ur = depsPath.get(key);
+            final InputStream imput = ur.openStream();
+            final byte[] classData = loadClassData(imput);
+            imput.close();
+            addClassCache(defineClass(name, classData, 0, classData.length));
+            return true;
+        } catch (final NoClassDefFoundError e) {
+                throw e;
+        } catch (final Throwable e){
+            return false;
         }
-        return false;
     }
 
     /**
@@ -407,12 +420,9 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     /**
-     * 
-     * @param String
-     *            ru.
-     * @param Set<String>
-     *            keys
-     * @return Set<String>
+     * @param String  ru.
+     * @param Set String keys
+     * @return Set String
      */
     private Set<String> findSystemRootUri(final String ru, final Set<String> keys) {
         final Set<String> response = new HashSet<String>();
@@ -577,26 +587,10 @@ public class SimpleClassLoader extends ClassLoader {
         if (dependencias == null) {
             return;
         }
-        final Set<String> eval = new HashSet<String>();
-        for (final String key : dependencias) {
-            if (depsPath.containsKey(key.replace(".", "/"))) {
-                eval.add(key.replace(".", "/"));
-            }
-            if (depsPath.containsKey(key.replace("/", "."))) {
-                eval.add(key.replace("/", "."));
-            }
-        }
+        final Set<String> eval = formatDepsCanonicalNames(dependencias);
         for (final String key : eval) {
             if (depsPath.containsKey(key)&& !classCache.containsKey(key)) {
-                try {
-                    final String name = key.replace("/", ".");
-                    final URL ur = depsPath.get(key);
-                    final InputStream imput = ur.openStream();
-                    final byte[] classData = loadClassData(imput);
-                    imput.close();
-                    addClassCache(defineClass(name, classData, 0, classData.length));
-                } catch (final Throwable e) {
-                }
+                ldepsFromDepsPath(key);
             }
         }
 

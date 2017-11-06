@@ -2,7 +2,6 @@
 <config>
 	<repoLoader>org.smapgen.scl.repo.maven.MvnRepoProvider</repoLoader>
 	<mapper>org.smapgen.sdm.map.mappers.BasicMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.AbstractMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ObjectMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.itemContiner.ArrayMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.itemContiner.IterableMap</mapper>

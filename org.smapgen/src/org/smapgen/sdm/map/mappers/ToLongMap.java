@@ -30,6 +30,7 @@ public class ToLongMap extends Mapper implements IMapper {
         return sourceField.getFieldType().equals(char[].class)||
             sourceField.getFieldType().equals(byte[].class)||
             sourceField.getFieldType().equals(int.class)||
+            sourceField.getFieldType().equals(long.class)||
             sourceField.getFieldType().equals(byte.class);
     }
 
@@ -40,6 +41,7 @@ public class ToLongMap extends Mapper implements IMapper {
         return  char[].class.isAssignableFrom(sourceField.getFieldType())||
                 byte[].class.isAssignableFrom(sourceField.getFieldType())||
                 int.class.isAssignableFrom(sourceField.getFieldType())||
+                long.class.isAssignableFrom(sourceField.getFieldType())||
                 byte.class.isAssignableFrom(sourceField.getFieldType());
     }
  
@@ -50,19 +52,19 @@ public class ToLongMap extends Mapper implements IMapper {
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
         if(sourceField.getFieldType().equals(byte[].class)||sourceField.getFieldType().equals(char[].class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                    + "(new Integer(new String("+sourceField.getVarName()+")));");
+                    + "(new Long(new String("+sourceField.getVarName()+")));");
         }else if(sourceField.getFieldType().equals(int.class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "("+sourceField.getVarName()+");");
-        }else if(sourceField.getFieldType().equals(int.class) && targetField.getFieldType().equals(Integer.class)){
+        }else if(sourceField.getFieldType().equals(int.class) && targetField.getFieldType().equals(Long.class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                    + "(new Integer("+sourceField.getVarName()+").intValue());");
+                    + "(new Long("+sourceField.getVarName()+"));");
         } else if(sourceField.getFieldType().equals(byte.class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                + "(new Byte(" +sourceField.getVarName()+").intValue();");
+                + "(new Byte(" +sourceField.getVarName()+").longValue();");
         }else if(sourceField.getFieldType().equals(Byte.class)){
             return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                    + "(" +sourceField.getVarName()+").intValue();");
+                    + "(" +sourceField.getVarName()+").longValue();");
             }
         return new StringBuffer();
     }
