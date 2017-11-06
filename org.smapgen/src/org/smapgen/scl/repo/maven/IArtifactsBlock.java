@@ -3,6 +3,10 @@ package org.smapgen.scl.repo.maven;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * @author Alberto Fuentes Gómez
+ *
+ */
 public interface IArtifactsBlock {
 
     /**

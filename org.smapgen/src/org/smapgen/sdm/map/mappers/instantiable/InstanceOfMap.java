@@ -14,11 +14,6 @@ import org.smapgen.sdm.metadata.MappingField;
  *
  */
 public abstract class InstanceOfMap extends Mapper {
-
-    public InstanceOfMap() {
-        super();
-    }
-
     /**
      * @param sourceField
      * @param targetField

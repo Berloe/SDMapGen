@@ -3,7 +3,6 @@ package org.smapgen.plugin.wizards;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * Messages.
  */
 public class Messages extends NLS {

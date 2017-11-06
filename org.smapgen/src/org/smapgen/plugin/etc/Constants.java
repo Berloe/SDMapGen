@@ -5,12 +5,6 @@ package org.smapgen.plugin.etc;
  *
  */
 public class Constants {
-    /**
-     * 
-     */
-    private Constants() {
-        super();
-    }
     public static String Eclipse21 = "Eclipse21";
     public static String EclipseDefault = "EclipseDefault";
     public static String JavaConventions = "JavaConventions";
@@ -26,4 +20,10 @@ public class Constants {
     public static String SupportMapper_endTag = "}";
     public static String SupportMapper_newLine = "line.separator";
     public static String SupportMapper_slash = "/";
+    /**
+     * constructor
+     */
+    private Constants() {
+        super();
+    }
 }
