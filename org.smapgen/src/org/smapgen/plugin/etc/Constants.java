@@ -5,6 +5,12 @@ package org.smapgen.plugin.etc;
  *
  */
 public class Constants {
+    /**
+     * 
+     */
+    private Constants() {
+        super();
+    }
     public static String Eclipse21 = "Eclipse21";
     public static String EclipseDefault = "EclipseDefault";
     public static String JavaConventions = "JavaConventions";

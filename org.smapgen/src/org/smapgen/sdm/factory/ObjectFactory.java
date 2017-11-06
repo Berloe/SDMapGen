@@ -18,7 +18,9 @@ public class ObjectFactory {
      * 
      * @return void
      */
-    public ObjectFactory() {}
+    private ObjectFactory() {
+        super();
+    }
 
     /**
      * 

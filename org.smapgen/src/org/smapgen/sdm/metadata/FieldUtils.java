@@ -24,6 +24,13 @@ import java.util.SortedSet;
 public class FieldUtils {
 
     /**
+     * 
+     */
+    private FieldUtils() {
+        super();
+    }
+
+    /**
      * @param loadClass
      * @param name
      * @return
@@ -96,21 +103,31 @@ public class FieldUtils {
         try {
             final Field field = loadClass.getDeclaredField("value");
             if (field.getDeclaringClass().getName().startsWith("java.lang")) {
-                final MappingField mapfield = new MappingField();
-                mapfield.setGetterMethod(null);
-                mapfield.setGetterGenericType(getGenericType(Class.forName(field.getDeclaringClass().getName())));
-                mapfield.setField(field);
-                mapfield.setName(field.getDeclaringClass().getName());
-                mapfield.setCalculatedFieldType(field.getDeclaringClass());
-                mapfield.setFieldType(field.getDeclaringClass());
-                mapfield.setVarName(name);
-                mapfield.setMapped(Boolean.FALSE);
-                return new MappingField[] { mapfield };
+                return setBasicType(name, field);
             }
         } finally {
             return new MappingField[0];
         }
 
+    }
+
+    /**
+     * @param name
+     * @param field
+     * @return
+     * @throws ClassNotFoundException
+     */
+    private static MappingField[] setBasicType(final String name, final Field field) throws ClassNotFoundException {
+        final MappingField mapfield = new MappingField();
+        mapfield.setGetterMethod(null);
+        mapfield.setGetterGenericType(getGenericType(Class.forName(field.getDeclaringClass().getName())));
+        mapfield.setField(field);
+        mapfield.setName(field.getDeclaringClass().getName());
+        mapfield.setCalculatedFieldType(field.getDeclaringClass());
+        mapfield.setFieldType(field.getDeclaringClass());
+        mapfield.setVarName(name);
+        mapfield.setMapped(Boolean.FALSE);
+        return new MappingField[] { mapfield };
     }
 
     /**
@@ -209,12 +226,6 @@ public class FieldUtils {
         return response;
     }
 
-//    @SuppressWarnings("unchecked")
-//    private static <T> Class<T> getAnotType(Class<?> T, Class<?> cls) {
-//        
-//        return (Class<T>)cls;
-//    }
-
     private static ArrayList<String> getAnotationsTypes(Annotation[] annotations) {
         ArrayList<String> anotTypes = new ArrayList<String>();
         for (Annotation annotation : annotations) {
@@ -230,8 +241,7 @@ public class FieldUtils {
      * @throws Exception
      */
     private static MappingField[] getElementTypeList(final Class<?> loadClass, final String name) throws Exception {
-        // List<?> l =(List<?>)loadClass;
-        final Field field = Field.class.newInstance();// l.getClass().getDeclaredField("elementData");
+        final Field field = Field.class.newInstance();
         final MappingField mapfield = new MappingField();
         mapfield.setGetterGenericType(MappingType.COLLECTION);
         mapfield.setField(field);
