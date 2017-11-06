@@ -43,7 +43,6 @@ public class IterableToArrayMap implements IMapper {
         datoTarget = ObjectFactory.loader(targetField.getFieldType()/*.getResolvedAbsClss()*/);
         final String newtargetName = Common.createNewVarArray(auxSb, datoTarget);
         auxSb.append(mapperArrayfromCollection(sourceField, targetField, sourceName, newtargetName));
-            auxSb.append(Common.valueAssign(newtargetName, targetField));
             
         return auxSb;
     }
@@ -74,6 +73,7 @@ public class IterableToArrayMap implements IMapper {
         b.append("}");
         b.append(targetName).append(" = list").append(targetName).append(".toArray(new ")
                 .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);");
+        b.append(Common.valueAssign(targetName, targetField));
         b.append("}");
         return b;
     }

@@ -39,7 +39,6 @@ public class ArrayMap implements IMapper {
         }
         final String newtargetName = Common.createNewVarArray(buffer, targetField.getFieldType());
         buffer.append(mapperArrays(sourceField, targetField, newSourceName, newtargetName));
-        buffer.append(Common.valueAssign(newtargetName, targetField));
 
         buffer.append(Common.postBlock());
         return buffer;
@@ -75,6 +74,7 @@ public class ArrayMap implements IMapper {
         b.append("}");
         b.append(targetName).append(" = list").append(targetName).append(".toArray(new ")
                 .append(targetField.getFieldType().getCanonicalName()).append("[0]);");
+        b.append(Common.valueAssign(targetName, targetField));
         b.append("}").append(System.getProperty("line.separator"));
     }
 

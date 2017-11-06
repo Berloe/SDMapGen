@@ -42,7 +42,6 @@ public class ArrayToIterableMap implements IMapper {
         Object datoTarget = ObjectFactory.loader(targetField.getCalculatedFieldType());
         final String newtargetName = Common.createNewVarCollection(auxSb, datoTarget, targetField);
         auxSb.append(mapperCollectionsfromArray(sourceField, targetField, sourceName, newtargetName));
-            auxSb.append(Common.valueAssign(newtargetName, targetField));
 
         return auxSb;
     }
@@ -61,15 +60,19 @@ public class ArrayToIterableMap implements IMapper {
         pre(sourceField, sourceName, b);
         b.append((new ItemContinerMap()).mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, 
                 targetName));
-        post(b);
+        post(b, targetName, targetField);
         return b;
     }
 
     /**
      * @param b
+     * @param newtargetName 
+     * @param targetField 
      */
-    private void post(final StringBuffer b) {
-        b.append("}").append("}");
+    private void post(final StringBuffer b, String newtargetName, MappingField targetField) {
+        b.append("}");
+        b.append(Common.valueAssign(newtargetName, targetField));
+        b.append("}");
     }
 
     /**
