@@ -1,5 +1,6 @@
 package org.smapgen.sdm.map.mappers.itemContiner;
 
+import org.smapgen.dconf.Dconf;
 import org.smapgen.sdm.common.Common;
 import org.smapgen.sdm.common.ConstantValues;
 import org.smapgen.sdm.map.mappers.common.IMapper;
@@ -31,8 +32,8 @@ public class ArrayMap implements IMapper {
 
         StringBuffer buffer = new StringBuffer();
         String newSourceName = Common.createVar(buffer, sourceField, sourceField.getFieldType());
-        buffer.append(Common.preBlock(newSourceName));
         if (sourceField.getFieldType().equals(targetField.getFieldType())) {
+            buffer.append(Common.preBlock(newSourceName));
             buffer.append(Common.valueAssign(newSourceName, targetField));
             buffer.append(Common.postBlock());
             return buffer;
@@ -40,7 +41,6 @@ public class ArrayMap implements IMapper {
         final String newtargetName = Common.createNewVarArray(buffer, targetField.getFieldType());
         buffer.append(mapperArrays(sourceField, targetField, newSourceName, newtargetName));
 
-        buffer.append(Common.postBlock());
         return buffer;
     }
 
@@ -84,10 +84,15 @@ public class ArrayMap implements IMapper {
      * @param sourceName
      * @param targetName
      * @param b
+     * @throws Throwable 
      */
     private void pre(final MappingField sourceField, final MappingField targetField, final String sourceName,
-            final String targetName, StringBuffer b) {
-        b.append("if(").append(sourceName).append(".length>0 ){");
+            final String targetName, StringBuffer b) throws Throwable {
+        b.append("if(");
+        if(!Dconf.getInstance().containsNotNullAnot(targetField.getAnotations())){
+            b.append(Common.nullValidation(sourceName)).append(" && ");
+        }
+        b.append(sourceName).append(".length>0 ){");
         b.append("java.util.List<").append(targetField.getFieldType().getCanonicalName()).append("> list")
                 .append(targetName).append(" = new java.util.ArrayList<")
                 .append(targetField.getFieldType().getCanonicalName()).append(">();");

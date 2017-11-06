@@ -14,15 +14,15 @@ import java.util.List;
 public class Registry {
     private static Registry registry;
     /**
-     * List<StringBuffer> functionList.
+     * Registered Function List.
      */
     private List<StringBuffer> functionList;
     /**
-     * HashMap<String,HashMap<String,String>> functionsRegistry.
+     * Functions Registry.
      */
     private HashMap<String, HashMap<String, String>> functionsRegistry;
     /**
-     * HashMap<String,Integer> namesRegistry.
+     * Names Registry.
      */
     private HashMap<String, Integer> namesRegistry;
     /**

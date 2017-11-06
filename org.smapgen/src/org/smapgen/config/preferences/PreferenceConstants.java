@@ -7,6 +7,13 @@ package org.smapgen.config.preferences;
 public class PreferenceConstants {
 
     /**
+     * 
+     */
+    private PreferenceConstants() {
+        super();
+    }
+
+    /**
      * String DEPTH .
      */
     public static final String DEPTH = "depth";

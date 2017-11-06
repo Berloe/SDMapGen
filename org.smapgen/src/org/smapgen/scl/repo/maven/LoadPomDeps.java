@@ -19,6 +19,13 @@ import javax.xml.stream.XMLStreamReader;
 public class LoadPomDeps {
 
     /**
+     * 
+     */
+    private LoadPomDeps() {
+        super();
+    }
+
+    /**
      * @param conf
      * @return
      * @throws FileNotFoundException

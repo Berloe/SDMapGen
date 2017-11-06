@@ -16,6 +16,13 @@ public final class Common implements ISimpleDataObjMapper {
 
     /**
      * 
+     */
+    private Common() {
+        super();
+    }
+
+    /**
+     * 
      * @param Object
      *            data.
      * @param Boolean
@@ -265,6 +272,13 @@ public final class Common implements ISimpleDataObjMapper {
         return (new StringBuffer()).append(targetName + "." + targetField.getSetterMethod().getName() + "(null);");
     }
 
+    /**
+     * @param newSourceName
+     * @return
+     */
+    public static StringBuffer nullValidation(final String name) {
+        return (new StringBuffer()).append(name + "!=null");
+    }
 
     /**
      * @param newSourceName

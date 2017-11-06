@@ -12,9 +12,19 @@ import java.util.Map.Entry;
  */
 public class ArtifactsBlock implements IArtifactsBlock {
 
+    /**
+     * Pom properties
+     */
     private Map<String, String> properties = new HashMap<String, String>();
+    /**
+     * ArtiFact list
+     */
     private HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<Entry<String, String>, Artifact>();
 
+    /**
+     * @author Alberto Fuentes Gómez
+     *
+     */
     @SuppressWarnings("serial")
     private class ArtifactEntry extends SimpleEntry<String, String> {
 

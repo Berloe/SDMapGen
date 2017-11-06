@@ -22,6 +22,14 @@ import org.smapgen.sdm.metadata.MappingField;
 public class Utils {
 
     /**
+     * 
+     */
+    private Utils() {
+        super();
+    }
+
+
+    /**
      * @param clazz
      * @return
      * @throws Throwable
