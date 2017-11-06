@@ -36,11 +36,11 @@ public class FieldUtils {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("finally")
+
     public static MappingField[] fieldGetter(final Class<?> loadClass, final String name) throws Exception {
         // if we are mappin a list or map:
         if (List.class.isAssignableFrom(loadClass)) {
-            return getElementTypeList(loadClass, name);
+            return getElementTypeList(name);
         }
         final Method[] methods = loadClass.getDeclaredMethods();
         final Collection<MappingField> mapFieldColecction = new ArrayList<MappingField>();
@@ -49,46 +49,9 @@ public class FieldUtils {
             String getterName = "is".equals(method.getName().substring(0, 2)) ? method.getName().substring(2)
                     : "get".equals(method.getName().substring(0, 3)) ? method.getName().substring(3) : null;
             if ("get".equals(method.getName().substring(0, 3)) || ("is".equals(method.getName().substring(0, 2)) && !Modifier.isPrivate(method.getModifiers()))) {
-                try {
-                    if (method.getParameterTypes().length == 0) {
-                        Field field = null;
-                        try {
-                            field = loadClass.getDeclaredField(
-                                    getterName.substring(0, 1).toLowerCase() + getterName.substring(1));
-                        } catch (NoSuchFieldException e) {
-                            field = findSimilar(getterName.substring(0, 1).toLowerCase() + getterName.substring(1),
-                                    loadClass, method.getReturnType());
-                        }
-                        if (field != null) {
-                            final MappingField mapfield = new MappingField();
-                            mapfield.setGetterMethod(method);
-                            mapfield.setGetterGenericType(getGenericType(method.getReturnType()));
-                            mapfield.setField(field);
-                            mapfield.setName(field.getName());
-                            try {
-                                mapfield.setCalculatedFieldType(getfieldType(field, mapfield.getGetterGenericType()));
-                            } catch (final Exception e) {
-                                mapfield.setCalculatedFieldType(field.getDeclaringClass());
-                            }
-                            switch (mapfield.getGetterGenericType()) {
-                                case COLLECTION:
-                                    mapfield.setFieldType(mapfield.getCalculatedFieldType());
-                                    break;
-                                case ARRAY:
-                                    mapfield.setFieldType(field.getType().getComponentType());
-                                    break;
-                                default:
-                                    mapfield.setFieldType(field.getType());
-                                    break;
-                            }
-                            mapfield.setVarName(name);
-                            mapfield.setMapped(Boolean.FALSE);
-                            mapFieldColecction.add(mapfield);
-                            mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
-                        }
-                    }
-                } catch (final Exception e) {
-                    e.printStackTrace();
+                final MappingField mapfield = getterMetadata(loadClass, name, method, getterName);
+                if(null != mapfield){
+                    mapFieldColecction.add(getterMetadata(loadClass, name, method, getterName));
                 }
             }
         }
@@ -100,15 +63,109 @@ public class FieldUtils {
         if (!mapFieldColecction.isEmpty()) {
             return mapFieldColecction.toArray(new MappingField[0]);
         }
+        return metadataFromField(loadClass, name);
+
+    }
+
+    /**
+     * @param loadClass
+     * @param name
+     * @param mapFieldColecction
+     * @param method
+     * @param getterName
+     * @return 
+     */
+    private static MappingField getterMetadata(final Class<?> loadClass, final String name, Method method, String getterName) {
+        try {
+            if (method.getParameterTypes().length == 0) {
+                Field field = getterField(loadClass, method, getterName);
+                if (field != null) {
+                    final MappingField mapfield = new MappingField();
+                    mapfield.setGetterMethod(method);
+                    mapfield.setGetterGenericType(getGenericType(method.getReturnType()));
+                    mapfield.setField(field);
+                    mapfield.setName(field.getName());
+                    mapfield.setCalculatedFieldType(getterCalculatedFieldType(field, mapfield));
+                    mapfield.setFieldType(getterGenericType(field, mapfield));
+                    mapfield.setVarName(name);
+                    mapfield.setMapped(Boolean.FALSE);
+                    mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
+                    return mapfield;
+                }
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * @param field
+     * @param mapfield
+     * @return 
+     */
+    private static Class<?> getterGenericType(Field field, final MappingField mapfield) {
+        switch (mapfield.getGetterGenericType()) {
+            case COLLECTION:
+                return mapfield.getCalculatedFieldType();
+            case ARRAY:
+                return field.getType().getComponentType();
+            default:
+                return field.getType();
+        }
+    }
+
+    /**
+     * @param field
+     * @param mapfield
+     * @return 
+     */
+    private static Class<?> getterCalculatedFieldType(Field field, final MappingField mapfield) {
+        try {
+             return getfieldType(field, mapfield.getGetterGenericType());
+        } catch (final Exception e) {
+             return field.getDeclaringClass();
+        }
+    }
+
+    /**
+     * @param loadClass
+     * @param method
+     * @param getterName
+     * @return
+     * @throws SecurityException
+     */
+    private static Field getterField(final Class<?> loadClass, Method method, String getterName)
+            throws SecurityException {
+        Field field = null;
+        try {
+            field = loadClass.getDeclaredField(
+                    getterName.substring(0, 1).toLowerCase() + getterName.substring(1));
+        } catch (NoSuchFieldException e) {
+            field = findSimilar(getterName.substring(0, 1).toLowerCase() + getterName.substring(1),
+                    loadClass, method.getReturnType());
+        }
+        return field;
+    }
+
+    /**
+     * @param loadClass
+     * @param name
+     * @return
+     * @throws NoSuchFieldException
+     * @throws SecurityException
+     * @throws ClassNotFoundException
+     */
+    private static MappingField[] metadataFromField(final Class<?> loadClass, final String name){
         try {
             final Field field = loadClass.getDeclaredField("value");
             if (field.getDeclaringClass().getName().startsWith("java.lang")) {
                 return setBasicType(name, field);
             }
-        } finally {
+        }catch (Exception e) {
             return new MappingField[0];
         }
-
+        return new MappingField[0];
     }
 
     /**
@@ -176,14 +233,7 @@ public class FieldUtils {
             if ("set".equals(method.getName().substring(0, 3)) && Modifier.isPublic(method.getModifiers())) {
                 try {
                     if (method.getParameterTypes().length == 1) {
-                        Field field = null;
-                        try {
-                            field = loadClass.getDeclaredField(
-                                    getterName.substring(0, 1).toLowerCase() + getterName.substring(1));
-                        } catch (NoSuchFieldException e) {
-                            field = findSimilar(getterName.substring(0, 1).toLowerCase() + getterName.substring(1),
-                                    loadClass, method.getParameterTypes()[0]);
-                        }
+                        Field field = getterField(loadClass, method, getterName);
                         if (field != null) {
                             final MappingField mapfield = new MappingField();
                             mapfield.setSetterMethod(method);
@@ -235,12 +285,11 @@ public class FieldUtils {
     }
 
     /**
-     * @param loadClass
      * @param name
      * @return
      * @throws Exception
      */
-    private static MappingField[] getElementTypeList(final Class<?> loadClass, final String name) throws Exception {
+    private static MappingField[] getElementTypeList(final String name) throws Exception {
         final Field field = Field.class.newInstance();
         final MappingField mapfield = new MappingField();
         mapfield.setGetterGenericType(MappingType.COLLECTION);
