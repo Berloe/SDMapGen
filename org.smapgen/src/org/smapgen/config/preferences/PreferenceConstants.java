@@ -5,14 +5,6 @@ package org.smapgen.config.preferences;
  *
  */
 public class PreferenceConstants {
-
-    /**
-     * 
-     */
-    private PreferenceConstants() {
-        super();
-    }
-
     /**
      * String DEPTH .
      */
@@ -33,5 +25,11 @@ public class PreferenceConstants {
      * String P_PATHCLASSREPO .
      */
     public static final String P_PATHCLASSREPO = "pathClassRepo";
+    /**
+     * constructor
+     */
+    private PreferenceConstants() {
+        super();
+    }
 
 }

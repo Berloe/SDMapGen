@@ -42,7 +42,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
      * 
      * @param IJavaProject
      *            project.
-     * @return Set<IJavaProject>
+     * @return Set IJavaProject
      */
     public static Set<IJavaProject> getAllRequiredProjects(final IJavaProject p) {
         final Set<IJavaProject> $ = new HashSet<IJavaProject>();

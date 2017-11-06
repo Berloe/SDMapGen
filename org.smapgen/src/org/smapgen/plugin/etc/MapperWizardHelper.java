@@ -299,9 +299,12 @@ public class MapperWizardHelper {
         }
         return null;
     }
-    private void loadFunctionsFromCu(ICompilationUnit javaClass, String rootPKG, SimpleDataObjMapper sm) throws Throwable {
-		if(javaClass==null){
+    private void loadFunctionsFromCu(ICompilationUnit jClass, String rootPKG, SimpleDataObjMapper sm) throws Throwable {
+		ICompilationUnit javaClass = null;
+        if(jClass ==null){
 			javaClass = getCompilationUnitFromPKG(rootPKG);
+		}else{
+		    javaClass = jClass;
 		}
 		if(javaClass.getAllTypes().length==0){
 			return;

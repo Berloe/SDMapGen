@@ -28,12 +28,12 @@ import org.smapgen.scl.exception.ClassLoaderException;
  */
 public class SimpleClassLoader extends ClassLoader {
     /**
-     * Map<String,Class<?>> classCache
+     * Class cache
      * 
      */
     private final Map<String, Class<?>> classCache = new HashMap<String, Class<?>>();
     /**
-     * Map<String,URL> depsPath .
+     * Dependency paths .
      */
     private Map<String, URL> depsPath = new HashMap<String, URL>();
     /**
@@ -45,7 +45,7 @@ public class SimpleClassLoader extends ClassLoader {
      */
     private boolean libpathLoaded;
     /**
-     * Map<String,String> paths .
+     * Paths .
      */
     private final Map<String, String> paths = new HashMap<String, String>();
     /**
@@ -114,7 +114,7 @@ public class SimpleClassLoader extends ClassLoader {
     /**
      * .
      * 
-     * @return Map<String,URL>
+     * @return dependency paths Map
      */
     public Map<String, URL> getClassMap() {
         return depsPath;
@@ -381,11 +381,9 @@ public class SimpleClassLoader extends ClassLoader {
 
     /**
      * 
-     * @param String
-     *            pkgToUri.
-     * @param Set<String>
-     *            keys
-     * @return Set<String>
+     * @param String pkgToUri.
+     * @param Set keys
+     * @return Set paths
      */
     private Set<String> findRootUri(String pkgToUri, final Set<String> keys) {
         final Set<String> response = new HashSet<String>();
@@ -400,9 +398,6 @@ public class SimpleClassLoader extends ClassLoader {
         }
         if (!response.isEmpty()) {
             return response;
-        }
-        if (!pkgToUri.contains("\\")) {
-            return null;
         }
         if(newPkgToUri.lastIndexOf("\\")<0){
             return null;

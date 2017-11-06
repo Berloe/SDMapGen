@@ -10,7 +10,7 @@ import org.smapgen.sdm.map.MapperClassElement;
 import org.smapgen.sdm.map.mappers.instantiable.ExtendedMap;
 import org.smapgen.sdm.metadata.MappingField;
 import org.smapgen.sdm.registry.Registry;
-import org.smapgen.sdm.utils.Utils;;
+import org.smapgen.sdm.utils.Utils;
 
 /**
  * @author Alberto Fuentes Gómez
