@@ -4,7 +4,7 @@ package org.smapgen.sdm.common;
  * @author Alberto Fuentes Gómez
  *
  */
-public class ConstantValues {
+public final class ConstantValues {
     /**
      * element Prefix
      */

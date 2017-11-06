@@ -54,8 +54,8 @@ class MapperSelectionListener implements SelectionListener{
      * @param target
      * @param styledText 
      */
-    public MapperSelectionListener(ProgressBar progressBar, boolean automaticMode, ICompilationUnit javaClass, MapperWizardHelper support,
-            Combo rootPkg, Text source, Text target) {
+    public MapperSelectionListener( final ProgressBar progressBar, final boolean automaticMode,final ICompilationUnit javaClass,final MapperWizardHelper support,
+            final Combo rootPkg,final Text source,final Text target) {
         super();
         this.progressBar = progressBar;
         this.automaticMode = automaticMode;

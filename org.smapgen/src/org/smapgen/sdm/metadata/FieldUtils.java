@@ -21,7 +21,7 @@ import java.util.SortedSet;
  * @author Alberto Fuentes Gómez
  *
  */
-public class FieldUtils {
+public final class FieldUtils {
 
     /**
      * 

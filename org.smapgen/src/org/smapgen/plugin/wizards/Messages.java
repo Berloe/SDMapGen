@@ -5,7 +5,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Messages.
  */
-public class Messages extends NLS {
+public final class Messages extends NLS {
     /**
      * String MapperNewWizardPage_10 .
      */

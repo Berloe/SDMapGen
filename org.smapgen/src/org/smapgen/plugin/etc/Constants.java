@@ -4,7 +4,7 @@ package org.smapgen.plugin.etc;
  * @author Alberto Fuentes Gómez
  *
  */
-public class Constants {
+public final class Constants {
     public static String Eclipse21 = "Eclipse21";
     public static String EclipseDefault = "EclipseDefault";
     public static String JavaConventions = "JavaConventions";

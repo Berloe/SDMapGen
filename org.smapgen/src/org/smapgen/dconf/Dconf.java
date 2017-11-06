@@ -16,7 +16,7 @@ import org.smapgen.sdm.map.mappers.common.IMapper;
  * @author Alberto Fuentes Gómez
  *
  */
-public class Dconf {
+public final class Dconf {
     private static Dconf dconf = null;
     private List<IMapper> mapper = new ArrayList<IMapper>();
     private List<IMapper> mapperAbs = new ArrayList<IMapper>();

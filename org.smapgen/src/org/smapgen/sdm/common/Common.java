@@ -14,6 +14,10 @@ import org.smapgen.sdm.utils.Utils;
  */
 public final class Common implements ISimpleDataObjMapper {
 
+    private static final String INSTANCEOF = " instanceof ";
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String STR_Equals = " = ";
+
     /**
      * 
      */
@@ -90,8 +94,7 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static String createNewVarCollection(final StringBuffer b, final Object targetField,
             final MappingField targetMappingField) {
-        String name = genName(targetField, Boolean.FALSE);
-        name = "list" + name;
+        String name = "list" + genName(targetField, Boolean.FALSE);
         final String concreteType = Utils.getConcreteType(targetMappingField);
         b.append(concreteType).append("<").append(targetMappingField.getFieldType().getCanonicalName()).append("> ").append(name).append(" =  new ").append(concreteType)
                 .append("<").append(targetMappingField.getFieldType().getCanonicalName()).append(">();");
@@ -117,7 +120,7 @@ public final class Common implements ISimpleDataObjMapper {
             b.append("<").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(">");
         }
         b.append(" ");
-        b.append(ret).append(" = ").append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
+        b.append(ret).append(Common.STR_Equals).append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
         return ret;
     }
 
@@ -140,7 +143,7 @@ public final class Common implements ISimpleDataObjMapper {
             b.append("<").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(">");
         }
         b.append(" ");
-        b.append(name).append(" = ").append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
+        b.append(name).append(Common.STR_Equals).append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
     }
 
     /**
@@ -195,7 +198,7 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static StringBuffer valueAssignFunction(final String newtargetName, final String newSourceName,
             final String fName) {
-        return (new StringBuffer()).append(newtargetName + " = " + fName + "(" + newSourceName + ");");
+        return (new StringBuffer()).append(newtargetName + Common.STR_Equals + fName + "(" + newSourceName + ");");
     }
 
     /**
@@ -204,7 +207,7 @@ public final class Common implements ISimpleDataObjMapper {
      * @return
      */
     public static StringBuffer valueAssignDirect(String newTarget, String newSourceName) {
-        return (new StringBuffer()).append(newTarget + " = " + newSourceName + ";");
+        return (new StringBuffer()).append(newTarget + Common.STR_Equals + newSourceName + ";");
     }
 
     /**
@@ -300,17 +303,16 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static StringBuffer createMappingMethod(final StringBuffer b, final Class<?> source, final Class<?> target,
             final String targetName, final String sourceName, final String functionName, final boolean isprivate) {
-        final StringBuffer ret = new StringBuffer();
-        ret.append("/**").append(System.getProperty("line.separator"));
-        ret.append("* @param ").append(sourceName).append(System.getProperty("line.separator"));
-        ret.append("* @return ").append(target.getSimpleName()).append(System.getProperty("line.separator"));
-        ret.append("**/").append(System.getProperty("line.separator"));
-        ret.append(isprivate ? "  private static " : "    public static ").append(target.getCanonicalName()).append(" ").append(functionName).append(" ").append("(").append(source.getCanonicalName())
-                .append(" ").append(sourceName).append(") {");
-        ret.append(b);
-        ret.append(" return ").append(targetName).append(";");
-        ret.append("}");
-        return ret;
+        return (new StringBuffer()).append("/**").append(Common.LINE_SEPARATOR)
+                .append("* @param ").append(sourceName).append(Common.LINE_SEPARATOR)
+                .append("* @return ").append(target.getSimpleName()).append(Common.LINE_SEPARATOR)
+                .append("**/").append(Common.LINE_SEPARATOR)
+                .append(isprivate ? "  private static " : "    public static ")
+                .append(target.getCanonicalName()).append(" ").append(functionName)
+                .append(" ").append("(").append(source.getCanonicalName())
+                .append(" ").append(sourceName).append(") {")
+                .append(b).append(" return ").append(targetName).append(";")
+                .append("}");
     }
 
     /**
@@ -352,7 +354,7 @@ public final class Common implements ISimpleDataObjMapper {
             HashMap<String, MappingField> maptarget) {
         for (final MappingField targetMappingField : maptarget.values()) {
             if (!targetMappingField.getMapped()) {
-                b.append(Common.valueAssignNull(targetName, targetMappingField)).append("//TODO:Not Mapped").append(System.getProperty("line.separator"));
+                b.append(Common.valueAssignNull(targetName, targetMappingField)).append("//TODO:Not Mapped").append(Common.LINE_SEPARATOR);
             }
         }
     }
@@ -369,7 +371,7 @@ public final class Common implements ISimpleDataObjMapper {
     public static StringBuffer instanceOfMap(String sourceName, final String newSourceName, String sourceClass,
             String classExcluded, String objecMapping, boolean ignoreNullValid) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("if(").append(sourceName).append(" instanceof ").append(sourceClass).append(classExcluded).append("){");
+        buffer.append("if(").append(sourceName).append(Common.INSTANCEOF).append(sourceClass).append(classExcluded).append("){");
         if(classExcluded.length() <= 0){
             buffer.append(sourceClass).append(" ").append(newSourceName).append("= (").append(sourceClass).append(")").append(sourceName)
                     .append(";");
@@ -397,7 +399,7 @@ public final class Common implements ISimpleDataObjMapper {
                     } else {
                         isFirst = false;
                     }
-                    b.append(sourceName).append(" instanceof ").append(classExcluded.getCanonicalName());
+                    b.append(sourceName).append(Common.INSTANCEOF).append(classExcluded.getCanonicalName());
                 }
             }
             b.append(")");

@@ -4,7 +4,7 @@ package org.smapgen.config.preferences;
  * @author Alberto Fuentes Gómez
  *
  */
-public class PreferenceConstants {
+public final class PreferenceConstants {
     /**
      * String DEPTH .
      */

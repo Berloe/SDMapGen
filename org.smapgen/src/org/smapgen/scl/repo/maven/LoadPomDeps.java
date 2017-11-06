@@ -16,7 +16,7 @@ import javax.xml.stream.XMLStreamReader;
  * @author Alberto Fuentes Gómez
  *
  */
-public class LoadPomDeps {
+public final class LoadPomDeps {
 
     /**
      * 

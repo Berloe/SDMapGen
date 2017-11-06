@@ -19,7 +19,7 @@ import org.smapgen.sdm.metadata.MappingField;
  * @author Alberto Fuentes Gómez
  *
  */
-public class Utils {
+public final class Utils {
 
     /**
      * 

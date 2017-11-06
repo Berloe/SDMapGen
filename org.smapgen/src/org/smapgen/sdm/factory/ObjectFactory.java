@@ -11,7 +11,7 @@ import org.smapgen.scl.exception.ClassLoaderException;
  * @author Alberto Fuentes Gómez
  *
  */
-public class ObjectFactory {
+public final class ObjectFactory {
 
     /**
      * .

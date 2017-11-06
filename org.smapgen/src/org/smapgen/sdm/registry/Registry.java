@@ -11,7 +11,7 @@ import java.util.List;
  * @author Alberto Fuentes Gómez
  *
  */
-public class Registry {
+public final class Registry {
     private static Registry registry;
     /**
      * Registered Function List.
