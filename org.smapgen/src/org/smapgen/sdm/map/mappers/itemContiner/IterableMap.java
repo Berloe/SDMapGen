@@ -44,8 +44,6 @@ public class IterableMap implements IMapper {
         final String newtargetName = Common.createNewVarCollection(auxSb, datoTarget, targetField);
         auxSb.append(mapperCollections(sourceField, targetField, sourceName, newtargetName));
 
-        auxSb.append(Common.valueAssign(newtargetName, targetField));
-
         return auxSb;
     }
 
@@ -70,7 +68,9 @@ public class IterableMap implements IMapper {
         b.append(itemContinerMap.mapItemElement(sourceField, targetField,
                 ConstantValues.ClassMapper_elementPrefix + sourceName, targetName));
 
-        b.append("}}");
+        b.append("}");
+        b.append(Common.valueAssign(targetName, targetField));
+        b.append("}");
         return b;
     }
 }
