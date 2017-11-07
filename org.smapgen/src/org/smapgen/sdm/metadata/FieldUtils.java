@@ -23,6 +23,8 @@ import java.util.SortedSet;
  */
 public final class FieldUtils {
 
+    private static final char PREFIX_CHOR = (char) Byte.valueOf("[").byteValue();
+
     /**
      * 
      */
@@ -317,7 +319,7 @@ public final class FieldUtils {
      * @return
      */
     private static MappingType getGenericType(final Class<?> dataClass) {
-        return dataClass.getName().startsWith("[") ? MappingType.ARRAY
+        return dataClass.getName().charAt(0) == FieldUtils.PREFIX_CHOR ? MappingType.ARRAY
                 : dataClass.getName().equals(Collection.class.getName())
                         || dataClass.getName().equals(Set.class.getName())
                         || dataClass.getName().equals(List.class.getName())

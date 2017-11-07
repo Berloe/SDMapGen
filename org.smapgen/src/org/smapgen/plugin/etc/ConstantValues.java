@@ -6,7 +6,7 @@ import org.eclipse.osgi.util.NLS;
  * @author Alberto Fuentes Gómez
  *
  */
-public class ConstantValues extends NLS {
+public final class ConstantValues extends NLS {
     public static String ClassMapper_elementPrefix;
     public static String ClassMapper_mapPrefix;
     public static String ClassMapper_newLine;

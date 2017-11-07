@@ -26,10 +26,10 @@ import org.smapgen.scl.exception.ClassLoaderException;
  */
 public class SimpleClassLoader extends ClassLoader {
     private static final String LINE_SEPARATOR = System.getProperty("file.separator");
-    private static final char SHARP_CHAR = (char) new Byte("#").byteValue();
-    private static final char SLASH_CHAR = (char) new Byte("/").byteValue();
-    private static final char DOT_CHAR = (char) new Byte(".").byteValue();
-    private static final char BACKSLASH = (char) new Byte("\\").byteValue();
+    private static final char SHARP_CHAR = (char) Byte.valueOf("#").byteValue();
+    private static final char SLASH_CHAR = (char) Byte.valueOf("/").byteValue();
+    private static final char DOT_CHAR = (char) Byte.valueOf(".").byteValue();
+    private static final char BACKSLASH = (char) Byte.valueOf("\\").byteValue();
     private static final String CLASS_EXTENSION = ".class";
     /**
      * Class cache

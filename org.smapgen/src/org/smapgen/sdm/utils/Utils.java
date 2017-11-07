@@ -20,8 +20,8 @@ import org.smapgen.sdm.metadata.MappingField;
  *
  */
 public final class Utils {
-    private static final char SLASH_CHAR = (char) new Byte("/").byteValue();
-    private static final char DOT_CHAR = (char) new Byte(".").byteValue();
+    private static final char SLASH_CHAR = (char) Byte.valueOf("/").byteValue();
+    private static final char DOT_CHAR = (char) Byte.valueOf(".").byteValue();
     /**
      * 
      */
@@ -95,7 +95,7 @@ public final class Utils {
             for (int i = 0; i < classesNames.length; ++i) {
                 String cl = classesNames[i];
                 String name = cl.replace(Utils.SLASH_CHAR, Utils.DOT_CHAR);
-                if (name.lastIndexOf(".") > 0 && clazz.getCanonicalName().lastIndexOf(".") > 0
+                if (name.lastIndexOf(Utils.DOT_CHAR) > 0 && clazz.getCanonicalName().lastIndexOf(Utils.DOT_CHAR) > 0
                         && name.substring(0, name.lastIndexOf(Utils.DOT_CHAR)).equals(
                                 clazz.getCanonicalName().substring(0, clazz.getCanonicalName().lastIndexOf(Utils.DOT_CHAR)))) {
                     try {

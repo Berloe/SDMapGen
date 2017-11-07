@@ -18,6 +18,17 @@ import javax.xml.stream.XMLStreamReader;
  */
 public final class LoadPomDeps {
 
+    private static final String PROPERTIES = "properties";
+    private static final String PARENT = "parent";
+    private static final String COMPILE = "compile";
+    private static final String SCOPE = "scope";
+    private static final String VERSION = "version";
+    private static final String ARTIFACT_ID = "artifactId";
+    private static final String GROUP_ID = "groupId";
+    private static final String DEPENDENCY = "dependency";
+    private static final String DEPENDENCY_MANAGEMENT = "dependencyManagement";
+    private static final String DEPENDENCIES = "dependencies";
+
     /**
      * 
      */
@@ -37,10 +48,10 @@ public final class LoadPomDeps {
         XMLStreamReader reader =  factory.createXMLStreamReader(new FileInputStream(conf));
         while(reader.hasNext()){
           int event = reader.next();
-          if (XMLStreamConstants.START_ELEMENT==event && "dependencies".equals(reader.getLocalName())){
+          if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.DEPENDENCIES.equals(reader.getLocalName())){
               artifacts.addAll(dependencyBlock(reader,event));
           }
-          if (XMLStreamConstants.START_ELEMENT==event && "dependencyManagement".equals(reader.getLocalName())){
+          if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.DEPENDENCY_MANAGEMENT.equals(reader.getLocalName())){
               artifacts.addAll(dependencyBlock(reader,event));
           }
         }
@@ -58,11 +69,11 @@ public final class LoadPomDeps {
         int event = ev;
         ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
         while(reader.hasNext()){
-          if (XMLStreamConstants.START_ELEMENT==event && "dependencies".equals(reader.getLocalName())){
+          if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.DEPENDENCIES.equals(reader.getLocalName())){
               artifacts.addAll(loadDependencies(reader));
               break;
           }
-          if (XMLStreamConstants.END_ELEMENT==event && "dependencies".equals(reader.getLocalName())){
+          if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.DEPENDENCIES.equals(reader.getLocalName())){
               return artifacts;
           }
           event = reader.next();
@@ -78,10 +89,10 @@ public final class LoadPomDeps {
         ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
         while(reader.hasNext()){
             int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT==event && "dependency".equals(reader.getLocalName())){
+            if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.DEPENDENCY.equals(reader.getLocalName())){
                 artifacts.add(loadDependency(reader));
             }
-            if (XMLStreamConstants.END_ELEMENT==event && "dependencies".equals(reader.getLocalName())){
+            if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.DEPENDENCIES.equals(reader.getLocalName())){
                 return artifacts;
             }
         }
@@ -100,37 +111,37 @@ public final class LoadPomDeps {
             int event = reader.next();
             if (XMLStreamConstants.START_ELEMENT==event){
                 switch (reader.getLocalName()) {
-                    case "groupId":
+                    case LoadPomDeps.GROUP_ID:
                         artfact.setGroup(getContent(reader));
                         break;
-                    case "artifactId":
+                    case LoadPomDeps.ARTIFACT_ID:
                         artfact.setArtifact(getContent(reader));
                         break;
-                    case "version":
+                    case LoadPomDeps.VERSION:
                         artfact.setVersion(getContent(reader));
                         break;
-                    case "scope":
+                    case LoadPomDeps.SCOPE:
                         String scop;
                         scop=getContent(reader);
-                        if (scop== null || "".equals(scop.trim())){
-                            scop="compile";
+                        if (scop== null || scop.trim().length()==0){
+                            scop=LoadPomDeps.COMPILE;
                         }
                         artfact.setScope(scop);
                         break;
                 }
             }
-            if (XMLStreamConstants.END_ELEMENT==event && "dependency".equals(reader.getLocalName())){
+            if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.DEPENDENCY.equals(reader.getLocalName())){
                 String scop = null;
-                if (artfact.getScope()== null || "".equals(artfact.getScope().trim())){
-                    scop="compile";
+                if (artfact.getScope()== null || artfact.getScope().trim().length()==0){
+                    scop=LoadPomDeps.COMPILE;
                 }
                 artfact.setScope(scop);
                 return artfact;
             }
         }
         String scop = null;
-        if (artfact.getScope()== null || "".equals(artfact.getScope().trim())){
-            scop="compile";
+        if (artfact.getScope()== null || artfact.getScope().trim().length()==0){
+            scop=LoadPomDeps.COMPILE;
         }
         artfact.setScope(scop);
         return artfact;     
@@ -146,18 +157,18 @@ public final class LoadPomDeps {
             int event = reader.next();
             if (XMLStreamConstants.START_ELEMENT==event){
                 switch (reader.getLocalName()) {
-                    case "groupId":
+                    case LoadPomDeps.GROUP_ID:
                         artfact.setGroup(getContent(reader));
                         break;
-                    case "artifactId":
+                    case LoadPomDeps.ARTIFACT_ID:
                         artfact.setArtifact(getContent(reader));
                         break;
-                    case "version":
+                    case LoadPomDeps.VERSION:
                         artfact.setVersion(getContent(reader));
                         break;
                 }
             }
-            if (XMLStreamConstants.END_ELEMENT==event && "parent".equals(reader.getLocalName())){
+            if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.PARENT.equals(reader.getLocalName())){
                 return artfact;
             }
         }
@@ -187,7 +198,7 @@ public final class LoadPomDeps {
         while(reader.hasNext()){
             try{
                 int event = reader.next();
-                if (XMLStreamConstants.START_ELEMENT==event && "parent".equals(reader.getLocalName())){
+                if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.PARENT.equals(reader.getLocalName())){
                     return loadParent(reader);
 
                 }
@@ -205,11 +216,11 @@ public final class LoadPomDeps {
         XMLStreamReader reader =  factory.createXMLStreamReader(new FileInputStream(conf));
         while(reader.hasNext()){
           int event = reader.next();
-          if (XMLStreamConstants.START_ELEMENT==event && "properties".equals(reader.getLocalName())){
+          if (XMLStreamConstants.START_ELEMENT==event && LoadPomDeps.PROPERTIES.equals(reader.getLocalName())){
               prop.putAll(loadProperties(reader));
               break;
           }
-          if (XMLStreamConstants.END_ELEMENT==event && "properties".equals(reader.getLocalName())){
+          if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.PROPERTIES.equals(reader.getLocalName())){
               return prop;
           }
         }
@@ -224,7 +235,7 @@ public final class LoadPomDeps {
                 prop.put(reader.getLocalName(), getContent(reader));
             }
             
-            if (XMLStreamConstants.END_ELEMENT==event && "properties".equals(reader.getLocalName())){
+            if (XMLStreamConstants.END_ELEMENT==event && LoadPomDeps.PROPERTIES.equals(reader.getLocalName())){
                 return prop;
             }
         }

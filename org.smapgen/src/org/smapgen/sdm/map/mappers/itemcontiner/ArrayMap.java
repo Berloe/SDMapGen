@@ -71,11 +71,11 @@ public class ArrayMap implements IMapper {
      * @param b
      */
     private void post(final MappingField targetField, final String targetName, StringBuffer b) {
-        b.append("}");
-        b.append(targetName).append(" = list").append(targetName).append(".toArray(new ")
-                .append(targetField.getFieldType().getCanonicalName()).append("[0]);");
-        b.append(Common.valueAssign(targetName, targetField));
-        b.append("}").append(System.getProperty("line.separator"));
+        b.append("}")
+        .append(targetName).append(" = list").append(targetName).append(".toArray(new ")
+        .append(targetField.getFieldType().getCanonicalName()).append("[0]);")
+        .append(Common.valueAssign(targetName, targetField))
+        .append("}").append(System.getProperty("line.separator"));
     }
 
     /**
@@ -92,11 +92,11 @@ public class ArrayMap implements IMapper {
         if(!Dconf.getInstance().containsNotNullAnot(targetField.getAnotations())){
             b.append(Common.nullValidation(sourceName)).append(" && ");
         }
-        b.append(sourceName).append(".length>0 ){");
-        b.append("java.util.List<").append(targetField.getFieldType().getCanonicalName()).append("> list")
+        b.append(sourceName).append(".length>0 ){ java.util.List<")
+                .append(targetField.getFieldType().getCanonicalName()).append("> list")
                 .append(targetName).append(" = new java.util.ArrayList<")
-                .append(targetField.getFieldType().getCanonicalName()).append(">();");
-        b.append("for(").append(sourceField.getFieldType().getCanonicalName()).append(" el").append(sourceName)
+                .append(targetField.getFieldType().getCanonicalName()).append(">(); for(")
+                .append(sourceField.getFieldType().getCanonicalName()).append(" el").append(sourceName)
                 .append(" : ").append(sourceName).append("){");
     }
 }

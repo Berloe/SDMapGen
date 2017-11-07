@@ -10,6 +10,6 @@ public interface ISimpleDataObjMapper {
     /**
      * Default sufix configuration
      */
-    public SDataObjMapperConfig config = new SDataObjMapperConfig("_IN","_Out");
+    SDataObjMapperConfig config = new SDataObjMapperConfig("_IN","_Out");
 
 }

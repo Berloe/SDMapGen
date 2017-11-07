@@ -17,10 +17,10 @@ import org.smapgen.sdm.map.mappers.common.IMapper;
  *
  */
 public final class Dconf {
-    private static Dconf dconf = null;
+    private static Dconf dconf;
     private List<IMapper> mapper = new ArrayList<IMapper>();
     private List<IMapper> mapperAbs = new ArrayList<IMapper>();
-    private IRepoProvider repoImpl = null;
+    private IRepoProvider repoImpl;
     private List<String> ignoreNullAnotation = new ArrayList<String>();
     
     private Dconf() {
