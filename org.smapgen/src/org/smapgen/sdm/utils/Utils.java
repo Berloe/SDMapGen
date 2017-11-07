@@ -20,8 +20,8 @@ import org.smapgen.sdm.metadata.MappingField;
  *
  */
 public final class Utils {
-    private static final char SLASH_CHAR = (char) Byte.valueOf("/").byteValue();
-    private static final char DOT_CHAR = (char) Byte.valueOf(".").byteValue();
+    private static final char SLASH_CHAR = "/".charAt(0);
+    private static final char DOT_CHAR = ".".charAt(0);
     /**
      * 
      */

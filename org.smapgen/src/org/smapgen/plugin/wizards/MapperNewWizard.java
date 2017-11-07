@@ -1,7 +1,9 @@
 package org.smapgen.plugin.wizards;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -17,12 +19,16 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.smapgen.config.preferences.PreferenceConstants;
+import org.smapgen.plugin.Activator;
 import org.smapgen.plugin.etc.MapperWizardHelper;
+import org.smapgen.scl.SimpleClassLoader;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -198,7 +204,28 @@ public class MapperNewWizard extends Wizard implements INewWizard {
             }
         suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString()
                 + p.getOutputLocation().toOSString().substring(p.getOutputLocation().toOSString().indexOf('\\', 1)));
+        loadDependencies();
         suport.getSimpleCl().initDeps();
+    }
+
+    /**
+     * 
+     */
+    private void loadDependencies() {
+        final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
+        final String value = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
+        final SimpleClassLoader reposcl = new SimpleClassLoader(value);
+        // Init classes into classloader
+        try {
+            Map<String, File> dependencies = suport.getResolvedDependendencyTree(suport.getRepoConfig(suport.getProject()), value);
+            for (File f : dependencies.values()) {
+                reposcl.loadlib(f.getPath());
+            }
+            reposcl.initDeps();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        suport.getSimpleCl().setRepoClassLoader(reposcl);
     }
     
 }

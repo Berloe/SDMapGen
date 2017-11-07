@@ -20,7 +20,7 @@ import org.smapgen.scl.repo.IRepoProvider;
 public class MvnRepoProvider implements IRepoProvider {
     private Path repo;
 
-    private IArtifactsBlock artifactBlock = null;
+    private IArtifactsBlock artifactBlock;
     
     /**
      * @param repo
@@ -70,9 +70,6 @@ public class MvnRepoProvider implements IRepoProvider {
             }
             deps = LoadPomDeps.loadDepsXmlFile(conf);
             for (Artifact artifact : deps) {
-                if(artifact.getArtifact().equals("jaxb2-basics-runtime")){
-                    artifact.getArtifact();
-                }
                 if(!artifactBlock.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
                     artifactBlock.add(artifact);
                     File parent = getDepPom(repo, artifact);
