@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -25,6 +25,12 @@ import org.smapgen.scl.exception.ClassLoaderException;
  *
  */
 public class SimpleClassLoader extends ClassLoader {
+    private static final String LINE_SEPARATOR = System.getProperty("file.separator");
+    private static final char SHARP_CHAR = (char) new Byte("#").byteValue();
+    private static final char SLASH_CHAR = (char) new Byte("/").byteValue();
+    private static final char DOT_CHAR = (char) new Byte(".").byteValue();
+    private static final char BACKSLASH = (char) new Byte("\\").byteValue();
+    private static final String CLASS_EXTENSION = ".class";
     /**
      * Class cache
      * 
@@ -155,7 +161,7 @@ public class SimpleClassLoader extends ClassLoader {
             final ArrayList<String> deps = new ArrayList<String>();
             deps.add(classname);
             loadDeps(deps);
-            response = loadClass(classname.replace("/", "."));
+            response = loadClass(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
             classCache.put(classname, response);
             if (response != null) {
                 return response;
@@ -165,7 +171,7 @@ public class SimpleClassLoader extends ClassLoader {
                 throw new ClassLoaderException(classname, e);
             }
             try {
-                response = repoClassLoader.loadClassByName(classname.replace("/", "."));
+                response = repoClassLoader.loadClassByName(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
             } catch (final Throwable ex) {
                 throw new ClassLoaderException(classname);
             }
@@ -207,11 +213,11 @@ public class SimpleClassLoader extends ClassLoader {
     private Set<String> formatDepsCanonicalNames(final ArrayList<String> dependencias) {
         final Set<String> eval = new HashSet<String>();
         for (final String key : dependencias) {
-            if (depsPath.containsKey(key.replace(".", "/"))) {
-                eval.add(key.replace(".", "/"));
+            if (depsPath.containsKey(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR))) {
+                eval.add(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR));
             }
-            if (depsPath.containsKey(key.replace("/", "."))) {
-                eval.add(key.replace("/", "."));
+            if (depsPath.containsKey(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR))) {
+                eval.add(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
             }
         }
         return eval;
@@ -223,7 +229,7 @@ public class SimpleClassLoader extends ClassLoader {
      */
     private boolean ldepsFromDepsPath(final String key) throws NoClassDefFoundError {
         try {
-            final String name = key.replace("/", ".");
+            final String name = key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR);
             final URL ur = depsPath.get(key);
             final InputStream imput = ur.openStream();
             final byte[] classData = loadClassData(imput);
@@ -323,7 +329,7 @@ public class SimpleClassLoader extends ClassLoader {
         clasesField.setAccessible(true);
         try {
             @SuppressWarnings("unchecked")
-            final Vector<Class<?>> classesValue = (Vector<Class<?>>) clasesField.get(appClassLoader);
+            final List<Class<?>> classesValue = (List<Class<?>>) clasesField.get(appClassLoader);
             classesValue.addAll(classCache.values());
         } catch (final IllegalArgumentException e) {
             e.printStackTrace();
@@ -356,11 +362,11 @@ public class SimpleClassLoader extends ClassLoader {
      * @return
      */
     private Class<?> findClassFromPkg(final String name) {
-        final String pkgToUri = name.replace(".", "\\");
+        final String pkgToUri = name.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.BACKSLASH);
         Class<?> response = null;
         final Set<String> rootUri = findRootUri(pkgToUri, paths.keySet());
         if (rootUri == null) {
-            final String transName = name.replace("/", ".");
+            final String transName = name.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR);
             if (depsPath.containsKey(transName)) {
                 response = findClassFromLoadDep(name);
                 if (response != null) {
@@ -375,7 +381,7 @@ public class SimpleClassLoader extends ClassLoader {
             for (final String sru : systemRootUri.keySet()) {
                 final Set<String> startUriSet = systemRootUri.get(sru);
                 for (final String startUri : startUriSet) {
-                    final String uriPath = startUri.concat(pkgToUri.concat(".class"));
+                    final String uriPath = startUri.concat(pkgToUri.concat(SimpleClassLoader.CLASS_EXTENSION));
                     try {
                         response = getClass(name, uriPath);
                     } catch (final URISyntaxException e) {
@@ -399,11 +405,11 @@ public class SimpleClassLoader extends ClassLoader {
      * @return Set paths
      */
     private Set<String> findRootUri(String pkgToUri, final Set<String> keys) {
-        final Set<String> response = new HashSet<String>();
-        if (!pkgToUri.contains("\\")) {
+        if (!pkgToUri.contains(String.valueOf(SimpleClassLoader.BACKSLASH))) {
             return null;
         }
-        String newPkgToUri = pkgToUri.substring(0, pkgToUri.lastIndexOf("\\"));
+        String newPkgToUri = pkgToUri.substring(0, pkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH));
+        final Set<String> response = new HashSet<String>();
         for (final String k : keys) {
             if (k.contains(newPkgToUri)) {
                 response.add(newPkgToUri);
@@ -412,10 +418,10 @@ public class SimpleClassLoader extends ClassLoader {
         if (!response.isEmpty()) {
             return response;
         }
-        if(newPkgToUri.lastIndexOf("\\")<0){
+        if(newPkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH)<0){
             return null;
         }
-        final String auxPkgToUri = newPkgToUri.substring(0, newPkgToUri.lastIndexOf("\\"));
+        final String auxPkgToUri = newPkgToUri.substring(0, newPkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH));
         return auxPkgToUri.equals(newPkgToUri) ? null : findRootUri(auxPkgToUri, paths.keySet());
     }
 
@@ -444,7 +450,7 @@ public class SimpleClassLoader extends ClassLoader {
     @SuppressWarnings("deprecation")
     private Class<?> getClass(final String classname, final String path)
             throws URISyntaxException, ClassLoaderException {
-        final String uri = path.substring(0, path.lastIndexOf("\\"));
+        final String uri = path.substring(0, path.lastIndexOf(SimpleClassLoader.BACKSLASH));
         if (!paths.containsKey(uri)) {
             paths.put(uri, uri);
         }
@@ -457,7 +463,7 @@ public class SimpleClassLoader extends ClassLoader {
             return c;
         }
         try {
-            final String name = classname.replace("/", ".");
+            final String name = classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR);
             if (classCache.containsKey(name)) {
                 return getClassCache(name);
             }
@@ -499,17 +505,17 @@ public class SimpleClassLoader extends ClassLoader {
             if (repoClassLoader != null) {
                 String auxlib = repoClassLoader.libpath;
                 // first try package
-                String auxName = name.replace(".", "#").replace("/", "#");
-                String[] fragments = auxName.split("#");
+                String auxName = name.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SHARP_CHAR).replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.SHARP_CHAR);
+                String[] fragments = auxName.split(String.valueOf(SimpleClassLoader.SHARP_CHAR));
                 for (int i = 0; i < fragments.length - 1; i++) {
                     StringBuffer rPath = new StringBuffer();
                     repoClassLoader.libpath = auxlib;
                     for (int j = 0; j < fragments.length - i - 1; j++) {
-                        rPath = rPath.append(System.getProperty("file.separator")).append(fragments[j]);
+                        rPath = rPath.append(SimpleClassLoader.LINE_SEPARATOR).append(fragments[j]);
                     }
                     try {
                         final Class<?> response = repoClassLoader.loadClassByNameAndPackage(name,
-                                repoClassLoader.libpath + rPath + System.getProperty("file.separator"));
+                                repoClassLoader.libpath + rPath + SimpleClassLoader.LINE_SEPARATOR);
                         if (response != null) {
                             repoClassLoader.libpath = auxlib;
                             addClassesToLoader(response);
@@ -612,7 +618,7 @@ public class SimpleClassLoader extends ClassLoader {
             final ArrayList<String> deps = new ArrayList<String>();
             deps.add(classname);
             loadDeps(deps);
-            response = loadClass(classname.replace("/", "."));
+            response = loadClass(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
             if (response != null) {
                 return response;
             }
@@ -621,7 +627,7 @@ public class SimpleClassLoader extends ClassLoader {
                 throw new ClassLoaderException(classname, e);
             }
             try {
-                response = repoClassLoader.loadClassByNameAndPackage(classname.replace("/", "."), pakageRelativePath);
+                response = repoClassLoader.loadClassByNameAndPackage(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR), pakageRelativePath);
             } catch (final Throwable ex) {
                 throw new ClassLoaderException(classname);
             }
@@ -677,9 +683,9 @@ public class SimpleClassLoader extends ClassLoader {
      */
     @SuppressWarnings("resource")
     private void loadJar(final String pathToJar) throws IOException {
-        if (pathToJar.endsWith(".class")) {
+        if (pathToJar.endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
             String className = pathToJar.substring(libpath.length() + 1, pathToJar.length() - 6)
-                    .replace(System.getProperty("file.separator"), ".");
+                    .replace(SimpleClassLoader.LINE_SEPARATOR, String.valueOf(SimpleClassLoader.DOT_CHAR));
             final URL ur = new File(pathToJar).toURI().toURL();
             if (!depsPath.containsKey(className)) {
                 depsPath.put(className, ur);
@@ -691,12 +697,12 @@ public class SimpleClassLoader extends ClassLoader {
 
                 while (e.hasMoreElements()) {
                     final JarEntry je = e.nextElement();
-                    if (je.isDirectory() || !je.getName().endsWith(".class")) {
+                    if (je.isDirectory() || !je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
                         continue;
                     }
                     final String className = je.getName().substring(0, je.getName().length() - 6);
                     // className = className.replace("/", ".");
-                    final URL ur = new URL("jar:file:" + pathToJar + "!/" + className + ".class");
+                    final URL ur = new URL("jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
                     if (!depsPath.containsKey(className)) {
                         // if(className.lastIndexOf("$")>0)
                         // depsPath.put(className.substring(0, className.lastIndexOf("$")), ur);

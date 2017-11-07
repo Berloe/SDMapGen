@@ -20,7 +20,8 @@ import org.smapgen.sdm.metadata.MappingField;
  *
  */
 public final class Utils {
-
+    private static final char SLASH_CHAR = (char) new Byte("/").byteValue();
+    private static final char DOT_CHAR = (char) new Byte(".").byteValue();
     /**
      * 
      */
@@ -35,7 +36,6 @@ public final class Utils {
      * @throws Throwable
      */
     public static Class<?>[] getConcreteClasses(Class<?> clazz) throws Throwable {
-        Map<String, Class<?>> retrnClasses = new HashMap<String, Class<?>>();
         SimpleClassLoader scl = (SimpleClassLoader) clazz.getClassLoader();
         if (scl == null) {
             return new Class<?>[] { clazz };
@@ -54,7 +54,7 @@ public final class Utils {
                 scl.loadClassByName(dep);
             }
         }
-        return shearchImplClasses(clazz, retrnClasses, scl);
+        return shearchImplClasses(clazz, scl);
     }
 
 
@@ -73,8 +73,9 @@ public final class Utils {
      * @return
      * @throws Throwable
      */
-    private static Class<?>[] shearchImplClasses(Class<?> clazz, Map<String, Class<?>> retrnClasses, SimpleClassLoader scl)
+    private static Class<?>[] shearchImplClasses(Class<?> clazz, SimpleClassLoader scl)
             throws Throwable {
+        Map<String, Class<?>> retrnClasses = new HashMap<String, Class<?>>();
         Class<?>[] auxClasses = scl.getClassCacheValues();
         for (int i = 0; i < auxClasses.length; ++i) {
             if (!isAbstract(auxClasses[i]) && clazz.isAssignableFrom(auxClasses[i])) {
@@ -93,12 +94,12 @@ public final class Utils {
             String[] classesNames = scl.getLoadedClassNames();
             for (int i = 0; i < classesNames.length; ++i) {
                 String cl = classesNames[i];
-                String name = cl.replace("/", ".");
+                String name = cl.replace(Utils.SLASH_CHAR, Utils.DOT_CHAR);
                 if (name.lastIndexOf(".") > 0 && clazz.getCanonicalName().lastIndexOf(".") > 0
-                        && name.substring(0, name.lastIndexOf(".")).equals(
-                                clazz.getCanonicalName().substring(0, clazz.getCanonicalName().lastIndexOf(".")))) {
+                        && name.substring(0, name.lastIndexOf(Utils.DOT_CHAR)).equals(
+                                clazz.getCanonicalName().substring(0, clazz.getCanonicalName().lastIndexOf(Utils.DOT_CHAR)))) {
                     try {
-                        Class<?> sclass = scl.loadClass(cl.replace("/", "."));
+                        Class<?> sclass = scl.loadClass(cl.replace(Utils.SLASH_CHAR, Utils.DOT_CHAR));
                         if (!isAbstract(sclass) && clazz.isAssignableFrom(sclass)) {
                             retrnClasses.put(sclass.getCanonicalName(), sclass);
                         } else if (isAbstract(sclass) && clazz.isAssignableFrom(sclass) && !clazz.equals(sclass)) {
