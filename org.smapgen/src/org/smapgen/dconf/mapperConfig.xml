@@ -3,15 +3,15 @@
 	<repoLoader>org.smapgen.scl.repo.maven.MvnRepoProvider</repoLoader>
 	<mapper>org.smapgen.sdm.map.mappers.BasicMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ObjectMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemContiner.ArrayMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemContiner.IterableMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemContiner.ArrayToIterableMap</mapper>
-	<mapper>org.smapgen.sdm.map.mappers.itemContiner.IterableToArrayMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.ArrayMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.IterableMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.ArrayToIterableMap</mapper>
+	<mapper>org.smapgen.sdm.map.mappers.itemcontiner.IterableToArrayMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.DateMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.CalendarMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ToStringMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ToBooleanMap</mapper>
 	<mapperAbs>org.smapgen.sdm.map.mappers.instantiable.ExtendedMap</mapperAbs>
-    <mapperAbs>org.smapgen.sdm.map.mappers.itemContiner.abstractItem.AbstractItemMap</mapperAbs>
+    <mapperAbs>org.smapgen.sdm.map.mappers.itemcontiner.abstractItem.AbstractItemMap</mapperAbs>
 	<notNullAnot>javax.validation.constraints.NotNull</notNullAnot>
 </config>
