@@ -12,6 +12,7 @@ import java.util.Map.Entry;
  */
 public class ArtifactsBlock implements IArtifactsBlock {
 
+    private static final char $ = "$".charAt(0);
     /**
      * Pom properties
      */
@@ -60,10 +61,10 @@ public class ArtifactsBlock implements IArtifactsBlock {
      */
     private void completeArtifact(Artifact a) {
         if (a.getScope() == null) {
-            a.setScope("compile");
+            a.setScope(Constants.COMPILE);
         }
         if (null == a.getVersion()) {
-            String ver = properties.get(a.getArtifact() + ".version");
+            String ver = properties.get(a.getArtifact() + "." + Constants.VERSION);
             if (null != ver) {
                 a.setVersion(ver);
             }
@@ -96,14 +97,14 @@ public class ArtifactsBlock implements IArtifactsBlock {
         completeArtifact(a);
         if (artiFactList.containsKey(ga)) {
             artifact = artiFactList.get(ga);
-            if ((a.getScope().equals("compile") || a.getScope().equals("import"))
-                    && !artifact.getScope().equals("compile")) {
+            if ((Constants.COMPILE.equals(a.getScope()) || Constants.IMPORT.equals(a.getScope()))
+                    && !Constants.COMPILE.equals(artifact.getScope())) {
                 artifact.setScope(a.getScope());
             }
             if (artifact.getVersion() == null && a.getVersion() != null) {
                 artifact.setVersion(a.getVersion());
             } else if (artifact.getVersion() != null && a.getVersion() != null
-                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && (!a.getVersion().startsWith("$")))
+                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && !(a.getVersion().charAt(0) == ArtifactsBlock.$))
                 artifact.setVersion(a.getVersion());
 
         }

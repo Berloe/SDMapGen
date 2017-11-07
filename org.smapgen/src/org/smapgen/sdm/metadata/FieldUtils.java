@@ -23,7 +23,7 @@ import java.util.SortedSet;
  */
 public final class FieldUtils {
 
-    private static final char PREFIX_CHOR = (char) Byte.valueOf("[").byteValue();
+    private static final char PREFIX_CHOR = "[".charAt(0);
 
     /**
      * 

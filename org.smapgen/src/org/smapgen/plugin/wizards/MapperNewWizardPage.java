@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Text;
 import org.smapgen.config.preferences.PreferenceConstants;
 import org.smapgen.plugin.Activator;
 import org.smapgen.plugin.etc.MapperWizardHelper;
-import org.smapgen.scl.SimpleClassLoader;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -89,21 +88,7 @@ public class MapperNewWizardPage extends WizardPage {
         this.selection = selection;
         support = suport;
         getPackageRoots();
-        final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
-        final String value = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
-        final SimpleClassLoader reposcl = new SimpleClassLoader(value);
-        // Init classes into classloader
-        try {
-            Map<String, File> dependencies = support
-                    .getResolvedDependendencyTree(support.getRepoConfig(support.getProject()), value);
-            for (File f : dependencies.values()) {
-                reposcl.loadlib(f.getPath());
-            }
-            support.getSimpleCl().initDeps();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        support.getSimpleCl().setRepoClassLoader(reposcl);
+        
         this.javaClass = javacls;
     }
 

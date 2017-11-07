@@ -70,9 +70,7 @@ public class ArrayToIterableMap implements IMapper {
      * @param targetField 
      */
     private void post(final StringBuffer b, String newtargetName, MappingField targetField) {
-        b.append("}");
-        b.append(Common.valueAssign(newtargetName, targetField));
-        b.append("}");
+        b.append("}").append(Common.valueAssign(newtargetName, targetField)).append("}");
     }
 
     /**
@@ -81,8 +79,8 @@ public class ArrayToIterableMap implements IMapper {
      * @param b
      */
     private void pre(final MappingField sourceField, final String sourceName, final StringBuffer b) {
-        b.append("if(").append(sourceName).append(".length>0 ){");
-        b.append("for(").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el")
-                .append(sourceName).append(" : ").append(sourceName).append("){");
+        b.append("if(").append(sourceName).append(".length>0 ){for(")
+            .append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el")
+            .append(sourceName).append(" : ").append(sourceName).append("){");
     }
 }

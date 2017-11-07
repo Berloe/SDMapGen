@@ -26,10 +26,10 @@ import org.smapgen.scl.exception.ClassLoaderException;
  */
 public class SimpleClassLoader extends ClassLoader {
     private static final String LINE_SEPARATOR = System.getProperty("file.separator");
-    private static final char SHARP_CHAR = (char) Byte.valueOf("#").byteValue();
-    private static final char SLASH_CHAR = (char) Byte.valueOf("/").byteValue();
-    private static final char DOT_CHAR = (char) Byte.valueOf(".").byteValue();
-    private static final char BACKSLASH = (char) Byte.valueOf("\\").byteValue();
+    private static final char SHARP_CHAR = "#".charAt(0);
+    private static final char SLASH_CHAR = "/".charAt(0);
+    private static final char DOT_CHAR = ".".charAt(0);
+    private static final char BACKSLASH = "\\".charAt(0);
     private static final String CLASS_EXTENSION = ".class";
     /**
      * Class cache
@@ -200,10 +200,10 @@ public class SimpleClassLoader extends ClassLoader {
         final Set<String> eval = formatDepsCanonicalNames(dependencias);
         for (final String key : eval) {
             if (depsPath.containsKey(key) && ldepsFromDepsPath(key)) {
-                return true;
+                continue;
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -596,7 +596,11 @@ public class SimpleClassLoader extends ClassLoader {
         final Set<String> eval = formatDepsCanonicalNames(dependencias);
         for (final String key : eval) {
             if (depsPath.containsKey(key)&& !classCache.containsKey(key)) {
-                ldepsFromDepsPath(key);
+                try {
+                    ldepsFromDepsPath(key);
+                } catch (Exception e) {
+                    continue;
+                }
             }
         }
 
@@ -704,8 +708,6 @@ public class SimpleClassLoader extends ClassLoader {
                     // className = className.replace("/", ".");
                     final URL ur = new URL("jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
                     if (!depsPath.containsKey(className)) {
-                        // if(className.lastIndexOf("$")>0)
-                        // depsPath.put(className.substring(0, className.lastIndexOf("$")), ur);
                         depsPath.put(className, ur);
                     }
                 }

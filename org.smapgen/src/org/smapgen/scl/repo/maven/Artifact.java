@@ -5,6 +5,7 @@ package org.smapgen.scl.repo.maven;
  *
  */
 public class Artifact {
+private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 private String group;
 private String artifact;
 private String version;
@@ -64,6 +65,6 @@ public String getPomName(){
 }
 
 public String getRelativePath(){
-    return  System.getProperty("file.separator").concat(getGroup().replace(".", System.getProperty("file.separator")).concat(System.getProperty("file.separator").concat(getArtifact())).concat(System.getProperty("file.separator")).concat(getVersion()!=null?getVersion():""));   
+    return  Artifact.FILE_SEPARATOR.concat(getGroup().replace(".", Artifact.FILE_SEPARATOR).concat(Artifact.FILE_SEPARATOR.concat(getArtifact())).concat(Artifact.FILE_SEPARATOR).concat(getVersion()!=null?getVersion():""));   
 }
 }
