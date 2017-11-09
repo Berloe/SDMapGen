@@ -21,7 +21,7 @@ public class ItemContinerMap extends Mapper {
      * @return
      * @throws Throwable
      */
-    public StringBuffer mapItemElement(final MappingField sourceField, final MappingField targetField,
+    public static StringBuffer mapItemElement(final MappingField sourceField, final MappingField targetField,
             final String sourceName, final String targetName) throws Throwable {
         final StringBuffer buffer = new StringBuffer();
         final String newTargetName;

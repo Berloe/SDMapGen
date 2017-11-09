@@ -35,7 +35,7 @@ public abstract class Mapper {
      * @throws ClassNotFoundException
      * @throws Throwable
      */
-    public StringBuffer objectMapping( MappingField targetMappingField,final Class<?> targetClass, final String targetName,
+    public static StringBuffer objectMapping( MappingField targetMappingField,final Class<?> targetClass, final String targetName,
             MappingField sourceMappingField, final Class<?> sourceClass, final Class<?> computeSrc,final String newSourceName)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, Throwable {
@@ -75,7 +75,7 @@ public abstract class Mapper {
      * @throws ClassLoaderException
      * @throws NoSuchMethodException
      */
-    private void mapInnerObject(MappingField targetMappingField, final Class<?> targetClass,
+    private static void mapInnerObject(MappingField targetMappingField, final Class<?> targetClass,
             MappingField sourceMappingField, final Class<?> computeSrc, final String newSourceName, StringBuffer fcode,
             String newtargetName)
             throws Throwable, IllegalArgumentException, InstantiationException, IllegalAccessException,
@@ -98,7 +98,7 @@ public abstract class Mapper {
      * @param funtionSeted
      * @return
      */
-    private boolean checkFunctionDefined(MappingField targetMappingField, final Class<?> targetClass,
+    private static boolean checkFunctionDefined(MappingField targetMappingField, final Class<?> targetClass,
             final String targetName, final Class<?> sourceClass, final String newSourceName, final StringBuffer b) {
         boolean funtionSeted = false;
         if (Registry.containsFuncReturn(targetClass.getCanonicalName())) {
@@ -131,7 +131,7 @@ public abstract class Mapper {
      * @return Boolean
      * @throws Throwable
      */
-    private StringBuffer mapperClass( final Class<?> source, final Class<?> target, final String sourceName,
+    private static StringBuffer mapperClass( final Class<?> source, final Class<?> target, final String sourceName,
             final String targetName, MappingField sourceField, MappingField targetField) throws Throwable {
         StringBuffer b = new StringBuffer();
         Class<?>[] classExtends = Utils.getConcreteClasses(source);
@@ -158,7 +158,7 @@ public abstract class Mapper {
      * @param targetExtends
      * @throws Throwable
      */
-    private void mapResolvedClass(final String sourceName, final String targetName,
+    private static void mapResolvedClass(final String sourceName, final String targetName,
             MappingField sourceField, MappingField targetField, StringBuffer b, Class<?> concreteSource,
             Class<?> targetExtends) throws Throwable {
         sourceField.setFieldType(concreteSource);
@@ -173,7 +173,7 @@ public abstract class Mapper {
      * @return
      * @throws Throwable
      */
-    protected Class<?> findExtensionsTarget(String simpleName, Class<?> targetClass) throws Throwable {
+    protected static Class<?> findExtensionsTarget(String simpleName, Class<?> targetClass) throws Throwable {
         Class<?>[] concreteClasses = Utils.getConcreteClasses(targetClass);
         if (concreteClasses != null && concreteClasses.length > 0) {
             for (int i = 0; i < concreteClasses.length; ++i) {

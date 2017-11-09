@@ -15,7 +15,7 @@ public class ToStringMap extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if((targetField.getFieldType().equals(String.class))&& (isPrimitive(sourceField) || isAssignablePrimitive(sourceField))){
+        if(String.class.equals(targetField.getFieldType()) && (isPrimitive(sourceField) || isAssignablePrimitive(sourceField))){
             return true;
         }
         return false;
@@ -54,13 +54,13 @@ public class ToStringMap extends Mapper implements IMapper {
     @Override
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
         if(sourceField.getFieldType().equals(byte[].class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer().append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "(new String("+sourceField.getVarName()+"));");
         }else if(isAssignablePrimitive(sourceField) && !isPrimitive(sourceField)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer().append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "("+sourceField.getVarName()+".toString());");
         }else{
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer().append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                 + "(new String().valueOf(" +sourceField.getVarName()+"));");
         }
     }

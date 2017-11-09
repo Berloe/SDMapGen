@@ -54,7 +54,7 @@ public final class FieldUtils {
             String getterName = isPrefix ? method.getName().substring(2)            
                     : getPrefix? method.getName().substring(3) : null;
                     
-            if (getPrefix || (isPrefix && !Modifier.isPrivate(method.getModifiers()))) {
+            if ((getPrefix || isPrefix) && !Modifier.isPrivate(method.getModifiers())) {
                 final MappingField mapfield = getterMetadata(loadClass, name, method, getterName);
                 if(null != mapfield){
                     mapFieldColecction.add(mapfield);
@@ -241,31 +241,7 @@ public final class FieldUtils {
                     if (method.getParameterTypes().length == 1) {
                         Field field = getterField(loadClass, method, getterName);
                         if (field != null) {
-                            final MappingField mapfield = new MappingField();
-                            mapfield.setSetterMethod(method);
-                            mapfield.setSetterGenericType(getGenericType(method.getParameterTypes()[0]));
-                            mapfield.setField(field);
-                            mapfield.setName(field.getName());
-                            try {
-                                mapfield.setCalculatedFieldType(getfieldType(field, mapfield.getSetterGenericType()));
-                            } catch (final Exception e) {
-                                mapfield.setCalculatedFieldType(field.getDeclaringClass());
-                            }
-                            switch (mapfield.getSetterGenericType()) {
-                                case COLLECTION:
-                                    mapfield.setFieldType(mapfield.getCalculatedFieldType());
-                                    break;
-                                case ARRAY:
-                                    mapfield.setFieldType(field.getType().getComponentType());
-                                    break;
-                                default:
-                                    mapfield.setFieldType(field.getType());
-                                    break;
-                            }
-                            mapfield.setVarName(name);
-                            response.put(field.getName(), mapfield);
-                            mapfield.setMapped(Boolean.FALSE);
-                            mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
+                            response.put(field.getName(), newSetMapField(name,  method, field));
                         }
                     }
                 } catch (final Exception e) {
@@ -280,6 +256,41 @@ public final class FieldUtils {
             response.putAll(hashSetMappinField);
         }
         return response;
+    }
+
+    /**
+     * @param name
+     * @param method
+     * @param field
+     * @return 
+     */
+    private static MappingField newSetMapField(final String name, Method method,
+            Field field) {
+        final MappingField mapfield = new MappingField();
+        mapfield.setSetterMethod(method);
+        mapfield.setSetterGenericType(getGenericType(method.getParameterTypes()[0]));
+        mapfield.setField(field);
+        mapfield.setName(field.getName());
+        try {
+            mapfield.setCalculatedFieldType(getfieldType(field, mapfield.getSetterGenericType()));
+        } catch (final Exception e) {
+            mapfield.setCalculatedFieldType(field.getDeclaringClass());
+        }
+        switch (mapfield.getSetterGenericType()) {
+            case COLLECTION:
+                mapfield.setFieldType(mapfield.getCalculatedFieldType());
+                break;
+            case ARRAY:
+                mapfield.setFieldType(field.getType().getComponentType());
+                break;
+            default:
+                mapfield.setFieldType(field.getType());
+                break;
+        }
+        mapfield.setVarName(name);
+        mapfield.setMapped(Boolean.FALSE);
+        mapfield.setAnotations(getAnotationsTypes(field.getAnnotations()));
+        return mapfield;
     }
 
     private static ArrayList<String> getAnotationsTypes(Annotation[] annotations) {

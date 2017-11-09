@@ -58,7 +58,7 @@ public class ArrayToIterableMap implements IMapper {
         final StringBuffer b = new StringBuffer();
         // If source is an array, classTarget must be an array too
         pre(sourceField, sourceName, b);
-        b.append((new ItemContinerMap()).mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, 
+        b.append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, 
                 targetName));
         post(b, targetName, targetField);
         return b;

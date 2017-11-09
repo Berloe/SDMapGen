@@ -21,9 +21,9 @@ public class ObjectMap extends Mapper implements IMapper {
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
         return (MappingType.OBJECT.equals(sourceField.getGetterGenericType())
-                && MappingType.OBJECT.equals(targetField.getSetterGenericType())
+                && MappingType.OBJECT.equals(targetField.getSetterGenericType()))
                 || (Utils.isAbstract(sourceField.getFieldType())
-                        && MappingType.OBJECT.equals(sourceField.getGetterGenericType())));
+                        && MappingType.OBJECT.equals(sourceField.getGetterGenericType()));
     }
 
     /*

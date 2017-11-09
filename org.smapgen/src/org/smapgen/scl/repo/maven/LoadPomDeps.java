@@ -138,7 +138,7 @@ public final class LoadPomDeps {
             }
            
         }
-        if (artfact.getScope() == null || artfact.getScope().trim().isEmpty()) {
+        if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
             String scop = Constants.COMPILE;
             artfact.setScope(scop);
         }

@@ -39,7 +39,6 @@ public final class ObjectFactory {
     public static Object loader(final Class<?> classTarget)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
-        Object $ = null;
         Constructor<?> defConstructor = getConstructor(classTarget);
         // Verificamos si estamos ante un array
 
@@ -48,7 +47,7 @@ public final class ObjectFactory {
         }
 
         if (defConstructor != null) {
-            $ = defConstructor.newInstance(new Object[0]);
+            Object $ = defConstructor.newInstance(new Object[0]);
             try {
                 $.getClass().getMethods();
                 return $;

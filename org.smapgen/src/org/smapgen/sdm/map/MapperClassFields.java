@@ -15,7 +15,7 @@ import org.smapgen.sdm.metadata.MappingField;
  */
 public class MapperClassFields {
     
-    public StringBuffer mapperFields( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
+    public static StringBuffer mapperFields( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
             final String sourceName, final String targetName) throws ClassNotFoundException, IllegalArgumentException,
             InstantiationException, IllegalAccessException, InvocationTargetException, Throwable, ClassLoaderException {
         
@@ -23,7 +23,7 @@ public class MapperClassFields {
         for (final MappingField sourceField : mapSource) {
             if (maptarget.containsKey(sourceField.getName())) {
                 final MappingField targetField = maptarget.get(sourceField.getName());
-                b .append((new DoMap()).mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
+                b .append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
                 targetField.setMapped(Boolean.TRUE);
             }
             sourceField.setMapped(Boolean.TRUE);

@@ -36,9 +36,9 @@ public class MapperClassElement{
         MappingField[] mapSource = Utils.getSourceMappinField(source, sourceName);
         HashMap<String, MappingField> maptarget = Utils.getTargetMappingField(target, targetName);
         StringBuffer b = new StringBuffer();
-        b = (new MapperClassFields()).mapperFields( mapSource, maptarget, sourceName, targetName);
+        b = MapperClassFields.mapperFields( mapSource, maptarget, sourceName, targetName);
 
-        b.append((new MapperClassFieldsCompatible()).mapperFieldsCompatible( mapSource, maptarget,sourceName, targetName));
+        b.append(MapperClassFieldsCompatible.mapperFieldsCompatible( mapSource, maptarget,sourceName, targetName));
 
         Common.setNotMappedNull(b, targetName, maptarget);
 

@@ -58,8 +58,7 @@ public class ArrayMap implements IMapper {
 
         // If source is an array, classTarget must be an array too
         pre(sourceField, targetField, sourceName, targetName, b);
-        b.append((new ItemContinerMap()).mapItemElement(sourceField, targetField,
-                ConstantValues.ClassMapper_elementPrefix + sourceName, targetName));
+        b.append(ItemContinerMap.mapItemElement(sourceField, targetField,ConstantValues.ClassMapper_elementPrefix + sourceName, targetName));
         post(targetField, targetName, b);
 
         return b;
@@ -71,11 +70,11 @@ public class ArrayMap implements IMapper {
      * @param b
      */
     private void post(final MappingField targetField, final String targetName, StringBuffer b) {
-        b.append("}")
+        b.append('}')
         .append(targetName).append(" = list").append(targetName).append(".toArray(new ")
         .append(targetField.getFieldType().getCanonicalName()).append("[0]);")
         .append(Common.valueAssign(targetName, targetField))
-        .append("}").append(System.getProperty("line.separator"));
+        .append('}').append(System.getProperty("line.separator"));
     }
 
     /**

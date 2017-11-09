@@ -112,7 +112,7 @@ class MapperSelectionListener implements SelectionListener{
                 getSourcesFromFields(javaClass, localSourcesFromFields, localTargetFromFields);
                 
                 int totalSize = localSourcesClasses.keySet().size()+localTargetClasses.keySet().size();
-                float factor=Double.valueOf(100f/totalSize).floatValue();
+                float factor= 100f/totalSize;
 
                 int count = 0;
                 progressBar.setSelection(1);
@@ -121,7 +121,7 @@ class MapperSelectionListener implements SelectionListener{
                             .equals(localTargetFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesClasses.get(nameSource),
                                 localTargetFromFields.get(nameSource), input, output, javaClass,Boolean.TRUE);
-                        progressBar.setSelection(Double.valueOf(++count*factor).intValue());
+                        progressBar.setSelection((int) (++count*factor));
                    }
                 }
                 progressBar.setSelection(50);
@@ -130,7 +130,7 @@ class MapperSelectionListener implements SelectionListener{
                             .equals(localSourcesFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesFromFields.get(nameSource),
                                 localTargetClasses.get(nameSource), input, output, javaClass,Boolean.TRUE);
-                        progressBar.setSelection(Double.valueOf(++count*factor).intValue());
+                        progressBar.setSelection((int) (++count*factor));
                     }
                 }
             } else {

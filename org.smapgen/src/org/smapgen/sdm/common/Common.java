@@ -14,6 +14,14 @@ import org.smapgen.sdm.utils.Utils;
  */
 public final class Common implements ISimpleDataObjMapper {
 
+    private static final char LESS_THAN = '<';
+    private static final char GREATER_THAN = '>';
+    private static final char DOT = '.';
+    private static final char PARENTHESIS_L = '(';
+    private static final char KEY_R = '}';
+    private static final char SPACE = ' ';
+    private static final char SEMICOLON = ';';
+    private static final char PARENTHESIS_R = ')';
     private static final String INSTANCEOF = " instanceof ";
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private static final String STR_Equals = " = ";
@@ -96,8 +104,8 @@ public final class Common implements ISimpleDataObjMapper {
             final MappingField targetMappingField) {
         String name = "list" + genName(targetField, Boolean.FALSE);
         final String concreteType = Utils.getConcreteType(targetMappingField);
-        b.append(concreteType).append("<").append(targetMappingField.getFieldType().getCanonicalName()).append("> ").append(name).append(" =  new ").append(concreteType)
-                .append("<").append(targetMappingField.getFieldType().getCanonicalName()).append(">();");
+        b.append(concreteType).append(Common.LESS_THAN).append(targetMappingField.getFieldType().getCanonicalName()).append(Common.GREATER_THAN).append(name).append(" =  new ").append(concreteType)
+                .append(Common.LESS_THAN).append(targetMappingField.getFieldType().getCanonicalName()).append(">();");
         return name;
     }
 
@@ -117,10 +125,10 @@ public final class Common implements ISimpleDataObjMapper {
         if(MappingType.ARRAY.equals(sourceField.getGetterGenericType())){
             b.append("[]");
         }else if(MappingType.COLLECTION.equals(sourceField.getGetterGenericType())){
-            b.append("<").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(">");
+            b.append(Common.LESS_THAN).append(sourceField.getCalculatedFieldType().getCanonicalName()).append(Common.GREATER_THAN);
         }
-        b.append(" ");
-        b.append(ret).append(Common.STR_Equals).append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
+        b.append(Common.SPACE);
+        b.append(ret).append(Common.STR_Equals).append(sourceField.getVarName()).append(Common.DOT).append(sourceField.getGetterMethod().getName()).append("();");
         return ret;
     }
 
@@ -140,10 +148,10 @@ public final class Common implements ISimpleDataObjMapper {
         if(MappingType.ARRAY.equals(sourceField.getGetterGenericType())){
             b.append("[]");
         }else if(MappingType.COLLECTION.equals(sourceField.getGetterGenericType())){
-            b.append("<").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(">");
+            b.append(Common.LESS_THAN).append(sourceField.getCalculatedFieldType().getCanonicalName()).append(Common.GREATER_THAN);
         }
-        b.append(" ");
-        b.append(name).append(Common.STR_Equals).append(sourceField.getVarName()).append(".").append(sourceField.getGetterMethod().getName()).append("();");
+        b.append(Common.SPACE);
+        b.append(name).append(Common.STR_Equals).append(sourceField.getVarName()).append(Common.DOT).append(sourceField.getGetterMethod().getName()).append("();");
     }
 
     /**
@@ -155,8 +163,8 @@ public final class Common implements ISimpleDataObjMapper {
      * @return StringBuffer
      */
     public static StringBuffer valueAssign(final String sourceField, final MappingField targetField) {
-        return (new StringBuffer()).append(
-                targetField.getVarName() + "." + targetField.getSetterMethod().getName() + "(" + sourceField + ");");
+        return new StringBuffer().append(
+                targetField.getVarName() + Common.DOT + targetField.getSetterMethod().getName() + Common.PARENTHESIS_L + sourceField + ");");
     }
 
     /**
@@ -168,8 +176,8 @@ public final class Common implements ISimpleDataObjMapper {
      * @return StringBuffer
      */
     public static StringBuffer valueAssign(final MappingField sourceField, final MappingField targetField) {
-        return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                + "(" + sourceField.getVarName() + "." + sourceField.getGetterMethod().getName() + "());");
+        return new StringBuffer().append(targetField.getVarName() + Common.DOT + targetField.getSetterMethod().getName()
+                + Common.PARENTHESIS_L + sourceField.getVarName() + Common.DOT + sourceField.getGetterMethod().getName() + "());");
     }
 
     /**
@@ -186,8 +194,8 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static StringBuffer valueAssignFunction(final MappingField targetField, final String newSourceName,
             final String fName) {
-        return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
-                + "(" + fName + "(" + newSourceName + "));");
+        return new StringBuffer().append(targetField.getVarName()).append(Common.DOT).append(targetField.getSetterMethod().getName())
+                .append(Common.PARENTHESIS_L).append(fName).append(Common.PARENTHESIS_L).append(newSourceName).append("));");
     }
 
     /**
@@ -198,7 +206,7 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static StringBuffer valueAssignFunction(final String newtargetName, final String newSourceName,
             final String fName) {
-        return (new StringBuffer()).append(newtargetName + Common.STR_Equals + fName + "(" + newSourceName + ");");
+        return new StringBuffer().append(newtargetName).append(Common.STR_Equals).append(fName).append(Common.PARENTHESIS_L).append(newSourceName).append(");");
     }
 
     /**
@@ -207,7 +215,7 @@ public final class Common implements ISimpleDataObjMapper {
      * @return
      */
     public static StringBuffer valueAssignDirect(String newTarget, String newSourceName) {
-        return (new StringBuffer()).append(newTarget + Common.STR_Equals + newSourceName + ";");
+        return new StringBuffer().append(newTarget).append(Common.STR_Equals).append(newSourceName).append(Common.SEMICOLON);
     }
 
     /**
@@ -219,8 +227,8 @@ public final class Common implements ISimpleDataObjMapper {
      * @return StringBuffer
      */
     public static StringBuffer valueAssignTimeInMilllis(final MappingField targetField, final String calendarName) {
-        return (new StringBuffer()).append(
-                targetField.getVarName() + "." + targetField.getSetterMethod().getName() + "(" + calendarName + "());");
+        return new StringBuffer().append(
+                targetField.getVarName()).append(Common.DOT).append(targetField.getSetterMethod().getName()).append(Common.PARENTHESIS_L).append( calendarName).append("());");
     }
 
     /**
@@ -245,7 +253,7 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static String createNewVar(final StringBuffer b, final Class<?> targetClass) {
         final String ret = genName(targetClass, Boolean.FALSE);
-        b.append(targetClass.getCanonicalName()).append(" ").append(ret).append(" =  new ").append(targetClass.getCanonicalName()).append("();");
+        b.append(targetClass.getCanonicalName()).append(Common.SPACE).append(ret).append(" =  new ").append(targetClass.getCanonicalName()).append("();");
         return ret;
     }
 
@@ -259,7 +267,7 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static String createNewVarNull(final StringBuffer b, final Class<?> targetClass) {
         final String ret = genName(targetClass, Boolean.FALSE);
-        b.append(targetClass.getCanonicalName()).append(" ").append(ret).append(" =  null;");
+        b.append(targetClass.getCanonicalName()).append(Common.SPACE).append(ret).append(" =  null;");
         return ret;
     }
 
@@ -272,7 +280,7 @@ public final class Common implements ISimpleDataObjMapper {
      * @return StringBuffer
      */
     public static StringBuffer valueAssignNull(final String targetName, final MappingField targetField) {
-        return (new StringBuffer()).append(targetName + "." + targetField.getSetterMethod().getName() + "(null);");
+        return new StringBuffer().append(targetName ).append( Common.DOT ).append( targetField.getSetterMethod().getName() ).append( "(null);");
     }
 
     /**
@@ -280,7 +288,7 @@ public final class Common implements ISimpleDataObjMapper {
      * @return
      */
     public static StringBuffer nullValidation(final String name) {
-        return (new StringBuffer()).append(name + "!=null");
+        return new StringBuffer().append(name ).append( "!=null");
     }
 
     /**
@@ -288,7 +296,7 @@ public final class Common implements ISimpleDataObjMapper {
      * @return
      */
     public static StringBuffer addNullValidatorstart(final String newSourceName) {
-        return (new StringBuffer()).append("if(" + newSourceName + "!=null){");
+        return new StringBuffer().append("if(" ).append( newSourceName ).append( "!=null){");
     }
 
     /**
@@ -303,23 +311,23 @@ public final class Common implements ISimpleDataObjMapper {
      */
     public static StringBuffer createMappingMethod(final StringBuffer b, final Class<?> source, final Class<?> target,
             final String targetName, final String sourceName, final String functionName, final boolean isprivate) {
-        return (new StringBuffer()).append("/**").append(Common.LINE_SEPARATOR)
+        return new StringBuffer().append("/**").append(Common.LINE_SEPARATOR)
                 .append("* @param ").append(sourceName).append(Common.LINE_SEPARATOR)
                 .append("* @return ").append(target.getSimpleName()).append(Common.LINE_SEPARATOR)
                 .append("**/").append(Common.LINE_SEPARATOR)
                 .append(isprivate ? "  private static " : "    public static ")
-                .append(target.getCanonicalName()).append(" ").append(functionName)
-                .append(" ").append("(").append(source.getCanonicalName())
-                .append(" ").append(sourceName).append(") {")
-                .append(b).append(" return ").append(targetName).append(";")
-                .append("}");
+                .append(target.getCanonicalName()).append(Common.SPACE).append(functionName)
+                .append(Common.SPACE).append(Common.PARENTHESIS_L).append(source.getCanonicalName())
+                .append(Common.SPACE).append(sourceName).append(") {")
+                .append(b).append(" return ").append(targetName).append(Common.SEMICOLON)
+                .append(Common.KEY_R);
     }
 
     /**
      * @return StringBuffer
      */
     public static StringBuffer postBlock() {
-        return (new StringBuffer()).append("}");
+        return new StringBuffer().append(Common.KEY_R);
     }
 
     /**
@@ -373,8 +381,8 @@ public final class Common implements ISimpleDataObjMapper {
         StringBuffer buffer = new StringBuffer();
         buffer.append("if(").append(sourceName).append(Common.INSTANCEOF).append(sourceClass).append(classExcluded).append("){");
         if(classExcluded.length() <= 0){
-            buffer.append(sourceClass).append(" ").append(newSourceName).append("= (").append(sourceClass).append(")").append(sourceName)
-                    .append(";");
+            buffer.append(sourceClass).append(Common.SPACE).append(newSourceName).append("= (").append(sourceClass).append(Common.PARENTHESIS_R).append(sourceName)
+                    .append(Common.SEMICOLON);
         }
         mappingObj(newSourceName, objecMapping, buffer, ignoreNullValid);
         buffer.append(Common.postBlock());
@@ -402,7 +410,7 @@ public final class Common implements ISimpleDataObjMapper {
                     b.append(sourceName).append(Common.INSTANCEOF).append(classExcluded.getCanonicalName());
                 }
             }
-            b.append(")");
+            b.append(Common.PARENTHESIS_R);
         }
         return b;
     }

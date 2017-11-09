@@ -30,16 +30,15 @@ public class MapperClassFieldsCompatible {
      * @throws Throwable
      * @throws ClassLoaderException
      */
-    public StringBuffer mapperFieldsCompatible( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
+    public static StringBuffer mapperFieldsCompatible( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
             final String sourceName, final String targetName)
             throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException,
             InvocationTargetException, Throwable, ClassLoaderException {
         StringBuffer b = new StringBuffer();
         for (MappingField sourceField : mapSource) {
             for (MappingField targetField : maptarget.values()) {
-                if (!targetField.getMapped() && !sourceField.getMapped()
-                        && isNameCompatible(targetField, sourceField)) {
-                    b.append((new DoMap()).mapSourceIntoTarget( sourceName, targetName, sourceField, targetField));
+                if (!targetField.getMapped() && !sourceField.getMapped() && isNameCompatible(targetField, sourceField)) {
+                    b.append(DoMap.mapSourceIntoTarget( sourceName, targetName, sourceField, targetField));
                     targetField.setMapped(Boolean.TRUE);
                     sourceField.setMapped(Boolean.TRUE);
                 }
@@ -53,7 +52,7 @@ public class MapperClassFieldsCompatible {
      * @param sourceField
      * @return
      */
-    private Boolean isNameCompatible(MappingField targetField, MappingField sourceField) {
+    private static Boolean isNameCompatible(MappingField targetField, MappingField sourceField) {
         return targetField.getName().startsWith(sourceField.getName())
                 || targetField.getName().endsWith(sourceField.getName())
                 || sourceField.getName().startsWith(targetField.getName())

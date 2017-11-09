@@ -69,7 +69,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
                 a.setVersion(ver);
             }
         } else if (a.getVersion() != null && a.getVersion().startsWith("${")
-                && (properties.containsKey(a.getVersion().subSequence(2, a.getVersion().length() - 1)))) {
+                && properties.containsKey(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
             a.setVersion(properties.get(a.getVersion().subSequence(2, a.getVersion().length() - 1)));
         }
     }
@@ -104,7 +104,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
             if (artifact.getVersion() == null && a.getVersion() != null) {
                 artifact.setVersion(a.getVersion());
             } else if (artifact.getVersion() != null && a.getVersion() != null
-                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && (a.getVersion().charAt(0) != ArtifactsBlock.$))
+                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && a.getVersion().charAt(0) != ArtifactsBlock.$)
                 artifact.setVersion(a.getVersion());
 
         }
@@ -148,7 +148,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
         for (String key : prop.keySet()) {
             for (Artifact a : artiFactList.values()) {
                 if (a.getVersion() != null && a.getVersion().startsWith("${")
-                        && (key.equals(a.getVersion().subSequence(2, a.getVersion().length() - 1)))) {
+                        && key.equals(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
                     a.setVersion(key);
                     add(a);
                 }

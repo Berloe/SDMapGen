@@ -27,7 +27,7 @@ public class DoMap {
      * @throws Throwable
      * @throws ClassLoaderException
      */
-    public StringBuffer mapSourceIntoTarget( final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField)
+    public static StringBuffer mapSourceIntoTarget( final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField)
             throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException,
             InvocationTargetException, Throwable, ClassLoaderException {
         List<IMapper> mops = Dconf.getInstance().getMapper();

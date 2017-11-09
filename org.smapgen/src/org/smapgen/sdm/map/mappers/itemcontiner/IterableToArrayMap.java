@@ -57,19 +57,17 @@ public class IterableToArrayMap implements IMapper {
      */
     private StringBuffer mapperArrayfromCollection(final MappingField sourceField, final MappingField targetField,
              final String sourceName, final String targetName) throws Throwable {
-        final StringBuffer b = (new StringBuffer()).append("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName())
+        final StringBuffer b = new StringBuffer().append("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName())
                 .append("> list").append(targetName).append(" = new java.util.ArrayList<")
                 .append(targetField.getCalculatedFieldType().getCanonicalName()).append(">(); for(")
                 .append(sourceField.getFieldType().getComponentType().getCanonicalName()).append(" el")
-                .append(sourceName).append(" : ").append(sourceName).append("){");
-
-        ItemContinerMap itemContinerMap = new ItemContinerMap();
-        
-        b.append(itemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName,targetName))
-            .append("}").append(targetName).append(" = list").append(targetName).append(".toArray(new ")
-            .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);")
-            .append(Common.valueAssign(targetName, targetField))
-            .append("}");
+                .append(sourceName).append(" : ").append(sourceName).append("){")
+                
+                .append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName,targetName))
+                .append('}').append(targetName).append(" = list").append(targetName).append(".toArray(new ")
+                .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);")
+                .append(Common.valueAssign(targetName, targetField))
+                .append('}');
         return b;
     }
 }
