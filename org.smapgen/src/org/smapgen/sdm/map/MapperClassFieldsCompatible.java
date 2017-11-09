@@ -53,7 +53,7 @@ public class MapperClassFieldsCompatible {
      * @param sourceField
      * @return
      */
-    private final Boolean isNameCompatible(MappingField targetField, MappingField sourceField) {
+    private Boolean isNameCompatible(MappingField targetField, MappingField sourceField) {
         return targetField.getName().startsWith(sourceField.getName())
                 || targetField.getName().endsWith(sourceField.getName())
                 || sourceField.getName().startsWith(targetField.getName())

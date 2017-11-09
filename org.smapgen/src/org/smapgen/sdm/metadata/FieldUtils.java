@@ -48,12 +48,16 @@ public final class FieldUtils {
         final Collection<MappingField> mapFieldColecction = new ArrayList<MappingField>();
         // Load MappingField from "get***"
         for (final Method method : methods) {
-            String getterName = "is".equals(method.getName().substring(0, 2)) ? method.getName().substring(2)
-                    : "get".equals(method.getName().substring(0, 3)) ? method.getName().substring(3) : null;
-            if ("get".equals(method.getName().substring(0, 3)) || ("is".equals(method.getName().substring(0, 2)) && !Modifier.isPrivate(method.getModifiers()))) {
+            boolean isPrefix = "is".equals(method.getName().substring(0, 2));
+            boolean getPrefix = "get".equals(method.getName().substring(0, 3));
+            
+            String getterName = isPrefix ? method.getName().substring(2)            
+                    : getPrefix? method.getName().substring(3) : null;
+                    
+            if (getPrefix || (isPrefix && !Modifier.isPrivate(method.getModifiers()))) {
                 final MappingField mapfield = getterMetadata(loadClass, name, method, getterName);
                 if(null != mapfield){
-                    mapFieldColecction.add(getterMetadata(loadClass, name, method, getterName));
+                    mapFieldColecction.add(mapfield);
                 }
             }
         }

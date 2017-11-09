@@ -65,10 +65,8 @@ public class IterableMap implements IMapper {
         sourceField.setFieldType(sourceField.getCalculatedFieldType());
         targetField.setFieldType(targetField.getCalculatedFieldType());
         ItemContinerMap itemContinerMap = new ItemContinerMap();
-        b.append(itemContinerMap.mapItemElement(sourceField, targetField,
-                ConstantValues.ClassMapper_elementPrefix + sourceName, targetName));
-
-        b.append("}").append(Common.valueAssign(targetName, targetField)).append("}");
+        b.append(itemContinerMap.mapItemElement(sourceField, targetField,ConstantValues.ClassMapper_elementPrefix + sourceName, targetName))
+        .append("}").append(Common.valueAssign(targetName, targetField)).append("}");
         
         return b;
     }

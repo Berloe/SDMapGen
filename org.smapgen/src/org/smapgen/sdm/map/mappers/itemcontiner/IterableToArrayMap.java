@@ -64,13 +64,12 @@ public class IterableToArrayMap implements IMapper {
                 .append(sourceName).append(" : ").append(sourceName).append("){");
 
         ItemContinerMap itemContinerMap = new ItemContinerMap();
-        b.append(itemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName,
-                targetName));
-
-        b.append("}").append(targetName).append(" = list").append(targetName).append(".toArray(new ")
-                .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);")
-                .append(Common.valueAssign(targetName, targetField))
-                .append("}");
+        
+        b.append(itemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName,targetName))
+            .append("}").append(targetName).append(" = list").append(targetName).append(".toArray(new ")
+            .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);")
+            .append(Common.valueAssign(targetName, targetField))
+            .append("}");
         return b;
     }
 }

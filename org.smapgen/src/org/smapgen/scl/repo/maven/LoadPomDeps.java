@@ -113,7 +113,7 @@ public final class LoadPomDeps {
                         break;
                     case Constants.SCOPE:
                         String scop = getContent(reader);
-                        if (scop == null || scop.trim().isEmpty()) {
+                        if (scop == null || !scop.matches("[a-zA-Z0-9 ]+")) {
                             scop = Constants.COMPILE;
                         }
                         artfact.setScope(scop);
@@ -127,7 +127,7 @@ public final class LoadPomDeps {
             }
             if (XMLStreamConstants.END_ELEMENT == event){
                 if (Constants.DEPENDENCY.equals(reader.getLocalName())) {
-                    if (artfact.getScope() == null || artfact.getScope().trim().isEmpty()) {
+                    if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
                         String scop = Constants.COMPILE;
                         artfact.setScope(scop);
                     }
@@ -165,6 +165,7 @@ public final class LoadPomDeps {
                     case Constants.VERSION:
                         artfact.setVersion(getContent(reader));
                         break;
+                    default: break;
                 }
             }
             if (XMLStreamConstants.END_ELEMENT == event && Constants.PARENT.equals(reader.getLocalName())) {

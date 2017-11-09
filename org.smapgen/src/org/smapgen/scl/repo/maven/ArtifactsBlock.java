@@ -104,7 +104,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
             if (artifact.getVersion() == null && a.getVersion() != null) {
                 artifact.setVersion(a.getVersion());
             } else if (artifact.getVersion() != null && a.getVersion() != null
-                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && !(a.getVersion().charAt(0) == ArtifactsBlock.$))
+                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && (a.getVersion().charAt(0) != ArtifactsBlock.$))
                 artifact.setVersion(a.getVersion());
 
         }

@@ -246,7 +246,9 @@ class MapperSelectionListener implements SelectionListener{
      */
     private boolean isWSClient(Class<?> classField) {
         for (Annotation anot : classField.getAnnotations()) {
-            return "javax.xml.ws.WebServiceClient".equals(anot.annotationType().getCanonicalName());
+            if("javax.xml.ws.WebServiceClient".equals(anot.annotationType().getCanonicalName())){
+                return true;
+            }
         }
         return false;
     }

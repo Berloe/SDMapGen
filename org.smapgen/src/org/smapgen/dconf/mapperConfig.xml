@@ -12,6 +12,6 @@
 	<mapper>org.smapgen.sdm.map.mappers.ToStringMap</mapper>
 	<mapper>org.smapgen.sdm.map.mappers.ToBooleanMap</mapper>
 	<mapperAbs>org.smapgen.sdm.map.mappers.instantiable.ExtendedMap</mapperAbs>
-    <mapperAbs>org.smapgen.sdm.map.mappers.itemcontiner.abstractItem.AbstractItemMap</mapperAbs>
+    <mapperAbs>org.smapgen.sdm.map.mappers.itemcontiner.abstractitem.AbstractItemMap</mapperAbs>
 	<notNullAnot>javax.validation.constraints.NotNull</notNullAnot>
 </config>

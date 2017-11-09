@@ -3,6 +3,7 @@ package org.smapgen.sdm.map.mappers.common;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.smapgen.scl.exception.ClassLoaderException;
 import org.smapgen.sdm.common.Common;
 import org.smapgen.sdm.common.ConstantValues;
 import org.smapgen.sdm.factory.ObjectFactory;
@@ -39,6 +40,66 @@ public abstract class Mapper {
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, Throwable {
         final StringBuffer b = new StringBuffer();
+
+        if (!checkFunctionDefined(targetMappingField, targetClass, targetName, sourceClass, newSourceName, b)) {
+            StringBuffer fcode = new StringBuffer();
+            String newtargetName = Utils.isAbstract(targetClass)?Common.createNewVarNull(fcode, targetClass):Common.createNewVar(fcode, targetClass);
+            String fName = Registry.registerName(ConstantValues.ClassMapper_mapPrefix + sourceClass.getSimpleName());
+            Registry.registreFunction(sourceClass.getCanonicalName(), targetClass.getCanonicalName(), fName);
+            mapInnerObject(targetMappingField, targetClass, sourceMappingField, computeSrc, newSourceName, fcode,
+                    newtargetName);
+
+            Common.addMappingMethod(fcode, computeSrc, targetClass, newtargetName, newSourceName, fName,
+                    true);
+            b.append(targetMappingField.getSetterMethod().getParameterTypes()[0].isAssignableFrom(targetClass)  && targetMappingField.getVarName().equals(targetName)
+                    ? Common.valueAssignFunction(targetMappingField, newSourceName, fName)
+                    : Common.valueAssignFunction(targetName, newSourceName, fName));
+        }
+        return b;
+    }
+
+    /**
+     * @param targetMappingField
+     * @param targetClass
+     * @param sourceMappingField
+     * @param computeSrc
+     * @param newSourceName
+     * @param fcode
+     * @param newtargetName
+     * @throws Throwable
+     * @throws IllegalArgumentException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws ClassNotFoundException
+     * @throws ClassLoaderException
+     * @throws NoSuchMethodException
+     */
+    private void mapInnerObject(MappingField targetMappingField, final Class<?> targetClass,
+            MappingField sourceMappingField, final Class<?> computeSrc, final String newSourceName, StringBuffer fcode,
+            String newtargetName)
+            throws Throwable, IllegalArgumentException, InstantiationException, IllegalAccessException,
+            InvocationTargetException, ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
+        if (Utils.getConcreteClasses(computeSrc).length==1 && !Utils.isAbstract(computeSrc) && !Utils.isAbstract(targetClass)) {
+            fcode.append((new MapperClassElement()).mapperInstance( ObjectFactory.loader(computeSrc), ObjectFactory.loader(targetClass), newSourceName, newtargetName));
+        } else {
+            fcode.append(mapperClass(computeSrc, targetClass, newSourceName, newtargetName, sourceMappingField,
+                    targetMappingField));
+        }
+    }
+
+    /**
+     * @param targetMappingField
+     * @param targetClass
+     * @param targetName
+     * @param sourceClass
+     * @param newSourceName
+     * @param b
+     * @param funtionSeted
+     * @return
+     */
+    private boolean checkFunctionDefined(MappingField targetMappingField, final Class<?> targetClass,
+            final String targetName, final Class<?> sourceClass, final String newSourceName, final StringBuffer b) {
         boolean funtionSeted = false;
         if (Registry.containsFuncReturn(targetClass.getCanonicalName())) {
             final HashMap<String, String> funtion = Registry.getFunctionsRegistry(targetClass.getCanonicalName());
@@ -50,29 +111,7 @@ public abstract class Mapper {
                 funtionSeted = true;
             }
         }
-
-        if (!funtionSeted) {
-            StringBuffer fcode = new StringBuffer();
-            String fName = null;
-            String newtargetName = null;
-
-            newtargetName = Utils.isAbstract(targetClass)?Common.createNewVarNull(fcode, targetClass):Common.createNewVar(fcode, targetClass);
-            fName = Registry.registerName(ConstantValues.ClassMapper_mapPrefix + sourceClass.getSimpleName());
-            Registry.registreFunction(sourceClass.getCanonicalName(), targetClass.getCanonicalName(), fName);
-            if (Utils.getConcreteClasses(computeSrc).length==1 && !Utils.isAbstract(computeSrc) && !Utils.isAbstract(targetClass)) {
-                fcode.append((new MapperClassElement()).mapperInstance( ObjectFactory.loader(computeSrc), ObjectFactory.loader(targetClass), newSourceName, newtargetName));
-            } else {
-                fcode.append(mapperClass(computeSrc, targetClass, newSourceName, newtargetName, sourceMappingField,
-                        targetMappingField));
-            }
-
-            Common.addMappingMethod(fcode, computeSrc, targetClass, newtargetName, newSourceName, fName,
-                    true);
-            b.append(targetMappingField.getSetterMethod().getParameterTypes()[0].isAssignableFrom(targetClass)  && targetMappingField.getVarName().equals(targetName)
-                    ? Common.valueAssignFunction(targetMappingField, newSourceName, fName)
-                    : Common.valueAssignFunction(targetName, newSourceName, fName));
-        }
-        return b;
+        return funtionSeted;
     }
 
     /**
