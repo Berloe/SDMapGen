@@ -15,8 +15,8 @@ public class ToIntegerMap extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if(((targetField.getFieldType().equals(Integer.class) || (targetField.getFieldType().equals(int.class)))
-                && (isPrimitive(sourceField) || isAssignablePrimitive(sourceField)))){
+        if((targetField.getFieldType().equals(Integer.class) || (targetField.getFieldType().equals(int.class)))
+                && (isPrimitive(sourceField) || isAssignablePrimitive(sourceField))){
             return true;
         }
         return false;
@@ -49,19 +49,19 @@ public class ToIntegerMap extends Mapper implements IMapper {
     @Override
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
         if(sourceField.getFieldType().equals(byte[].class)||sourceField.getFieldType().equals(char[].class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "(new Integer(new String("+sourceField.getVarName()+")));");
         }else if(sourceField.getFieldType().equals(int.class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "("+sourceField.getVarName()+");");
         }else if(sourceField.getFieldType().equals(int.class) && targetField.getFieldType().equals(Integer.class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "(new Integer("+sourceField.getVarName()+").intValue());");
         } else if(sourceField.getFieldType().equals(byte.class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                 + "(new Byte(" +sourceField.getVarName()+").intValue();");
         }else if(sourceField.getFieldType().equals(Byte.class)){
-            return (new StringBuffer()).append(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
+            return new StringBuffer(targetField.getVarName() + "." + targetField.getSetterMethod().getName()
                     + "(" +sourceField.getVarName()+").intValue();");
             }
         return new StringBuffer();

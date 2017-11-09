@@ -37,7 +37,7 @@ public abstract class InstanceOfMap extends Mapper {
         String classExcluded = Common.excludeElements(sourceField.getFieldType(), sourceName, excluded).toString();
         StringBuffer objecMapping = new StringBuffer();
         if(classExcluded.length()>0){
-            objecMapping= (new MapperClassElement()).mapperInstance(ObjectFactory.loader(sourceField.getFieldType()), ObjectFactory.loader(targetField.getFieldType()), newSourceName, targetName);
+            objecMapping= MapperClassElement.mapperInstance(ObjectFactory.loader(sourceField.getFieldType()), ObjectFactory.loader(targetField.getFieldType()), newSourceName, targetName);
                     }else{
             objecMapping = objectMapping(targetField,targetField.getFieldType(),targetName,sourceField,sourceField.getFieldType(),
                sourceField.getFieldType(),newSourceName);

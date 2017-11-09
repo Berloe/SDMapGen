@@ -30,7 +30,7 @@ public class MapperClassElement{
      * @return Boolean
      * @throws Throwable
      */
-    public StringBuffer mapperInstance(final Object source, final Object target,
+    public static StringBuffer mapperInstance(final Object source, final Object target,
             final String sourceName, final String targetName) throws Throwable {
 
         MappingField[] mapSource = Utils.getSourceMappinField(source, sourceName);

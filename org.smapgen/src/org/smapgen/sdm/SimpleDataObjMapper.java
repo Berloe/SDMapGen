@@ -34,7 +34,7 @@ public class SimpleDataObjMapper implements ISimpleDataObjMapper {
         final StringBuffer b = new StringBuffer();
         final String sourceName = Common.genName(source, Boolean.TRUE);
         final String targetName = Common.createNewVar(b, target);
-        b.append((new MapperClassElement()).mapperInstance( source, target, sourceName, targetName));
+        b.append(MapperClassElement.mapperInstance( source, target, sourceName, targetName));
         Common.addMappingMethod(b, clasSource, classTarget, targetName, sourceName,
                 ConstantValues.ClassMapper_mapPrefix + classTarget.getSimpleName(), isMainPrivate);
         StringBuffer[] flist = Registry.getInstance().getFunctionList().toArray(new StringBuffer[0]);

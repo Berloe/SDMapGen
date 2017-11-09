@@ -57,7 +57,7 @@ public class IterableToArrayMap implements IMapper {
      */
     private StringBuffer mapperArrayfromCollection(final MappingField sourceField, final MappingField targetField,
              final String sourceName, final String targetName) throws Throwable {
-        final StringBuffer b = new StringBuffer().append("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName())
+        final StringBuffer b = new StringBuffer("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName())
                 .append("> list").append(targetName).append(" = new java.util.ArrayList<")
                 .append(targetField.getCalculatedFieldType().getCanonicalName()).append(">(); for(")
                 .append(sourceField.getFieldType().getComponentType().getCanonicalName()).append(" el")

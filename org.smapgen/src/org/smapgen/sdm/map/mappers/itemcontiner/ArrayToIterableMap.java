@@ -70,7 +70,7 @@ public class ArrayToIterableMap implements IMapper {
      * @param targetField 
      */
     private void post(final StringBuffer b, String newtargetName, MappingField targetField) {
-        b.append("}").append(Common.valueAssign(newtargetName, targetField)).append("}");
+        b.append('}').append(Common.valueAssign(newtargetName, targetField)).append('}');
     }
 
     /**

@@ -81,7 +81,7 @@ public abstract class Mapper {
             throws Throwable, IllegalArgumentException, InstantiationException, IllegalAccessException,
             InvocationTargetException, ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
         if (Utils.getConcreteClasses(computeSrc).length==1 && !Utils.isAbstract(computeSrc) && !Utils.isAbstract(targetClass)) {
-            fcode.append((new MapperClassElement()).mapperInstance( ObjectFactory.loader(computeSrc), ObjectFactory.loader(targetClass), newSourceName, newtargetName));
+            fcode.append(MapperClassElement.mapperInstance( ObjectFactory.loader(computeSrc), ObjectFactory.loader(targetClass), newSourceName, newtargetName));
         } else {
             fcode.append(mapperClass(computeSrc, targetClass, newSourceName, newtargetName, sourceMappingField,
                     targetMappingField));
@@ -164,7 +164,7 @@ public abstract class Mapper {
         sourceField.setFieldType(concreteSource);
         targetField.setFieldType(targetExtends);
 
-        b.append((new ExtendedMap()).map(sourceName, targetName, sourceField, targetField));
+        b.append(new ExtendedMap().map(sourceName, targetName, sourceField, targetField));
     }
     
     /**

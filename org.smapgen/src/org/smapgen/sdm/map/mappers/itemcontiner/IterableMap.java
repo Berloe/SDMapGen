@@ -58,7 +58,7 @@ public class IterableMap implements IMapper {
     private StringBuffer mapperCollections(final MappingField sourceField, final MappingField targetField,
             final String sourceName, final String targetName) throws Throwable {
         // If source is an array, classTarget must be an array too
-        final StringBuffer b = (new StringBuffer()).append("if(!").append(sourceName).append(".isEmpty()){ for(")
+        final StringBuffer b = new StringBuffer().append("if(!").append(sourceName).append(".isEmpty()){ for(")
                 .append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el")
                 .append(sourceName).append(" : ").append(sourceName).append("){");
         
@@ -66,7 +66,7 @@ public class IterableMap implements IMapper {
         targetField.setFieldType(targetField.getCalculatedFieldType());
         
         b.append(ItemContinerMap.mapItemElement(sourceField, targetField,ConstantValues.ClassMapper_elementPrefix + sourceName, targetName))
-        .append("}").append(Common.valueAssign(targetName, targetField)).append("}");
+        .append('}').append(Common.valueAssign(targetName, targetField)).append('}');
         
         return b;
     }

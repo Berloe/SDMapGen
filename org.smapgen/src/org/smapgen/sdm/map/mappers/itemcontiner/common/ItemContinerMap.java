@@ -27,7 +27,7 @@ public class ItemContinerMap extends Mapper {
         final String newTargetName;
         if (Utils.isAbstract(targetField.getFieldType())) {
             newTargetName = Common.createNewVarNull(buffer, targetField.getFieldType());
-            buffer.append((new AbstractItemMap()).map(sourceName, newTargetName, sourceField, targetField));
+            buffer.append(new AbstractItemMap().map(sourceName, newTargetName, sourceField, targetField));
         } else {
             newTargetName = Common.createNewVar(buffer, ObjectFactory.loader(targetField.getFieldType()));
 

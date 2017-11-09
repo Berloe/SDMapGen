@@ -15,7 +15,8 @@ public class ToBooleanMap extends Mapper implements IMapper {
      */
     @Override
     public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        if (((targetField.getFieldType().equals(Boolean.class)||targetField.getFieldType().equals(boolean.class)) && !targetField.getFieldType().equals(sourceField.getFieldType())) && (sourceField.getFieldType().equals(boolean.class)||sourceField.getFieldType().equals(Boolean.class)||sourceField.getFieldType().equals(String.class))){
+        if ((targetField.getFieldType().equals(Boolean.class)||targetField.getFieldType().equals(boolean.class)) && !targetField.getFieldType().equals(sourceField.getFieldType()) 
+                && (sourceField.getFieldType().equals(boolean.class)||sourceField.getFieldType().equals(Boolean.class)||sourceField.getFieldType().equals(String.class))){
             return true;
         }
         return false;
@@ -29,15 +30,15 @@ public class ToBooleanMap extends Mapper implements IMapper {
     public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
         if(targetField.getFieldType().equals(boolean.class)){
         	if(sourceField.getFieldType().equals(Boolean.class)) {
-        		return new StringBuffer().append(targetField.getVarName() + " = " +sourceField.getVarName()+".booleanValue();");
+        		return new StringBuffer(targetField.getVarName() + " = " +sourceField.getVarName()+".booleanValue();");
         	}else if(sourceField.getFieldType().equals(String.class)){
-           		return new StringBuffer().append(targetField.getVarName() + " = Boolean.parseBoolean(" + sourceField.getVarName()+").booleanValue();");
+           		return new StringBuffer(targetField.getVarName() + " = Boolean.parseBoolean(" + sourceField.getVarName()+").booleanValue();");
         	}
         }else if(targetField.getFieldType().equals(Boolean.class)){
         	if(sourceField.getFieldType().equals(boolean.class)) {
-        		return new StringBuffer().append(targetField.getVarName() + " = new Boolean(" +sourceField.getVarName()+");");
+        		return new StringBuffer(targetField.getVarName() + " = new Boolean(" +sourceField.getVarName()+");");
         	}else if(sourceField.getFieldType().equals(String.class)){
-           		return new StringBuffer().append(targetField.getVarName() + " = Boolean.parseBoolean(" + sourceField.getVarName()+");");
+           		return new StringBuffer(targetField.getVarName() + " = Boolean.parseBoolean(" + sourceField.getVarName()+");");
         	}
         }
 		return new StringBuffer();
