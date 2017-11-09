@@ -205,7 +205,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
         suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString()
                 + p.getOutputLocation().toOSString().substring(p.getOutputLocation().toOSString().indexOf('\\', 1)));
         loadDependencies();
-        suport.getSimpleCl().initDeps();
+        suport.getSimpleCl().initDeps(true);
     }
 
     /**
@@ -221,7 +221,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
             for (File f : dependencies.values()) {
                 reposcl.loadlib(f.getPath());
             }
-            reposcl.initDeps();
+            reposcl.initDeps(true);
         } catch (Throwable e) {
             e.printStackTrace();
         }

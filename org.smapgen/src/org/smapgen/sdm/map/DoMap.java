@@ -41,4 +41,11 @@ public class DoMap {
         return b;
     }
 
+    /**
+     * 
+     */
+    private DoMap() {
+        super();
+    }
+
 }

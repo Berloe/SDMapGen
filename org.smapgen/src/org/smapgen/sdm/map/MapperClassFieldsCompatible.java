@@ -58,5 +58,11 @@ public class MapperClassFieldsCompatible {
                 || sourceField.getName().startsWith(targetField.getName())
                 || sourceField.getName().endsWith(targetField.getName());
     }
+    /**
+     * 
+     */
+    private MapperClassFieldsCompatible() {
+        super();
+    }
 
 }

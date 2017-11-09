@@ -20,7 +20,8 @@ import org.smapgen.scl.repo.IRepoProvider;
 public class MvnRepoProvider implements IRepoProvider {
     private Path repo;
 
-    private IArtifactsBlock artifactBlock;
+    private IArtifactsBlock artifactBlock = new ArtifactsBlock();
+    private IArtifactsBlock artifactBlockBlackList = new ArtifactsBlock();
     
     /**
      * @param repo
@@ -45,9 +46,9 @@ public class MvnRepoProvider implements IRepoProvider {
      */
     @Override
     public List<Artifact> getDependenciesTree(File conf,Path repo) throws FileNotFoundException, XMLStreamException{
-        artifactBlock = new ArtifactsBlock();
         recursiveLoadDependencies(conf, repo);
- 
+        recursiveLoadExcludes(conf, repo);
+        artifactBlock.removeAll(artifactBlockBlackList);
         return artifactBlock.values();
     }
     /**
@@ -85,6 +86,40 @@ public class MvnRepoProvider implements IRepoProvider {
         }
     }
     
+    /**
+     * @param conf
+     * @param repo
+     * @return
+     * @throws FileNotFoundException
+     */
+    public void recursiveLoadExcludes(File conf, Path repo) throws FileNotFoundException {
+
+        ArrayList<Artifact> deps = null;
+        try{
+            Artifact parentArt = LoadPomDeps.loadParentXmlFile(conf);
+            if(null != parentArt && !artifactBlockBlackList.contains(parentArt)){
+                artifactBlockBlackList.addProperties(LoadPomDeps.loadVarsXmlFile(conf));
+                File parent = getDepPom(repo, parentArt);
+                if(null != parent){
+                    recursiveLoadDependencies(parent,repo);
+                }
+            }
+            deps = LoadPomDeps.loadExcludedXmlFile(conf);
+            for (Artifact artifact : deps) {
+                if(!artifactBlockBlackList.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
+                    artifactBlockBlackList.add(artifact);
+                    File parent = getDepPom(repo, artifact);
+                    if(null != parent){
+                        artifactBlockBlackList.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
+                        recursiveLoadDependencies(parent,repo);
+                    }
+                }
+            }
+        }catch(XMLStreamException e){
+            // Omit artifact
+            deps= new ArrayList<Artifact>();
+        }
+    }
     
     /* (non-Javadoc)
      * @see org.scl.repo.maven.IRepoProvider#getTransitiveDependencies(java.io.File)

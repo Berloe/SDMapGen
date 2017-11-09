@@ -22,6 +22,18 @@ public interface IArtifactsBlock {
     boolean contains(Artifact a);
 
     /**
+     * @param a
+     * @return
+     */
+    boolean remove(Artifact a);
+    
+    /**
+     * @param a
+     * @return
+     */
+    boolean removeAll(IArtifactsBlock a);
+
+    /**
      * @param g
      * @param a
      * @return
@@ -43,5 +55,10 @@ public interface IArtifactsBlock {
      * @param prop
      */
     void addProperties(Map<String, String> prop);
+
+    /**
+     * @param string
+     */
+    void filterByScope(String string);
 
 }

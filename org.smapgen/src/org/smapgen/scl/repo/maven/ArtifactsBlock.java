@@ -80,7 +80,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
      */
     @Override
     public boolean contains(Artifact a) {
-        Entry<String, String> ga = new ArtifactEntry(a.getGroup(), a.getArtifact());
+        Entry<String, String> ga = getKey(a);
         boolean value = artiFactList.containsKey(ga);
         fixArtifact(a);
         return value;
@@ -93,7 +93,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
      */
     private Artifact fixArtifact(Artifact a) {
         Artifact artifact = a;
-        Entry<String, String> ga = new ArtifactEntry(a.getGroup(), a.getArtifact());
+        Entry<String, String> ga = getKey(a);
         completeArtifact(a);
         if (artiFactList.containsKey(ga)) {
             artifact = artiFactList.get(ga);
@@ -109,6 +109,15 @@ public class ArtifactsBlock implements IArtifactsBlock {
 
         }
         return put(artifact);
+    }
+
+    /**
+     * @param a
+     * @return
+     */
+    private Entry<String, String> getKey(Artifact a) {
+        Entry<String, String> ga = new ArtifactEntry(a.getGroup(), a.getArtifact());
+        return ga;
     }
 
     /*
@@ -139,6 +148,7 @@ public class ArtifactsBlock implements IArtifactsBlock {
         return result;
     }
 
+    
     /*
      * (non-Javadoc)
      * @see org.smapgen.scl.repo.maven.IArtifactsBlock#addProperties(java.util.Map)
@@ -156,5 +166,54 @@ public class ArtifactsBlock implements IArtifactsBlock {
             }
         }
         properties.putAll(prop);
+    }
+
+    @Override
+    public boolean remove(Artifact a) {
+        Entry<String, String> ga = getKey(a);
+        Artifact artfact = artiFactList.remove(ga);
+        return null!=artfact;
+    }
+
+    @Override
+    public boolean removeAll(IArtifactsBlock a) {
+        boolean ret = true;
+        for (Artifact element : a.values()) {
+            if(!remove(element)){
+                ret= false;
+            }
+        }
+        return ret;
+    }
+
+    @Override
+    public void filterByScope(String scope) {
+        HashMap<Entry<String, String>, Artifact> aux = new HashMap<Entry<String, String>, Artifact>();
+        for (Artifact element : artiFactList.values()) {
+            if(completeVersion(element) && element.getScope().equals(scope)){
+                aux.put(getKey(element), element);
+            }
+        }
+        artiFactList=aux;
+    }
+
+    /**
+     * @param element
+     * @return 
+     */
+    private boolean completeVersion(Artifact element) {
+        if(element.getVersion()==null){
+            return false;
+        }
+        if(element.getVersion().startsWith("${")){
+            CharSequence key = element.getVersion().subSequence(2, element.getVersion().length() - 1);
+            if(properties.containsKey(key)){
+                element.setVersion(properties.get(key));
+                return true;
+            }
+            return false;
+        }else{
+            return true;
+        }
     }
 }

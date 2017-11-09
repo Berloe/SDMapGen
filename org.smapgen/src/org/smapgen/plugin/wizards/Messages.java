@@ -50,14 +50,7 @@ public final class Messages extends NLS {
      * String MapperNewWizardPage_6 .
      */
     public static String MapperNewWizardPage_6;
-    /**
-     * String MapperNewWizardPage_7 .
-     */
-    public static String MapperNewWizardPage_7;
-    /**
-     * String MapperNewWizardPage_8 .
-     */
-    public static String MapperNewWizardPage_8;
+
     /**
      * String MapperNewWizardPage_9 .
      */
@@ -79,6 +72,12 @@ public final class Messages extends NLS {
     public static String MapperNewWizardPage_tltmDropdownItem_1_text;
     public static String MapperNewWizardPage_tbtmNewItem_text_2;
     public static String MapperNewWizardPage_tbtmNewItem_1_text_1;
+    public static String MapperNewWizardPage_button_1_text;
+    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText;
+    public static String MapperNewWizardPage_button_toolTipText;
+    public static String MapperNewWizardPage_button_toolTipText_1;
+    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText_1;
+    public static String MapperNewWizardPage_button_1_toolTipText;
     /** $NON-NLS-1$. */
     static {
         // initialize resource bundle

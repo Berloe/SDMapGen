@@ -44,6 +44,13 @@ public class MapperClassElement{
 
         return b;
     }
+
+    /**
+     * 
+     */
+    private MapperClassElement() {
+        super();
+    }
     
 
 }

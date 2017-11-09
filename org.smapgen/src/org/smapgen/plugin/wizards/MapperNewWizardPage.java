@@ -34,6 +34,8 @@ import org.eclipse.swt.widgets.Text;
 import org.smapgen.config.preferences.PreferenceConstants;
 import org.smapgen.plugin.Activator;
 import org.smapgen.plugin.etc.MapperWizardHelper;
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -88,7 +90,7 @@ public class MapperNewWizardPage extends WizardPage {
         this.selection = selection;
         support = suport;
         getPackageRoots();
-        
+
         this.javaClass = javacls;
     }
 
@@ -120,7 +122,15 @@ public class MapperNewWizardPage extends WizardPage {
                 setAutoCompletion(text, text.getText());
             }
         });
-        new Label(container, SWT.NONE);
+
+        Button button_1 = new Button(container, SWT.NONE);
+        button_1.setToolTipText(Messages.MapperNewWizardPage_button_1_toolTipText);
+
+        GridData gd_button_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        gd_button_1.widthHint = 30;
+        button_1.setLayoutData(gd_button_1);
+        button_1.setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/elcl16/synced.png"));
+        button_1.setText(Messages.MapperNewWizardPage_button_1_text);
         final Label labelCombo2 = new Label(container, SWT.NULL);
         labelCombo2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
         labelCombo2.setText(Messages.MapperNewWizardPage_5);
@@ -140,6 +150,14 @@ public class MapperNewWizardPage extends WizardPage {
                 setAutoCompletion(text_1, text_1.getText());
             }
         });
+        button_1.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String tmp = text_1.getText();
+                text_1.setText(text.getText());
+                text.setText(tmp);
+            }
+        });
         new Label(container, SWT.NONE);
         Button btnRadioButton = new Button(container, SWT.RADIO);
         btnRadioButton.setVisible(false);
@@ -151,6 +169,7 @@ public class MapperNewWizardPage extends WizardPage {
                 gen.setAutomaticMode(false);
                 text.setEnabled(true);
                 text_1.setEnabled(true);
+                button_1.setEnabled(true);
             }
         });
         btnRadioButton.setSelection(true);
@@ -166,17 +185,16 @@ public class MapperNewWizardPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 gen.setAutomaticMode(true);
                 text.setEnabled(false);
+                text.setText("");
                 text_1.setEnabled(false);
+                text_1.setText("");
+                button_1.setEnabled(false);
             }
         });
         if (javaClass != null) {
             btnRadioButton.setVisible(true);
             btnRadioButton_1.setVisible(true);
         }
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
         final Label lblPackageRoot = new Label(container, SWT.NONE);
         lblPackageRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
         lblPackageRoot.setText(Messages.MapperNewWizardPage_6);
@@ -185,8 +203,8 @@ public class MapperNewWizardPage extends WizardPage {
         }
         Combo combo = new Combo(container, SWT.NONE);
 
-        GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
-        gd_combo.widthHint = 626;
+        GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+        gd_combo.widthHint = 115;
         combo.setLayoutData(gd_combo);
         combo.setItems(rootPackages);
         if (javaClass != null) {
@@ -196,8 +214,10 @@ public class MapperNewWizardPage extends WizardPage {
         new Label(container, SWT.NONE);
 
         final Button button = new Button(container, SWT.PUSH);
-        button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        button.setText(Messages.MapperNewWizardPage_7);
+        button.setToolTipText(Messages.MapperNewWizardPage_button_toolTipText_1);
+        button.setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/eview16/filenav_nav.png"));
+        button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        new Label(container, SWT.NONE);
 
         Combo combo_1 = new Combo(container, SWT.NONE);
         combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -212,7 +232,7 @@ public class MapperNewWizardPage extends WizardPage {
                             .getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo);
                     dependencies.get(combo_1.getText());
                     support.getSimpleCl().loadlib(dependencies.get(combo_1.getText()).getPath());
-                    support.getSimpleCl().initDeps();
+                    support.getSimpleCl().initDeps(true);
                     updateDeps();
                     lblNewLabel.setText(combo_1.getText() + Messages.MapperNewWizardPage_19);
                 } catch (Throwable e1) {
@@ -220,7 +240,6 @@ public class MapperNewWizardPage extends WizardPage {
                 }
             }
         });
-
         final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
         final String repo = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
         try {
@@ -236,31 +255,38 @@ public class MapperNewWizardPage extends WizardPage {
 
         lblNewLabel = new CLabel(container, SWT.NONE);
         lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
-        lblNewLabel.setText(Messages.MapperNewWizardPage_8);
         loadJars = new LoadJarSelectionAdapter(support, getShell(), selection, lblNewLabel);
         button.addSelectionListener(loadJars);
         new Label(container, SWT.NONE);
-        final Label label_1 = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-        label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-        new Label(container, SWT.NONE);
         final Button btnGeneraMtodo = new Button(container, SWT.NONE);
-        btnGeneraMtodo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        btnGeneraMtodo.setToolTipText(Messages.MapperNewWizardPage_btnGeneraMtodo_toolTipText_1);
+        btnGeneraMtodo.setGrayed(true);
+        btnGeneraMtodo
+                .setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/obj16/generic_elements.gif"));
+        GridData gd_btnGeneraMtodo = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
+        gd_btnGeneraMtodo.widthHint = 29;
+        btnGeneraMtodo.setLayoutData(gd_btnGeneraMtodo);
         btnGeneraMtodo.setText(Messages.MapperNewWizardPage_13);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
+        final Label label_1 = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
+        GridData gd_label_1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
+        gd_label_1.widthHint = 125;
+        label_1.setLayoutData(gd_label_1);
         ProgressBar progressBar = new ProgressBar(container, SWT.SMOOTH);
-        progressBar.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, false, false, 3, 1));
+        GridData gd_progressBar = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 4, 1);
+        gd_progressBar.widthHint = 125;
+        progressBar.setLayoutData(gd_progressBar);
         progressBar.setVisible(true);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
+        new Label(container, SWT.NONE);
         gen = new MapperSelectionListener(progressBar, automaticMode, javaClass, support, combo, text, text_1);
+        new Label(container, SWT.NONE);
+        container.setTabList(new Control[]{text, button_1, text_1, btnRadioButton, btnRadioButton_1, button, combo_1, btnGeneraMtodo, combo, lblNewLabel, progressBar});
         btnGeneraMtodo.addSelectionListener(gen);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
-        new Label(container, SWT.NONE);
 
         combo.addSelectionListener(new SelectionAdapter() {
             @Override

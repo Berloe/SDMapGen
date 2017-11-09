@@ -47,7 +47,24 @@ public final class LoadPomDeps {
         }
         return artifacts;
     }
-
+    /**
+     * @param conf
+     * @return
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    protected static ArrayList<Artifact> loadExcludedXmlFile(File conf) throws FileNotFoundException, XMLStreamException {
+        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
+        while (reader.hasNext()) {
+            int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                artifacts.addAll(excludeBlock(reader, event));
+            }
+        }
+        return artifacts;
+    }
     /**
      * @param artifacts
      * @param reader
@@ -71,6 +88,27 @@ public final class LoadPomDeps {
     }
 
     /**
+     * @param artifacts
+     * @param reader
+     * @param event
+     * @throws XMLStreamException
+     */
+    public static ArrayList<Artifact> excludeBlock(XMLStreamReader reader, int ev) throws XMLStreamException {
+        int event = ev;
+        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+        while (reader.hasNext()) {
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                artifacts.addAll(loadExclusion(reader));
+                break;
+            }
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                return artifacts;
+            }
+            event = reader.next();
+        }
+        return artifacts;
+    }
+    /**
      * @param reader
      * @return
      * @throws XMLStreamException
@@ -89,6 +127,25 @@ public final class LoadPomDeps {
         return artifacts;
 
     }
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    private static ArrayList<Artifact> loadExclusion(XMLStreamReader reader) throws XMLStreamException {
+        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+        while (reader.hasNext()) {
+            int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSION.equals(reader.getLocalName())) {
+                artifacts.add(loadDependency(reader));
+            }
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                return artifacts;
+            }
+        }
+        return artifacts;
+
+    }
 
     /**
      * @param reader
@@ -97,10 +154,9 @@ public final class LoadPomDeps {
      */
     private static Artifact loadDependency(XMLStreamReader reader) throws XMLStreamException {
         Artifact artfact = new Artifact();
-        boolean ignoreByExclusion = false;
         while (reader.hasNext()) {
             int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && !ignoreByExclusion) {
+            if (XMLStreamConstants.START_ELEMENT == event) {
                 switch (reader.getLocalName()) {
                     case Constants.GROUP_ID:
                         artfact.setGroup(getContent(reader));
@@ -118,9 +174,6 @@ public final class LoadPomDeps {
                         }
                         artfact.setScope(scop);
                         break;
-                    case Constants.EXCLUSIONS:
-                        ignoreByExclusion=true;
-                        break;
                     default:
                         break;
                 }
@@ -132,8 +185,12 @@ public final class LoadPomDeps {
                         artfact.setScope(scop);
                     }
                     return artfact;
-                }else if( Constants.EXCLUSIONS.equals(reader.getLocalName())) {
-                    ignoreByExclusion=false;
+                }else if( Constants.EXCLUSION.equals(reader.getLocalName())) {
+                    if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
+                        String scop = Constants.COMPILE;
+                        artfact.setScope(scop);
+                    }
+                    return artfact;
                 }
             }
            

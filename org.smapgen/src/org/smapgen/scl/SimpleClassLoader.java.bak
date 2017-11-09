@@ -56,7 +56,6 @@ public class SimpleClassLoader extends ClassLoader {
      * SimpleClassLoader repoClassLoader .
      */
     private SimpleClassLoader repoClassLoader;
-    private boolean ignoreClassNotFound = false;
     public SimpleClassLoader() {}
 
     /**
@@ -97,20 +96,10 @@ public class SimpleClassLoader extends ClassLoader {
         if (response != null) {
             return response;
         }
-        if (ignoreClassNotFound){
-            try{
-                response = super.findClass(name);
-            }catch(Throwable e){
-                e.printStackTrace();
-                return null;
-            }
-        }else{
-            response = super.findClass(name);
-        }
+        response = super.findClass(name);
         if (response == null) {
-           throw new NoClassDefFoundError(name);
+            throw new NoClassDefFoundError(name);
         }
-            
         return response;
     }
 
@@ -144,23 +133,15 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     /**
-     * @param  
      * @throws Throwable
      */
-    public void initDeps(Boolean ignoreClassNotFound) throws Throwable {
-        setignoreClassNotFound(ignoreClassNotFound);
+    public void initDeps() throws Throwable {
         try {
             ArrayList<String> deps = new ArrayList<String>(depsPath.keySet());
             loadAllDeps(deps);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        setignoreClassNotFound(false);
-    }
-
-    private void setignoreClassNotFound(Boolean ignore) {
-        ignoreClassNotFound = ignore.booleanValue();
-        
     }
 
     /**
@@ -256,7 +237,8 @@ public class SimpleClassLoader extends ClassLoader {
             addClassCache(defineClass(name, classData, 0, classData.length));
             return true;
         } catch (final NoClassDefFoundError e) {
-                throw e;
+            // Ommit
+            return false;
         } catch (final Throwable e){
             return false;
         }
