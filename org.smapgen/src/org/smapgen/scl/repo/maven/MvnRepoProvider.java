@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -19,7 +21,7 @@ import org.smapgen.scl.repo.IRepoProvider;
  */
 public class MvnRepoProvider implements IRepoProvider {
     private Path repo;
-
+    private final ExecutorService service = Executors.newFixedThreadPool(10);
     private IArtifactsBlock artifactBlock = new ArtifactsBlock();
     private IArtifactsBlock artifactBlockBlackList = new ArtifactsBlock();
     
@@ -41,14 +43,17 @@ public class MvnRepoProvider implements IRepoProvider {
     public List<Artifact> getDependencies(File conf) throws FileNotFoundException, XMLStreamException{
         return LoadPomDeps.loadDepsXmlFile(conf);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.scl.repo.IRepoProvider#getDependenciesTree(java.io.File, java.nio.file.Path)
      */
     @Override
-    public List<Artifact> getDependenciesTree(File conf,Path repo) throws FileNotFoundException, XMLStreamException{
+    public List<Artifact> getDependenciesTree(File conf, Path repo) throws FileNotFoundException, XMLStreamException {
         recursiveLoadDependencies(conf, repo);
-        recursiveLoadExcludes(conf, repo);
-        artifactBlock.removeAll(artifactBlockBlackList);
+        //recursiveLoadExcludes(conf, repo);
+        //artifactBlock.removeAll(artifactBlockBlackList);
+        artifactBlock.fixArtifacts();
         return artifactBlock.values();
     }
     /**
@@ -63,20 +68,30 @@ public class MvnRepoProvider implements IRepoProvider {
         try{
             Artifact parentArt = LoadPomDeps.loadParentXmlFile(conf);
             if(null != parentArt && !artifactBlock.contains(parentArt)){
-                artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(conf));
+                addProperties(conf);
                 File parent = getDepPom(repo, parentArt);
                 if(null != parent){
                     recursiveLoadDependencies(parent,repo);
                 }
             }
             deps = LoadPomDeps.loadDepsXmlFile(conf);
+
             for (Artifact artifact : deps) {
                 if(!artifactBlock.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
-                    artifactBlock.add(artifact);
+                    addArtifact(artifact);
                     File parent = getDepPom(repo, artifact);
                     if(null != parent){
-                        artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
-                        recursiveLoadDependencies(parent,repo);
+                        addProperties(parent);
+                        Runnable task = new Runnable() {
+                            public void run() {
+                                try {
+                                    recursiveLoadDependencies(parent,repo);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        service.submit(task );
                     }
                 }
             }
@@ -84,6 +99,20 @@ public class MvnRepoProvider implements IRepoProvider {
             // Omit artifact
             deps= new ArrayList<Artifact>();
         }
+    }
+    /**
+     * @param artifact
+     */
+    private synchronized void addArtifact(Artifact artifact) {
+        artifactBlock.add(artifact);
+    }
+    /**
+     * @param parent
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    private synchronized void addProperties(File parent) throws FileNotFoundException, XMLStreamException {
+        artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
     }
     
     /**
@@ -98,20 +127,30 @@ public class MvnRepoProvider implements IRepoProvider {
         try{
             Artifact parentArt = LoadPomDeps.loadParentXmlFile(conf);
             if(null != parentArt && !artifactBlockBlackList.contains(parentArt)){
-                artifactBlockBlackList.addProperties(LoadPomDeps.loadVarsXmlFile(conf));
+                addPropertiesBlackList(conf);
                 File parent = getDepPom(repo, parentArt);
                 if(null != parent){
                     recursiveLoadDependencies(parent,repo);
                 }
             }
             deps = LoadPomDeps.loadExcludedXmlFile(conf);
+            ExecutorService service = Executors.newFixedThreadPool(10);
             for (Artifact artifact : deps) {
                 if(!artifactBlockBlackList.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
-                    artifactBlockBlackList.add(artifact);
+                    addBlackListArtifact(artifact);
                     File parent = getDepPom(repo, artifact);
                     if(null != parent){
-                        artifactBlockBlackList.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
-                        recursiveLoadDependencies(parent,repo);
+                        addPropertiesBlackList(parent);
+                        Runnable task = new Runnable() {
+                            public void run() {
+                                try {
+                                    recursiveLoadDependencies(parent,repo);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        service.submit(task );
                     }
                 }
             }
@@ -119,6 +158,20 @@ public class MvnRepoProvider implements IRepoProvider {
             // Omit artifact
             deps= new ArrayList<Artifact>();
         }
+    }
+    /**
+     * @param artifact
+     */
+    private synchronized void addBlackListArtifact(Artifact artifact) {
+        artifactBlockBlackList.add(artifact);
+    }
+    /**
+     * @param conf
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    private synchronized void addPropertiesBlackList(File conf) throws FileNotFoundException, XMLStreamException {
+        artifactBlockBlackList.addProperties(LoadPomDeps.loadVarsXmlFile(conf));
     }
     
     /* (non-Javadoc)

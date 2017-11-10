@@ -56,9 +56,6 @@ public interface IArtifactsBlock {
      */
     void addProperties(Map<String, String> prop);
 
-    /**
-     * @param string
-     */
-    void filterByScope(String string);
+    void fixArtifacts();
 
 }

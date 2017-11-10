@@ -187,33 +187,9 @@ public class ArtifactsBlock implements IArtifactsBlock {
     }
 
     @Override
-    public void filterByScope(String scope) {
-        HashMap<Entry<String, String>, Artifact> aux = new HashMap<Entry<String, String>, Artifact>();
-        for (Artifact element : artiFactList.values()) {
-            if(completeVersion(element) && element.getScope().equals(scope)){
-                aux.put(getKey(element), element);
-            }
-        }
-        artiFactList=aux;
-    }
-
-    /**
-     * @param element
-     * @return 
-     */
-    private boolean completeVersion(Artifact element) {
-        if(element.getVersion()==null){
-            return false;
-        }
-        if(element.getVersion().startsWith("${")){
-            CharSequence key = element.getVersion().subSequence(2, element.getVersion().length() - 1);
-            if(properties.containsKey(key)){
-                element.setVersion(properties.get(key));
-                return true;
-            }
-            return false;
-        }else{
-            return true;
+    public void fixArtifacts(){
+        for (Artifact it : artiFactList.values()) {
+            completeArtifact(it);
         }
     }
 }
