@@ -232,7 +232,6 @@ public class MapperNewWizardPage extends WizardPage {
                             .getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo);
                     dependencies.get(combo_1.getText());
                     support.getSimpleCl().loadlib(dependencies.get(combo_1.getText()).getPath());
-                    support.getSimpleCl().initDeps(true);
                     updateDeps();
                     lblNewLabel.setText(combo_1.getText() + Messages.MapperNewWizardPage_19);
                 } catch (Throwable e1) {
