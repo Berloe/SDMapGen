@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/sdmapgen_1.0.1.3.jar" id="sdmapgen" version="1.0.1.3" os="win32" ws="win32" arch="x86,x86_64">
+   <feature url="features/sdmapgen_1.0.1.4.jar" id="sdmapgen" version="1.0.1.4" os="win32" ws="win32" arch="x86,x86_64">
       <category name="SDMapGen"/>
    </feature>
-   <category-def name="SDMapGen" label="SDMapGen"/>
+   <category-def name="SDMapGen" label="SDMapGen">
+      <description>
+         SDMapGen is a code generator for mapping between beans from an approach of simplicity of use, that is the reason for being integrated in Eclipse as a plugin
+      </description>
+   </category-def>
 </site>
