@@ -21,7 +21,7 @@ import org.smapgen.scl.repo.IRepoProvider;
  */
 public class MvnRepoProvider implements IRepoProvider {
     private Path repo;
-    private final ExecutorService service = Executors.newFixedThreadPool(10);
+    private final ExecutorService threadPool = Executors.newWorkStealingPool();
     private IArtifactsBlock artifactBlock = new ArtifactsBlock();
     private IArtifactsBlock artifactBlockBlackList = new ArtifactsBlock();
     
@@ -51,8 +51,9 @@ public class MvnRepoProvider implements IRepoProvider {
     @Override
     public List<Artifact> getDependenciesTree(File conf, Path repo) throws FileNotFoundException, XMLStreamException {
         recursiveLoadDependencies(conf, repo);
-        //recursiveLoadExcludes(conf, repo);
-        //artifactBlock.removeAll(artifactBlockBlackList);
+        recursiveLoadExcludes(conf, repo);
+        artifactBlock.removeAll(artifactBlockBlackList);
+        threadPool.shutdown();
         artifactBlock.fixArtifacts();
         return artifactBlock.values();
     }
@@ -91,7 +92,7 @@ public class MvnRepoProvider implements IRepoProvider {
                                 }
                             }
                         };
-                        service.submit(task );
+                        threadPool.submit(task );
                     }
                 }
             }
@@ -111,7 +112,7 @@ public class MvnRepoProvider implements IRepoProvider {
      * @throws FileNotFoundException
      * @throws XMLStreamException
      */
-    private synchronized void addProperties(File parent) throws FileNotFoundException, XMLStreamException {
+    private void addProperties(File parent) throws FileNotFoundException, XMLStreamException {
         artifactBlock.addProperties(LoadPomDeps.loadVarsXmlFile(parent));
     }
     
@@ -134,7 +135,6 @@ public class MvnRepoProvider implements IRepoProvider {
                 }
             }
             deps = LoadPomDeps.loadExcludedXmlFile(conf);
-            ExecutorService service = Executors.newFixedThreadPool(10);
             for (Artifact artifact : deps) {
                 if(!artifactBlockBlackList.contains(artifact) && (null ==artifact.getScope()||"compile".equals(artifact.getScope())|| "import".equals(artifact.getScope()))){
                     addBlackListArtifact(artifact);
@@ -150,7 +150,7 @@ public class MvnRepoProvider implements IRepoProvider {
                                 }
                             }
                         };
-                        service.submit(task );
+                        threadPool.execute(task );
                     }
                 }
             }

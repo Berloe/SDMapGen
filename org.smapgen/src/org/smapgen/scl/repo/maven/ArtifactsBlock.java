@@ -155,17 +155,17 @@ public class ArtifactsBlock implements IArtifactsBlock {
      */
     @Override
     public void addProperties(Map<String, String> prop) {
-        for (String key : prop.keySet()) {
-            for (Artifact a : artiFactList.values()) {
-                if (a.getVersion() != null && a.getVersion().startsWith("${")
-                        && key.equals(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
-                    a.setVersion(key);
-                    add(a);
-                }
-
-            }
-        }
-        properties.putAll(prop);
+//            for (String key : prop.keySet()) {
+//                for (Artifact a : artiFactList.values()) {
+//                    if (a.getVersion() != null && a.getVersion().startsWith("${")
+//                            && key.equals(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
+//                        a.setVersion(key);
+//                        add(a);
+//                    }
+//    
+//                }
+//            }
+            properties.putAll(prop);
     }
 
     @Override

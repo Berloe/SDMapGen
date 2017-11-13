@@ -44,6 +44,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
      * SupportMapper suport .
      */
     private final MapperWizardHelper suport;
+
     /**
      * 
      * @param IJavaProject
@@ -113,7 +114,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     @Override
     public void addPages() {
         try {
-            MapperNewWizardPage page = new MapperNewWizardPage(selectionData, suport,javaclass);
+            MapperNewWizardPage page = new MapperNewWizardPage(selectionData, suport, javaclass);
             addPage(page);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -141,13 +142,14 @@ public class MapperNewWizard extends Wizard implements INewWizard {
                 else if (element instanceof IJavaProject)
                     suport.setProject((IJavaProject) element);
                 else if (element instanceof IAdaptable)
-                    if((IJavaProject) ((IAdaptable) element).getAdapter(IProject.class)!=null){
+                    if ((IJavaProject) ((IAdaptable) element).getAdapter(IProject.class) != null) {
                         suport.setProject((IJavaProject) ((IAdaptable) element).getAdapter(IProject.class));
-                    }else if((IFile) ((IAdaptable) element).getAdapter(IFile.class)!=null){
-                        javaclass=JavaCore.createCompilationUnitFrom((IFile) ((IAdaptable) element).getAdapter(IFile.class));
+                    } else if ((IFile) ((IAdaptable) element).getAdapter(IFile.class) != null) {
+                        javaclass = JavaCore
+                                .createCompilationUnitFrom((IFile) ((IAdaptable) element).getAdapter(IFile.class));
                         suport.setProject(javaclass.getJavaProject());
                     }
-                
+
                 if (suport.getProject() != null) {
                     final Set<IJavaProject> projectTree = getAllRequiredProjects(suport.getProject());
                     projectTree.add(suport.getProject());
@@ -156,6 +158,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
                             initClassPaths(iJavaProject);
                         } catch (Throwable e) {
                             e.printStackTrace();
+                            continue;
                         }
                 }
             }
@@ -172,8 +175,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     }
 
     /**
-     * This method is called when 'Finish' button is pressed in the wizard. We will create an operation and run it using
-     * wizard as execution context.
+     * This method is called when 'Finish' button is pressed in the wizard. We will create an operation and run it using wizard as execution context.
      */
     @Override
     public boolean performFinish() {
@@ -185,19 +187,18 @@ public class MapperNewWizard extends Wizard implements INewWizard {
      * @param IJavaProject
      *            project.
      * @return void
-     * @throws Throwable 
+     * @throws Throwable
      */
     private void initClassPaths(final IJavaProject p) throws Throwable {
         final IClasspathEntry[] resolvedClass = p.getResolvedClasspath(true);
         final String[] importer = p.getRequiredProjectNames();
         for (final IClasspathEntry iClasspathEntry : resolvedClass)
-            if (iClasspathEntry.getOutputLocation() != null){
+            if (iClasspathEntry.getOutputLocation() != null) {
                 suport.getSimpleCl()
                         .loadlib(p.getProject().getLocation().toOSString()
                                 + iClasspathEntry.getOutputLocation().toOSString()
                                         .substring(iClasspathEntry.getOutputLocation().toOSString().indexOf('\\', 1)));
-            }
-            else{
+            } else {
                 for (final String importPrj : importer)
                     if (iClasspathEntry.getPath().toOSString().contains(importPrj))
                         suport.getSimpleCl().loadlib(iClasspathEntry.getPath().toOSString());
@@ -208,22 +209,24 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     }
 
     /**
+     * @throws Throwable
      * 
      */
-    private void loadDependencies() {
+    private void loadDependencies() throws Throwable {
         final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
         final String value = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
         final SimpleClassLoader reposcl = new SimpleClassLoader(value);
         // Init classes into classloader
-        try {
-            Map<String, File> dependencies = suport.getResolvedDependendencyTree(suport.getRepoConfig(suport.getProject()), value);
-            for (File f : dependencies.values()) {
+        Map<String, File> dependencies = suport.getResolvedDependendencyTree(suport.getRepoConfig(suport.getProject()),
+                value);
+        for (File f : dependencies.values()) {
+            try {
                 reposcl.loadlib(f.getPath());
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
         suport.getSimpleCl().setRepoClassLoader(reposcl);
     }
-    
+
 }

@@ -31,6 +31,7 @@ public class SimpleClassLoader extends ClassLoader {
     private static final char DOT_CHAR = ".".charAt(0);
     private static final char BACKSLASH = "\\".charAt(0);
     private static final String CLASS_EXTENSION = ".class";
+    private static final String JAR_EXTENSION = ".jar";
     /**
      * Class cache
      * 
@@ -57,6 +58,7 @@ public class SimpleClassLoader extends ClassLoader {
      */
     private SimpleClassLoader repoClassLoader;
     private boolean ignoreClassNotFound = false;
+
     public SimpleClassLoader() {}
 
     /**
@@ -97,20 +99,20 @@ public class SimpleClassLoader extends ClassLoader {
         if (response != null) {
             return response;
         }
-        if (ignoreClassNotFound){
-            try{
+        if (ignoreClassNotFound) {
+            try {
                 response = super.findClass(name);
-            }catch(Throwable e){
+            } catch (Throwable e) {
                 e.printStackTrace();
                 return null;
             }
-        }else{
+        } else {
             response = super.findClass(name);
         }
         if (response == null) {
-           throw new NoClassDefFoundError(name);
+            throw new NoClassDefFoundError(name);
         }
-            
+
         return response;
     }
 
@@ -144,7 +146,7 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     /**
-     * @param  
+     * @param
      * @throws Throwable
      */
     public void initDeps(Boolean ignoreClassNotFound) throws Throwable {
@@ -160,7 +162,7 @@ public class SimpleClassLoader extends ClassLoader {
 
     private void setignoreClassNotFound(Boolean ignore) {
         ignoreClassNotFound = ignore.booleanValue();
-        
+
     }
 
     /**
@@ -190,7 +192,8 @@ public class SimpleClassLoader extends ClassLoader {
                 throw new ClassLoaderException(classname, e);
             }
             try {
-                response = repoClassLoader.loadClassByName(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
+                response = repoClassLoader
+                        .loadClassByName(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
             } catch (final Throwable ex) {
                 throw new ClassLoaderException(classname);
             }
@@ -256,8 +259,8 @@ public class SimpleClassLoader extends ClassLoader {
             addClassCache(defineClass(name, classData, 0, classData.length));
             return true;
         } catch (final NoClassDefFoundError e) {
-                throw e;
-        } catch (final Throwable e){
+            throw e;
+        } catch (final Throwable e) {
             return false;
         }
     }
@@ -335,7 +338,7 @@ public class SimpleClassLoader extends ClassLoader {
         classCache.put(loadClass.getName(), loadClass);
     }
 
-     /**
+    /**
      * 
      * @param Class<?>
      *            classFrom
@@ -419,8 +422,10 @@ public class SimpleClassLoader extends ClassLoader {
 
     /**
      * 
-     * @param String pkgToUri.
-     * @param Set keys
+     * @param String
+     *            pkgToUri.
+     * @param Set
+     *            keys
      * @return Set paths
      */
     private Set<String> findRootUri(String pkgToUri, final Set<String> keys) {
@@ -437,7 +442,7 @@ public class SimpleClassLoader extends ClassLoader {
         if (!response.isEmpty()) {
             return response;
         }
-        if(newPkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH)<0){
+        if (newPkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH) < 0) {
             return null;
         }
         final String auxPkgToUri = newPkgToUri.substring(0, newPkgToUri.lastIndexOf(SimpleClassLoader.BACKSLASH));
@@ -445,8 +450,10 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     /**
-     * @param String  ru.
-     * @param Set String keys
+     * @param String
+     *            ru.
+     * @param Set
+     *            String keys
      * @return Set String
      */
     private Set<String> findSystemRootUri(final String ru, final Set<String> keys) {
@@ -524,7 +531,8 @@ public class SimpleClassLoader extends ClassLoader {
             if (repoClassLoader != null) {
                 String auxlib = repoClassLoader.libpath;
                 // first try package
-                String auxName = name.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SHARP_CHAR).replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.SHARP_CHAR);
+                String auxName = name.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SHARP_CHAR)
+                        .replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.SHARP_CHAR);
                 String[] fragments = auxName.split(String.valueOf(SimpleClassLoader.SHARP_CHAR));
                 for (int i = 0; i < fragments.length - 1; i++) {
                     StringBuffer rPath = new StringBuffer();
@@ -614,7 +622,7 @@ public class SimpleClassLoader extends ClassLoader {
         }
         final Set<String> eval = formatDepsCanonicalNames(dependencias);
         for (final String key : eval) {
-            if (depsPath.containsKey(key)&& !classCache.containsKey(key)) {
+            if (depsPath.containsKey(key) && !classCache.containsKey(key)) {
                 try {
                     ldepsFromDepsPath(key);
                 } catch (Exception e) {
@@ -650,7 +658,9 @@ public class SimpleClassLoader extends ClassLoader {
                 throw new ClassLoaderException(classname, e);
             }
             try {
-                response = repoClassLoader.loadClassByNameAndPackage(classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR), pakageRelativePath);
+                response = repoClassLoader.loadClassByNameAndPackage(
+                        classname.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR),
+                        pakageRelativePath);
             } catch (final Throwable ex) {
                 throw new ClassLoaderException(classname);
             }
@@ -697,6 +707,7 @@ public class SimpleClassLoader extends ClassLoader {
         }
 
     }
+
     /**
      * 
      * @param String
@@ -710,30 +721,33 @@ public class SimpleClassLoader extends ClassLoader {
             String className = pathToJar.substring(libpath.length() + 1, pathToJar.length() - 6)
                     .replace(SimpleClassLoader.LINE_SEPARATOR, String.valueOf(SimpleClassLoader.DOT_CHAR));
             final URL ur = new File(pathToJar).toURI().toURL();
-            if (!depsPath.containsKey(className)) {
-                depsPath.put(className, ur);
-            }
+            addDependencyPath(className, ur);
         } else {
-            try {
+            if (pathToJar.endsWith(SimpleClassLoader.JAR_EXTENSION)) {
                 final JarFile jarFile = new JarFile(pathToJar);
                 final Enumeration<JarEntry> e = jarFile.entries();
-
                 while (e.hasMoreElements()) {
                     final JarEntry je = e.nextElement();
-                    if (je.isDirectory() || !je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
-                        continue;
+                    if (!je.isDirectory() && je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
+                        final String className = je.getName().substring(0, je.getName().length() - 6);
+                        // className = className.replace("/", ".");
+                        final URL ur = new URL(
+                                "jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
+                        addDependencyPath(className, ur);
                     }
-                    final String className = je.getName().substring(0, je.getName().length() - 6);
-                    // className = className.replace("/", ".");
-                    final URL ur = new URL("jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
-                    if (!depsPath.containsKey(className)) {
-                        depsPath.put(className, ur);
-                    }
+
                 }
-            } catch (Exception e) {
-                // forget the file
             }
         }
+    }
 
+    /**
+     * @param className
+     * @param ur
+     */
+    private void addDependencyPath(final String className, final URL ur) {
+        if (!depsPath.containsKey(className)) {
+            depsPath.put(className, ur);
+        }
     }
 }
