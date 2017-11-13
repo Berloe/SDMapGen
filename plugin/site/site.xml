@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/sdmapgen_1.0.1.5.jar" id="sdmapgen" version="1.0.1.5" os="win32" ws="win32" arch="x86,x86_64">
+   <feature url="features/sdmapgen_1.0.2.0.jar" id="sdmapgen" version="1.0.2.0" os="win32" ws="win32" arch="x86,x86_64">
       <category name="SDMapGen"/>
    </feature>
    <category-def name="SDMapGen" label="SDMapGen">
