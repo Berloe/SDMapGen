@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/BeanUtils_1.0.3.0.jar" id="BeanUtils" version="1.0.3.0">
-      <category name="BeanUtils"/>
-   </feature>
-   <category-def name="BeanUtils" label="BeanUtils"/>
-</site>
