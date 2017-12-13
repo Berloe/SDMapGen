@@ -5,6 +5,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.smapgen.plugin.Activator;
@@ -43,6 +44,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         addField(new StringFieldEditor(PreferenceConstants.OUTPUT_SUFFIX, Messages.PreferencePage_3, -1,
                 StringFieldEditor.VALIDATE_ON_KEY_STROKE, getFieldEditorParent()));
         addField(new org.eclipse.jface.preference.ComboFieldEditor(PreferenceConstants.FORMATTING, Messages.PreferencePage_4,getFormattingDefaults(), getFieldEditorParent()));
+        
+        addField(new org.eclipse.jface.preference.IntegerFieldEditor(PreferenceConstants.COMPAT_THRESHOLD, Messages.PreferencePage_5, getFieldEditorParent(),2));
     }
 
     /**
@@ -81,6 +84,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
         store.setValue(PreferenceConstants.INPUT_SUFFIX, textoIn);
         final String textoOut = ((Text) getFieldEditorParent().getTabList()[3]).getText();
         store.setValue(PreferenceConstants.OUTPUT_SUFFIX, textoOut);
+        final String combo = ((Combo) getFieldEditorParent().getTabList()[4]).getText();
+        store.setValue(PreferenceConstants.FORMATTING, combo);
+        final String compat = ((Text) getFieldEditorParent().getTabList()[5]).getText();
+        store.setValue(PreferenceConstants.COMPAT_THRESHOLD, compat);
         setPreferenceStore(store);
         return super.performOk();
     }

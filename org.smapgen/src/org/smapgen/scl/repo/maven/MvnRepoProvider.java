@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -54,6 +55,13 @@ public class MvnRepoProvider implements IRepoProvider {
         recursiveLoadExcludes(conf, repo);
         artifactBlock.removeAll(artifactBlockBlackList);
         threadPool.shutdown();
+        while (!threadPool.isShutdown()) {
+            try {
+                threadPool.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         artifactBlock.fixArtifacts();
         return artifactBlock.values();
     }

@@ -3,6 +3,7 @@ package org.smapgen.scl;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -473,7 +474,6 @@ public class SimpleClassLoader extends ClassLoader {
      * @throws URISyntaxException
      * @throws ClassLoaderException
      */
-    @SuppressWarnings("deprecation")
     private Class<?> getClass(final String classname, final String path)
             throws URISyntaxException, ClassLoaderException {
         final String uri = path.substring(0, path.lastIndexOf(SimpleClassLoader.BACKSLASH));
@@ -502,11 +502,20 @@ public class SimpleClassLoader extends ClassLoader {
             final InputStream classImput = new FileInputStream(path);
             final byte[] classData = loadClassData(classImput);
             classImput.close();
-            final Class<?> clazz = defineClass(classData, 0, classData.length);
+            final Class<?> clazz = defineClass(null,classData, 0, classData.length);
             addClassCache(clazz);
             return clazz;
         } catch (final Exception e) {
             throw new ClassLoaderException(classname);
+        }
+    }
+
+    public InputStream getClassAsStream(String name) {
+        final URL pkgToUri = depsPath.get(name);
+        try {
+            return new FileInputStream(pkgToUri.getPath());
+        } catch (FileNotFoundException e) {
+            return null;
         }
     }
 

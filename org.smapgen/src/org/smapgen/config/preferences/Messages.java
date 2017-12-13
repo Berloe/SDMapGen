@@ -23,7 +23,15 @@ public final class Messages extends NLS {
      */
     public static String PreferencePage_3;
     
+    /**
+     * String PreferencePage_4 .
+     */
     public static String PreferencePage_4;
+    
+    /**
+     * String PreferencePage_5 .
+     */
+    public static String PreferencePage_5;
     /**
      * String BUNDLE_NAME .
      */

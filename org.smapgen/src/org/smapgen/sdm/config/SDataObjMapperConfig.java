@@ -14,10 +14,29 @@ public class SDataObjMapperConfig {
      * String OUTSufix.
      */
     private String OUTSufix;
+    
+    private Integer compatThreshold;
 
-    public SDataObjMapperConfig( String input, String output) {
+    /**
+     * @return the compatThreshold
+     */
+    public Integer getCompatThreshold() {
+        return compatThreshold;
+    }
+
+    /**
+     * @param compatThreshold the compatThreshold to set
+     */
+    public void setCompatThreshold(Integer compatThreshold) {
+        this.compatThreshold = compatThreshold;
+    }
+
+    public SDataObjMapperConfig( String input, String output, Integer compatThreshold) {
         this.INSufix = input;
         this.OUTSufix = output;
+        if(compatThreshold!=null){
+            this.compatThreshold = compatThreshold;
+        }
     }
 
     public String getINSufix() {

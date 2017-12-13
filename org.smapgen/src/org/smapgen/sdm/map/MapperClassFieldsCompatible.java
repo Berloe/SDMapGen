@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.smapgen.scl.exception.ClassLoaderException;
 import org.smapgen.sdm.metadata.MappingField;
+import org.smapgen.sdm.utils.Utils;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -37,7 +38,7 @@ public class MapperClassFieldsCompatible {
         StringBuffer b = new StringBuffer();
         for (MappingField sourceField : mapSource) {
             for (MappingField targetField : maptarget.values()) {
-                if (!targetField.getMapped() && !sourceField.getMapped() && isNameCompatible(targetField, sourceField)) {
+                if (!targetField.getMapped() && !sourceField.getMapped() && Utils.isCompatibleName(targetField.getName(), sourceField.getName())) {
                     b.append(DoMap.mapSourceIntoTarget( sourceName, targetName, sourceField, targetField));
                     targetField.setMapped(Boolean.TRUE);
                     sourceField.setMapped(Boolean.TRUE);
@@ -47,17 +48,7 @@ public class MapperClassFieldsCompatible {
         }
         return b;
     }
-    /**
-     * @param targetField
-     * @param sourceField
-     * @return
-     */
-    private static Boolean isNameCompatible(MappingField targetField, MappingField sourceField) {
-        return targetField.getName().startsWith(sourceField.getName())
-                || targetField.getName().endsWith(sourceField.getName())
-                || sourceField.getName().startsWith(targetField.getName())
-                || sourceField.getName().endsWith(targetField.getName());
-    }
+ 
     /**
      * 
      */

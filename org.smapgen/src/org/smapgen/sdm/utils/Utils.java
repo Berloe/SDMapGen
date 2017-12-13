@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.smapgen.scl.SimpleClassLoader;
+import org.smapgen.sdm.ISimpleDataObjMapper;
 import org.smapgen.sdm.metadata.FieldUtils;
 import org.smapgen.sdm.metadata.MappingField;
 
@@ -19,7 +20,7 @@ import org.smapgen.sdm.metadata.MappingField;
  * @author Alberto Fuentes Gómez
  *
  */
-public final class Utils {
+public final class Utils implements ISimpleDataObjMapper {
     private static final char SLASH_CHAR = "/".charAt(0);
     private static final char DOT_CHAR = ".".charAt(0);
     /**
@@ -175,5 +176,49 @@ public final class Utils {
             }
         }
         return null;
+    }
+    
+    public static boolean isCompatibleName(String simpleName, String simpleName2) {
+        return simpleName.equals(simpleName2)||simpleName.startsWith(simpleName2)
+                || simpleName.endsWith(simpleName2)
+                || simpleName2.startsWith(simpleName)
+                || simpleName2.endsWith(simpleName) ||matchPercent(simpleName,simpleName2);
+    }
+
+
+    /**
+     * @param auxSimpleName
+     * @param auxsimpleName2
+     * @return 
+     */
+    public static boolean matchPercent(String SimpleName, String simpleName2) {
+        String auxSimpleName = SimpleName.toLowerCase();
+        String auxsimpleName2= simpleName2.toLowerCase();
+        int length = auxSimpleName.length()>auxsimpleName2.length()?auxsimpleName2.length():auxSimpleName.length();
+        int match=0;
+        int offset1 = 0;
+        int offset2 = 0;
+        if(auxSimpleName.charAt(0)!=auxsimpleName2.charAt(0)){
+            String init1 = String.valueOf(auxSimpleName.charAt(0));
+            String init2 = String.valueOf(auxsimpleName2.charAt(0));
+            if(auxSimpleName.indexOf(init2)< auxsimpleName2.indexOf(init1)){
+                offset1=auxSimpleName.indexOf(init2);
+            }else{
+                offset2=auxsimpleName2.indexOf(init1);
+            }
+        }
+        if(offset1<0||offset2<0){
+            return false;
+        }
+        for (int i = 0; i+offset1+offset2 < length; i++) {
+            if(auxSimpleName.charAt(i+offset1)==auxsimpleName2.charAt(i+offset2)){
+                ++match;
+            }
+        }
+        double result = (match*100)/length;
+        if(result>config.getCompatThreshold().intValue()){
+            return true;          
+        }
+        return false;
     }
 }

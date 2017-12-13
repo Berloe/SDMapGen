@@ -27,6 +27,7 @@ import org.smapgen.config.preferences.PreferenceConstants;
 import org.smapgen.plugin.Activator;
 import org.smapgen.plugin.etc.Constants;
 import org.smapgen.plugin.etc.MapperWizardHelper;
+import org.smapgen.sdm.config.SDataObjMapperConfig;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -95,6 +96,8 @@ class MapperSelectionListener implements SelectionListener{
             final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
             final String input = prop.getString(PreferenceConstants.INPUT_SUFFIX);
             final String output = prop.getString(PreferenceConstants.OUTPUT_SUFFIX);
+            final Integer threshold = Integer.valueOf(prop.getInt(PreferenceConstants.COMPAT_THRESHOLD));
+            SDataObjMapperConfig mapConf = new SDataObjMapperConfig(input, output,threshold);
             
             progressBar.setMaximum(100);
             progressBar.setMinimum(1);
@@ -120,7 +123,7 @@ class MapperSelectionListener implements SelectionListener{
                     if (localTargetFromFields.containsKey(nameSource) && !localSourcesClasses.get(nameSource)
                             .equals(localTargetFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesClasses.get(nameSource),
-                                localTargetFromFields.get(nameSource), input, output, javaClass,Boolean.TRUE);
+                                localTargetFromFields.get(nameSource), mapConf, javaClass,Boolean.TRUE);
                         progressBar.setSelection((int) (++count*factor));
                    }
                 }
@@ -129,13 +132,13 @@ class MapperSelectionListener implements SelectionListener{
                     if (localSourcesFromFields.containsKey(nameSource) && !localTargetClasses.get(nameSource)
                             .equals(localSourcesFromFields.get(nameSource))) {
                         support.generate(rootPkg.getText(), localSourcesFromFields.get(nameSource),
-                                localTargetClasses.get(nameSource), input, output, javaClass,Boolean.TRUE);
+                                localTargetClasses.get(nameSource), mapConf, javaClass,Boolean.TRUE);
                         progressBar.setSelection((int) (++count*factor));
                     }
                 }
             } else {
                 progressBar.setSelection(1);
-                support.generate(rootPkg.getText(), source.getText(), target.getText(), input, output, javaClass,Boolean.valueOf(javaClass!=null));
+                support.generate(rootPkg.getText(), source.getText(), target.getText(), mapConf, javaClass,Boolean.valueOf(javaClass!=null));
             }
             progressBar.setSelection(100);
 

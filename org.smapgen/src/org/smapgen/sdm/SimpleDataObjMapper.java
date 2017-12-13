@@ -19,6 +19,7 @@ public class SimpleDataObjMapper implements ISimpleDataObjMapper {
     public SimpleDataObjMapper(final SDataObjMapperConfig conf) {
         config.setINSufix(conf.getINSufix());
         config.setOUTSufix(conf.getOUTSufix());
+        config.setCompatThreshold(conf.getCompatThreshold());
     }
     /**
      * @param clasSource

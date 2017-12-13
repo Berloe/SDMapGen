@@ -25,6 +25,8 @@ public final class PreferenceConstants {
      * String P_PATHCLASSREPO .
      */
     public static final String P_PATHCLASSREPO = "pathClassRepo";
+    
+    public static final String COMPAT_THRESHOLD = "classNameCompatThreshold";
     /**
      * constructor
      */

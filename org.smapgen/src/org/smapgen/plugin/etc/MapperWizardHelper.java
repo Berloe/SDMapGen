@@ -72,22 +72,21 @@ public class MapperWizardHelper {
      * @return
      * @throws Throwable
      */
-    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam, final String input, final String output,ICompilationUnit cu, Boolean isMainPrivate) throws Throwable {
+    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam, final SDataObjMapperConfig mapConf,ICompilationUnit cu, Boolean isMainPrivate) throws Throwable {
         final String source = sourceParam;
         final String target = targetParam;
-        StringBuffer[] fileStB = getFileString(source, target, simpleCl, input, output,cu,rootPKG, isMainPrivate);
+        StringBuffer[] fileStB = getFileString(source, target, simpleCl, mapConf,cu,rootPKG, isMainPrivate);
         return fileStB == null || genfile(fileStB, rootPKG,cu);
     }
     public StringBuffer[] getFileString(final String sourceName, final String targetName,
-            final SimpleClassLoader l, final String input, final String output, ICompilationUnit cu, String rootPKG, Boolean isMainPrivate)
+            final SimpleClassLoader l, final SDataObjMapperConfig mapConf, ICompilationUnit cu, String rootPKG, Boolean isMainPrivate)
             throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
             ClassNotFoundException, Throwable {
         if (sourceName != null && !"".equals(sourceName.trim())) {
             final Class<?> source = l.loadClassByName(sourceName.trim());
             if (targetName != null && !"".equals(targetName.trim())) {
                 final Class<?> target = l.loadClassByName(targetName.trim());
-                SDataObjMapperConfig conf = new SDataObjMapperConfig(input, output);
-                final SimpleDataObjMapper sm = new SimpleDataObjMapper(conf);
+                final SimpleDataObjMapper sm = new SimpleDataObjMapper(mapConf);
                 ICompilationUnit jClss = (cu==null?getCompilationUnitFromPKG(rootPKG):cu);
                 loadFunctionsFromCu(jClss,rootPKG,sm);
                 final StringBuffer[] s = sm.mappers( source, target, isMainPrivate);

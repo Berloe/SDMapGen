@@ -177,14 +177,11 @@ public abstract class Mapper {
         Class<?>[] concreteClasses = Utils.getConcreteClasses(targetClass);
         if (concreteClasses != null && concreteClasses.length > 0) {
             for (int i = 0; i < concreteClasses.length; ++i) {
-                if (simpleName.equals(concreteClasses[i].getSimpleName())) {
+                if (Utils.isCompatibleName(simpleName,concreteClasses[i].getSimpleName())) {
                     return concreteClasses[i];
                 }
             }
         }
         return null;
     }
-    
-
-    
 }
