@@ -18,6 +18,7 @@
          <action
                label="Mapper"
                tooltip="Mapper"
+               icon="icons/SDMap16.png"
                class="org.smapgen.plugin.action.ActionLauncher"
                menubarPath="mapperGen.menu/group1"
                enablesFor="1"
@@ -38,6 +39,7 @@
          </menu>
          <action
                label="Mapper"
+               icon="icons/SDMap16.png"
                class="org.smapgen.plugin.action.ActionLauncher"
                menubarPath="mapperGen.menu/group1"
                enablesFor="1"
@@ -58,6 +60,7 @@
          </menu>
          <action
                label="Mapper"
+               icon="icons/SDMap16.png"
                class="org.smapgen.plugin.action.ActionLauncher"
                menubarPath="mapperGen.menu/group1"
                enablesFor="1"
@@ -78,6 +81,7 @@
          </menu>
          <action
                label="Mapper"
+               icon="icons/SDMap16.png"
                class="org.smapgen.plugin.action.ActionLauncher"
                menubarPath="mapperGen.menu/group1"
                enablesFor="1"
