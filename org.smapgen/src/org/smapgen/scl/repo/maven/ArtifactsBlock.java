@@ -12,6 +12,17 @@ import java.util.Map.Entry;
  */
 public class ArtifactsBlock implements IArtifactsBlock {
 
+    private static final char $ = "$".charAt(0);
+
+    /**
+     * ArtiFact list
+     */
+    private final HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<>();
+    /**
+     * Pom properties
+     */
+    private final Map<String, String> properties = new HashMap<>();
+
     /**
      * @author Alberto Fuentes Gómez
      *
@@ -28,17 +39,6 @@ public class ArtifactsBlock implements IArtifactsBlock {
         }
 
     }
-
-    private static final char $ = "$".charAt(0);
-    /**
-     * ArtiFact list
-     */
-    private final HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<>();
-
-    /**
-     * Pom properties
-     */
-    private final Map<String, String> properties = new HashMap<>();
 
     /*
      * (non-Javadoc)

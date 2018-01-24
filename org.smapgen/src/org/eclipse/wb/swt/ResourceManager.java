@@ -37,17 +37,11 @@ import org.osgi.framework.Bundle;
  */
 public class ResourceManager extends SWTResourceManager {
     /**
-     * Provider for plugin resources, used by WindowBuilder at design time.
-     */
-    public interface PluginResourceProvider {
-        URL getEntry(String symbolicName, String path);
-    }
-
-    /**
      * Maps images to decorated images.
      */
     @SuppressWarnings("unchecked")
     private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[SWTResourceManager.LAST_CORNER_KEY];
+
     ////////////////////////////////////////////////////////////////////////////
     //
     // Image
@@ -67,6 +61,12 @@ public class ResourceManager extends SWTResourceManager {
      * Maps URL to images.
      */
     private static Map<String, Image> m_URLImageMap = new HashMap<>();
+    /**
+     * Provider for plugin resources, used by WindowBuilder at design time.
+     */
+    public interface PluginResourceProvider {
+        URL getEntry(String symbolicName, String path);
+    }
 
     /**
      * Returns an {@link Image} composed of a base image decorated by another image.
