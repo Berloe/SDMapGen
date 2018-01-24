@@ -40,9 +40,7 @@ public class MapperWizardHelper {
     /**
      * String classdef .
      */
-    private static final String classdef = Constants.SupportMapper_classHeader
-            + System.getProperty(Constants.SupportMapper_newLine)
-            + System.getProperty(Constants.SupportMapper_newLine) + Constants.SupportMapper_endTag;
+    private static final String classdef = Constants.SupportMapper_classHeader + System.getProperty(Constants.SupportMapper_newLine) + System.getProperty(Constants.SupportMapper_newLine) + Constants.SupportMapper_endTag;
     /**
      * IJavaProject project .
      */
@@ -54,42 +52,39 @@ public class MapperWizardHelper {
 
     /**
      * .
-     * 
+     *
      * @return void
      */
     public MapperWizardHelper() {
         simpleCl = new SimpleClassLoader();
     }
 
-
     /**
      * @param output
      * @param input
      * @param depth
-	 * @param isMainPrivate 
+     * @param isMainPrivate
      * @param rootPKG,String
      *            source,String target
      * @return
      * @throws Throwable
      */
-    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam, final SDataObjMapperConfig mapConf,ICompilationUnit cu, Boolean isMainPrivate) throws Throwable {
+    public boolean generate(final String rootPKG, final String sourceParam, final String targetParam, final SDataObjMapperConfig mapConf, final ICompilationUnit cu, final Boolean isMainPrivate) throws Throwable {
         final String source = sourceParam;
         final String target = targetParam;
-        StringBuffer[] fileStB = getFileString(source, target, simpleCl, mapConf,cu,rootPKG, isMainPrivate);
-        return fileStB == null || genfile(fileStB, rootPKG,cu);
+        final StringBuffer[] fileStB = getFileString(source, target, simpleCl, mapConf, cu, rootPKG, isMainPrivate);
+        return fileStB == null || genfile(fileStB, rootPKG, cu);
     }
-    public StringBuffer[] getFileString(final String sourceName, final String targetName,
-            final SimpleClassLoader l, final SDataObjMapperConfig mapConf, ICompilationUnit cu, String rootPKG, Boolean isMainPrivate)
-            throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
-            ClassNotFoundException, Throwable {
+
+    public StringBuffer[] getFileString(final String sourceName, final String targetName, final SimpleClassLoader l, final SDataObjMapperConfig mapConf, final ICompilationUnit cu, final String rootPKG, final Boolean isMainPrivate) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException, Throwable {
         if (sourceName != null && !"".equals(sourceName.trim())) {
             final Class<?> source = l.loadClassByName(sourceName.trim());
             if (targetName != null && !"".equals(targetName.trim())) {
                 final Class<?> target = l.loadClassByName(targetName.trim());
                 final SimpleDataObjMapper sm = new SimpleDataObjMapper(mapConf);
-                ICompilationUnit jClss = (cu==null?getCompilationUnitFromPKG(rootPKG):cu);
-                loadFunctionsFromCu(jClss,rootPKG,sm);
-                final StringBuffer[] s = sm.mappers( source, target, isMainPrivate);
+                final ICompilationUnit jClss = cu == null ? getCompilationUnitFromPKG(rootPKG) : cu;
+                loadFunctionsFromCu(jClss, rootPKG, sm);
+                final StringBuffer[] s = sm.mappers(source, target, isMainPrivate);
                 if (s.length > 0) {
                     return s;
                 }
@@ -105,12 +100,12 @@ public class MapperWizardHelper {
         return project;
     }
 
-	/**
-	 * @param prj
-	 * @return
-	 * @throws Throwable
-	 */
-	public File getRepoConfig (IJavaProject prj) throws Throwable{
+    /**
+     * @param prj
+     * @return
+     * @throws Throwable
+     */
+    public File getRepoConfig(final IJavaProject prj) throws Throwable {
         return new File(prj.getProject().getFile(Dconf.getInstance().getRepoImpl().getConfigFileName()).getLocationURI());
     }
 
@@ -120,12 +115,12 @@ public class MapperWizardHelper {
      * @return
      * @throws Throwable
      */
-    public Map<String, File> getResolvedDependendencies (File conf,String repo) throws Throwable{
-        IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
-        Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependencies(conf), new File(repo).toPath());
-        Map<String, File> result = new HashMap<String, File>();
-        for (Entry<String, URI> uri : filesURI.entrySet()) {
-            result.put(uri.getKey(),new File(uri.getValue()));
+    public Map<String, File> getResolvedDependendencies(final File conf, final String repo) throws Throwable {
+        final IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath());
+        final Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependencies(conf), new File(repo).toPath());
+        final Map<String, File> result = new HashMap<>();
+        for (final Entry<String, URI> uri : filesURI.entrySet()) {
+            result.put(uri.getKey(), new File(uri.getValue()));
         }
         return result;
     }
@@ -134,31 +129,31 @@ public class MapperWizardHelper {
      * @param repoConfig
      * @param repo
      * @return
-     * @throws XMLStreamException 
-     * @throws FileNotFoundException 
+     * @throws XMLStreamException
+     * @throws FileNotFoundException
      */
-    public Map<String, File> getResolvedDependendencyTree(File conf, String repo) throws Throwable {
-        IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
-        Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependenciesTree(conf, new File(repo).toPath()), new File(repo).toPath());
-        Map<String, File> result = new HashMap<String, File>();
-        for (Entry<String, URI> uri : filesURI.entrySet()) {
-            result.put(uri.getKey(),new File(uri.getValue()));
+    public Map<String, File> getResolvedDependendencyTree(final File conf, final String repo) throws Throwable {
+        final IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath());
+        final Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getDependenciesTree(conf, new File(repo).toPath()), new File(repo).toPath());
+        final Map<String, File> result = new HashMap<>();
+        for (final Entry<String, URI> uri : filesURI.entrySet()) {
+            result.put(uri.getKey(), new File(uri.getValue()));
         }
         return result;
     }
-    
+
     /**
      * @param conf
      * @param repo
      * @return
      * @throws Throwable
      */
-    public Map<String, File> getResolvedTransitiveDependendencies (File conf,String repo) throws Throwable{
-        IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath()); 
-        Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getTransitiveDependencies(conf), new File(repo).toPath());
-        Map<String, File> result = new HashMap<String, File>();
-        for (Entry<String, URI> uri : filesURI.entrySet()) {
-            result.put(uri.getKey(),new File(uri.getValue()));
+    public Map<String, File> getResolvedTransitiveDependendencies(final File conf, final String repo) throws Throwable {
+        final IRepoProvider repository = Dconf.getInstance().getRepoNewInstance(new File(repo).toPath());
+        final Map<String, URI> filesURI = repository.getResolveDependenciesURL(repository.getTransitiveDependencies(conf), new File(repo).toPath());
+        final Map<String, File> result = new HashMap<>();
+        for (final Entry<String, URI> uri : filesURI.entrySet()) {
+            result.put(uri.getKey(), new File(uri.getValue()));
         }
         return result;
     }
@@ -175,7 +170,7 @@ public class MapperWizardHelper {
      *            the project to set
      */
     public void setProject(final IJavaProject p) {
-        this.project = p;
+        project = p;
     }
 
     /**
@@ -183,58 +178,55 @@ public class MapperWizardHelper {
      *            the simpleCl to set
      */
     public void setSimpleCl(final SimpleClassLoader l) {
-        this.simpleCl = l;
+        simpleCl = l;
     }
 
     /**
-     * 
-     * @param cu2 
+     *
+     * @param cu2
      * @param StringBuffer[]
      *            filedatas.
      * @param String
      *            rootPKG
      * @return boolean
      */
-    private boolean genfile(final StringBuffer[] filedatas, final String rootPKG, ICompilationUnit javaClass) {
+    private boolean genfile(final StringBuffer[] filedatas, final String rootPKG, final ICompilationUnit javaClass) {
         try {
-        			ICompilationUnit cu;
-        			if(javaClass!=null){
-                    	cu = javaClass;
-        			}else{
-        				cu = getCompilationUnitFromPKG(rootPKG);
-        			}
-        			IType type;
-        			if(javaClass!=null){
-        			   type = cu.getAllTypes()[0];
-        			}else{
-        			   type = cu.getType(Constants.SupportMapper_defaultFile);
-        			}
-                    for (final StringBuffer method : filedatas) {
-                        type.createMethod(method.toString(), null, true, null);
-                    }
-                    Map<?, ?> setting = null;
-                    final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
-                    final String formatting = prop.getString(PreferenceConstants.FORMATTING);
-                    if(Constants.EclipseDefault.equals(formatting)){
-                        setting = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
-                    }else if(Constants.Eclipse21.equals(formatting)){
-                        setting = DefaultCodeFormatterConstants.getEclipse21Settings();
-                    }else if(Constants.JavaConventions.equals(formatting)){
-                        setting = DefaultCodeFormatterConstants.getJavaConventionsSettings();
-                    }
-                    final CodeFormatter formatter = ToolFactory.createCodeFormatter(setting,ToolFactory.M_FORMAT_EXISTING);
-                    org.eclipse.text.edits.TextEdit edit = formatter.format(
-                            CodeFormatter.K_UNKNOWN, cu.getSource(), 0,
-                            cu.getSourceRange().getLength(), 0,
-                            System.getProperty(Constants.SupportMapper_newLine));
-                    if (edit != null) {
-                        cu.applyTextEdit(edit, null);
-                    }
-                    if(javaClass==null){
-                        cu.createPackageDeclaration(Constants.SupportMapper_defaultPackage, null);
-                    }
-                    cu.save(null, false);
-                    return true;
+            ICompilationUnit cu;
+            if (javaClass != null) {
+                cu = javaClass;
+            } else {
+                cu = getCompilationUnitFromPKG(rootPKG);
+            }
+            IType type;
+            if (javaClass != null) {
+                type = cu.getAllTypes()[0];
+            } else {
+                type = cu.getType(Constants.SupportMapper_defaultFile);
+            }
+            for (final StringBuffer method : filedatas) {
+                type.createMethod(method.toString(), null, true, null);
+            }
+            Map<?, ?> setting = null;
+            final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
+            final String formatting = prop.getString(PreferenceConstants.FORMATTING);
+            if (Constants.EclipseDefault.equals(formatting)) {
+                setting = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+            } else if (Constants.Eclipse21.equals(formatting)) {
+                setting = DefaultCodeFormatterConstants.getEclipse21Settings();
+            } else if (Constants.JavaConventions.equals(formatting)) {
+                setting = DefaultCodeFormatterConstants.getJavaConventionsSettings();
+            }
+            final CodeFormatter formatter = ToolFactory.createCodeFormatter(setting, ToolFactory.M_FORMAT_EXISTING);
+            final org.eclipse.text.edits.TextEdit edit = formatter.format(CodeFormatter.K_UNKNOWN, cu.getSource(), 0, cu.getSourceRange().getLength(), 0, System.getProperty(Constants.SupportMapper_newLine));
+            if (edit != null) {
+                cu.applyTextEdit(edit, null);
+            }
+            if (javaClass == null) {
+                cu.createPackageDeclaration(Constants.SupportMapper_defaultPackage, null);
+            }
+            cu.save(null, false);
+            return true;
 
         } catch (final JavaModelException e) {
             e.printStackTrace();
@@ -244,84 +236,83 @@ public class MapperWizardHelper {
 
     /**
      * @param rootPKG
-     * @return 
+     * @return
      * @throws JavaModelException
      */
     private ICompilationUnit getCompilationUnitFromPKG(final String rootPKG) throws JavaModelException {
-                IPackageFragment pack = getPack(rootPKG);
-                if (pack == null){
-                    IPackageFragmentRoot root = getRootPkg(rootPKG);
-                    if (root==null) {
-                        return null;
-                    }
-                    pack = root.createPackageFragment(Constants.SupportMapper_defaultPackage, false, null);
-                }
-                ICompilationUnit cu = pack.getCompilationUnit(Constants.SupportMapper_defaultFileName);
-                if (!cu.exists()) {
-                    cu = pack.createCompilationUnit(Constants.SupportMapper_defaultFileName, classdef, true,
-                            null);
-                }
-                return cu;
+        IPackageFragment pack = getPack(rootPKG);
+        if (pack == null) {
+            final IPackageFragmentRoot root = getRootPkg(rootPKG);
+            if (root == null) {
+                return null;
+            }
+            pack = root.createPackageFragment(Constants.SupportMapper_defaultPackage, false, null);
+        }
+        ICompilationUnit cu = pack.getCompilationUnit(Constants.SupportMapper_defaultFileName);
+        if (!cu.exists()) {
+            cu = pack.createCompilationUnit(Constants.SupportMapper_defaultFileName, MapperWizardHelper.classdef, true, null);
+        }
+        return cu;
     }
+
     /**
      * @param rootPKG
-     * @return 
+     * @return
      * @throws JavaModelException
      */
     private IPackageFragment getPack(final String rootPKG) throws JavaModelException {
-                IPackageFragmentRoot root = getRootPkg(rootPKG);
-                if (root==null) {
-                    return null;
-                }
-                IPackageFragment pack = null;
-                for (final IJavaElement iJavaElement : root.getChildren()) {
-                    if (iJavaElement.getPath().toString().replace(Constants.SupportMapper_slash, Constants.SupportMapper_dot)
-                            .equals(rootPKG.replace(Constants.SupportMapper_slash,Constants.SupportMapper_dot)
-                                    .replace(Constants.SupportMapper_Bkslash,Constants.SupportMapper_dot)+ Constants.SupportMapper_dot + Constants.SupportMapper_defaultPackage)) {
-                        return pack = (IPackageFragment) iJavaElement;
-                    }
-                }
-                return pack;
-     }
+        final IPackageFragmentRoot root = getRootPkg(rootPKG);
+        if (root == null) {
+            return null;
+        }
+        IPackageFragment pack = null;
+        for (final IJavaElement iJavaElement : root.getChildren()) {
+            if (iJavaElement.getPath().toString().replace(Constants.SupportMapper_slash, Constants.SupportMapper_dot).equals(rootPKG.replace(Constants.SupportMapper_slash, Constants.SupportMapper_dot).replace(Constants.SupportMapper_Bkslash, Constants.SupportMapper_dot) + Constants.SupportMapper_dot + Constants.SupportMapper_defaultPackage)) {
+                return pack = (IPackageFragment) iJavaElement;
+            }
+        }
+        return pack;
+    }
+
     /**
      * @param rootPKG
-     * @return 
+     * @return
      * @throws JavaModelException
      */
     private IPackageFragmentRoot getRootPkg(final String rootPKG) throws JavaModelException {
         final IPackageFragmentRoot[] roots = project.getPackageFragmentRoots();
         for (final IPackageFragmentRoot root : roots) {
-            if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE
-                    && (rootPKG ==null || root.getPath().toOSString().equals(rootPKG))) {
+            if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE && (rootPKG == null || root.getPath().toOSString().equals(rootPKG))) {
                 return root;
             }
         }
         return null;
     }
-    private void loadFunctionsFromCu(ICompilationUnit jClass, String rootPKG, SimpleDataObjMapper sm) throws Throwable {
-		ICompilationUnit javaClass = null;
-        if(jClass ==null){
-			javaClass = getCompilationUnitFromPKG(rootPKG);
-		}else{
-		    javaClass = jClass;
-		}
-		if(javaClass.getAllTypes().length==0){
-			return;
-		}
-			for (IType type : javaClass.getAllTypes()) {
-				if(type.getMethods().length==0){
-					return;
-				}
-				for (IMethod method : type.getMethods()) {
-					if(method.getNumberOfParameters()==1){
-						String target = Signature.getReturnType(method.getSignature());
-						target=Signature.getSignatureQualifier(target)+Constants.SupportMapper_dot+Signature.getSignatureSimpleName(target);
-						String source = Signature.getParameterTypes(method.getSignature())[0];
-						source=Signature.getSignatureQualifier(source)+Constants.SupportMapper_dot+Signature.getSignatureSimpleName(source);
-						String fName = method.getElementName();
-						sm.preLoadFunction(source, target, fName );
-					}
-				}
-			}
-	}
+
+    private void loadFunctionsFromCu(final ICompilationUnit jClass, final String rootPKG, final SimpleDataObjMapper sm) throws Throwable {
+        ICompilationUnit javaClass = null;
+        if (jClass == null) {
+            javaClass = getCompilationUnitFromPKG(rootPKG);
+        } else {
+            javaClass = jClass;
+        }
+        if (javaClass.getAllTypes().length == 0) {
+            return;
+        }
+        for (final IType type : javaClass.getAllTypes()) {
+            if (type.getMethods().length == 0) {
+                return;
+            }
+            for (final IMethod method : type.getMethods()) {
+                if (method.getNumberOfParameters() == 1) {
+                    String target = Signature.getReturnType(method.getSignature());
+                    target = Signature.getSignatureQualifier(target) + Constants.SupportMapper_dot + Signature.getSignatureSimpleName(target);
+                    String source = Signature.getParameterTypes(method.getSignature())[0];
+                    source = Signature.getSignatureQualifier(source) + Constants.SupportMapper_dot + Signature.getSignatureSimpleName(source);
+                    final String fName = method.getElementName();
+                    sm.preLoadFunction(source, target, fName);
+                }
+            }
+        }
+    }
 }

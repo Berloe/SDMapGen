@@ -19,9 +19,8 @@ public class IterableMap implements IMapper {
      * @see org.smapgen.sdm.map.IMapper#isAplicable(org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        return MappingType.COLLECTION.equals(sourceField.getGetterGenericType())
-                && MappingType.COLLECTION.equals(targetField.getSetterGenericType());
+    public Boolean isAplicable(final MappingField sourceField, final MappingField targetField) {
+        return MappingType.COLLECTION.equals(sourceField.getGetterGenericType()) && MappingType.COLLECTION.equals(targetField.getSetterGenericType());
     }
 
     /*
@@ -29,8 +28,7 @@ public class IterableMap implements IMapper {
      * @see org.smapgen.sdm.map.IMapper#map(java.lang.String, java.lang.String, org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public StringBuffer map(final String sourceName, String targetName, MappingField sourceField,
-            MappingField targetField) throws Throwable {
+    public StringBuffer map(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) throws Throwable {
         if (targetField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName())) {
             return new StringBuffer();
         }
@@ -40,7 +38,7 @@ public class IterableMap implements IMapper {
         }
 
         final StringBuffer auxSb = new StringBuffer();
-        Object datoTarget = ObjectFactory.loader(targetField.getCalculatedFieldType());
+        final Object datoTarget = ObjectFactory.loader(targetField.getCalculatedFieldType());
         final String newtargetName = Common.createNewVarCollection(auxSb, datoTarget, targetField);
         auxSb.append(mapperCollections(sourceField, targetField, sourceName, newtargetName));
 
@@ -55,19 +53,15 @@ public class IterableMap implements IMapper {
      * @return
      * @throws Throwable
      */
-    private StringBuffer mapperCollections(final MappingField sourceField, final MappingField targetField,
-            final String sourceName, final String targetName) throws Throwable {
+    private StringBuffer mapperCollections(final MappingField sourceField, final MappingField targetField, final String sourceName, final String targetName) throws Throwable {
         // If source is an array, classTarget must be an array too
-        final StringBuffer b = new StringBuffer().append("if(!").append(sourceName).append(".isEmpty()){ for(")
-                .append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el")
-                .append(sourceName).append(" : ").append(sourceName).append("){");
-        
+        final StringBuffer b = new StringBuffer().append("if(!").append(sourceName).append(".isEmpty()){ for(").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el").append(sourceName).append(" : ").append(sourceName).append("){");
+
         sourceField.setFieldType(sourceField.getCalculatedFieldType());
         targetField.setFieldType(targetField.getCalculatedFieldType());
-        
-        b.append(ItemContinerMap.mapItemElement(sourceField, targetField,ConstantValues.ClassMapper_elementPrefix + sourceName, targetName))
-        .append('}').append(Common.valueAssign(targetName, targetField)).append('}');
-        
+
+        b.append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, targetName)).append('}').append(Common.valueAssign(targetName, targetField)).append('}');
+
         return b;
     }
 }

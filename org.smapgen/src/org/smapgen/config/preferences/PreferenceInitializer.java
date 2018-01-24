@@ -9,16 +9,14 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
     /**
      * .
-     * 
+     *
      * @return void
      */
     /*
      * (non-Javadoc)
-     * 
      * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
      */
     @Override
-    public void initializeDefaultPreferences() {
-    }
+    public void initializeDefaultPreferences() {}
 
 }

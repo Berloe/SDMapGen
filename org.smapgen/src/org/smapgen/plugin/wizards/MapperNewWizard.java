@@ -36,29 +36,31 @@ import org.smapgen.scl.SimpleClassLoader;
  */
 public class MapperNewWizard extends Wizard implements INewWizard {
     private ICompilationUnit javaclass;
+
     /**
      * String[] selectionData .
      */
     private String[] selectionData;
+
     /**
      * SupportMapper suport .
      */
     private final MapperWizardHelper suport;
 
     /**
-     * 
+     *
      * @param IJavaProject
      *            project.
      * @return Set IJavaProject
      */
     public static Set<IJavaProject> getAllRequiredProjects(final IJavaProject p) {
-        final Set<IJavaProject> $ = new HashSet<IJavaProject>();
+        final Set<IJavaProject> $ = new HashSet<>();
         try {
             for (final String reqName : p.getRequiredProjectNames()) {
-                final IJavaProject reqProject = getJavaProjectByName(reqName);
+                final IJavaProject reqProject = MapperNewWizard.getJavaProjectByName(reqName);
                 // also add recursive requirements
                 if (reqProject != null) {
-                    $.addAll(getAllRequiredProjects(reqProject));
+                    $.addAll(MapperNewWizard.getAllRequiredProjects(reqProject));
                     $.add(reqProject);
                 }
             }
@@ -70,7 +72,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     }
 
     /**
-     * 
+     *
      * @param String
      *            name.
      * @return IJavaProject
@@ -78,23 +80,26 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     public static IJavaProject getJavaProjectByName(final String name) {
         final IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
         final IProject project = wr.getProject(name);
-        if (project == null)
+        if (project == null) {
             throw new IllegalArgumentException("Project " + name + " not found");
-        if (!project.isOpen())
+        }
+        if (!project.isOpen()) {
             try {
                 project.open(null);
             } catch (final CoreException e) {
                 // Si no puede abrirlo no hace nada y retorna null
                 return null;
             }
+        }
         IJavaProject $ = null;
         try {
             $ = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
         } catch (final CoreException e) {
             e.printStackTrace();
         }
-        if ($ == null)
+        if ($ == null) {
             throw new IllegalArgumentException("Project " + name + " not a java project");
+        }
 
         return $;
     }
@@ -114,57 +119,59 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     @Override
     public void addPages() {
         try {
-            MapperNewWizardPage page = new MapperNewWizardPage(selectionData, suport, javaclass);
+            final MapperNewWizardPage page = new MapperNewWizardPage(selectionData, suport, javaclass);
             addPage(page);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             e.printStackTrace();
         }
     }
 
     /**
      * We will accept the selection in the workbench to see if we can initialize from it.
-     * 
+     *
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
     @Override
     public void init(final IWorkbench w, final IStructuredSelection s) {
-        if (s instanceof IStructuredSelection)
+        if (s instanceof IStructuredSelection) {
             for (final Iterator<?> it = s.iterator(); it.hasNext();) {
                 final Object element = it.next();
-                if (element instanceof IProject)
+                if (element instanceof IProject) {
                     suport.setProject(JavaCore.create((IProject) element));
-                else if (element instanceof IJavaProject)
+                } else if (element instanceof IJavaProject) {
                     suport.setProject((IJavaProject) element);
-                else if (element instanceof IPackageFragmentRoot)
+                } else if (element instanceof IPackageFragmentRoot) {
                     suport.setProject(((IPackageFragmentRoot) element).getJavaProject());
-                else if (element instanceof IPackageFragment)
+                } else if (element instanceof IPackageFragment) {
                     suport.setProject(((IPackageFragment) element).getJavaProject());
-                else if (element instanceof IJavaProject)
+                } else if (element instanceof IJavaProject) {
                     suport.setProject((IJavaProject) element);
-                else if (element instanceof IAdaptable)
+                } else if (element instanceof IAdaptable) {
                     if ((IJavaProject) ((IAdaptable) element).getAdapter(IProject.class) != null) {
                         suport.setProject((IJavaProject) ((IAdaptable) element).getAdapter(IProject.class));
-                    } else if ((IFile) ((IAdaptable) element).getAdapter(IFile.class) != null) {
-                        javaclass = JavaCore
-                                .createCompilationUnitFrom((IFile) ((IAdaptable) element).getAdapter(IFile.class));
+                    } else if (((IAdaptable) element).getAdapter(IFile.class) != null) {
+                        javaclass = JavaCore.createCompilationUnitFrom(((IAdaptable) element).getAdapter(IFile.class));
                         suport.setProject(javaclass.getJavaProject());
                     }
+                }
 
                 if (suport.getProject() != null) {
-                    final Set<IJavaProject> projectTree = getAllRequiredProjects(suport.getProject());
+                    final Set<IJavaProject> projectTree = MapperNewWizard.getAllRequiredProjects(suport.getProject());
                     projectTree.add(suport.getProject());
-                    for (final IJavaProject iJavaProject : projectTree)
+                    for (final IJavaProject iJavaProject : projectTree) {
                         try {
                             initClassPaths(iJavaProject);
-                        } catch (Throwable e) {
+                        } catch (final Throwable e) {
                             e.printStackTrace();
                             continue;
                         }
+                    }
                 }
             }
+        }
         try {
             selectionData = suport.getSimpleCl().getLoadedClassNames();
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             e.printStackTrace();
         }
         for (int i = 0; i < selectionData.length; ++i) {
@@ -183,7 +190,7 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     }
 
     /**
-     * 
+     *
      * @param IJavaProject
      *            project.
      * @return void
@@ -192,37 +199,35 @@ public class MapperNewWizard extends Wizard implements INewWizard {
     private void initClassPaths(final IJavaProject p) throws Throwable {
         final IClasspathEntry[] resolvedClass = p.getResolvedClasspath(true);
         final String[] importer = p.getRequiredProjectNames();
-        for (final IClasspathEntry iClasspathEntry : resolvedClass)
+        for (final IClasspathEntry iClasspathEntry : resolvedClass) {
             if (iClasspathEntry.getOutputLocation() != null) {
-                suport.getSimpleCl()
-                        .loadlib(p.getProject().getLocation().toOSString()
-                                + iClasspathEntry.getOutputLocation().toOSString()
-                                        .substring(iClasspathEntry.getOutputLocation().toOSString().indexOf('\\', 1)));
+                suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString() + iClasspathEntry.getOutputLocation().toOSString().substring(iClasspathEntry.getOutputLocation().toOSString().indexOf('\\', 1)));
             } else {
-                for (final String importPrj : importer)
-                    if (iClasspathEntry.getPath().toOSString().contains(importPrj))
+                for (final String importPrj : importer) {
+                    if (iClasspathEntry.getPath().toOSString().contains(importPrj)) {
                         suport.getSimpleCl().loadlib(iClasspathEntry.getPath().toOSString());
+                    }
+                }
             }
-        suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString()
-                + p.getOutputLocation().toOSString().substring(p.getOutputLocation().toOSString().indexOf('\\', 1)));
+        }
+        suport.getSimpleCl().loadlib(p.getProject().getLocation().toOSString() + p.getOutputLocation().toOSString().substring(p.getOutputLocation().toOSString().indexOf('\\', 1)));
         loadDependencies();
     }
 
     /**
      * @throws Throwable
-     * 
+     *
      */
     private void loadDependencies() throws Throwable {
         final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
         final String value = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
         final SimpleClassLoader reposcl = new SimpleClassLoader(value);
         // Init classes into classloader
-        Map<String, File> dependencies = suport.getResolvedDependendencyTree(suport.getRepoConfig(suport.getProject()),
-                value);
-        for (File f : dependencies.values()) {
+        final Map<String, File> dependencies = suport.getResolvedDependendencyTree(suport.getRepoConfig(suport.getProject()), value);
+        for (final File f : dependencies.values()) {
             try {
                 reposcl.loadlib(f.getPath());
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 e.printStackTrace();
             }
         }

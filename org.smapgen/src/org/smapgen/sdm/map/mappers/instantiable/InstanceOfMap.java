@@ -29,21 +29,18 @@ public abstract class InstanceOfMap extends Mapper {
      * @throws ClassNotFoundException
      * @throws Throwable
      */
-    protected StringBuffer instanceOfMapping( MappingField sourceField, MappingField targetField,
-            String sourceName,final String newSourceName,final String targetName, Class<?>[] excluded) throws IllegalArgumentException, InstantiationException,
-            IllegalAccessException, InvocationTargetException, ClassNotFoundException, Throwable {
+    protected StringBuffer instanceOfMapping(final MappingField sourceField, final MappingField targetField, final String sourceName, final String newSourceName, final String targetName, final Class<?>[] excluded) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException, Throwable {
 
-        String sourceClass = sourceField.getFieldType().getCanonicalName();
-        String classExcluded = Common.excludeElements(sourceField.getFieldType(), sourceName, excluded).toString();
+        final String sourceClass = sourceField.getFieldType().getCanonicalName();
+        final String classExcluded = Common.excludeElements(sourceField.getFieldType(), sourceName, excluded).toString();
         StringBuffer objecMapping = new StringBuffer();
-        if(classExcluded.length()>0){
-            objecMapping= MapperClassElement.mapperInstance(ObjectFactory.loader(sourceField.getFieldType()), ObjectFactory.loader(targetField.getFieldType()), newSourceName, targetName);
-                    }else{
-            objecMapping = objectMapping(targetField,targetField.getFieldType(),targetName,sourceField,sourceField.getFieldType(),
-               sourceField.getFieldType(),newSourceName);
+        if (classExcluded.length() > 0) {
+            objecMapping = MapperClassElement.mapperInstance(ObjectFactory.loader(sourceField.getFieldType()), ObjectFactory.loader(targetField.getFieldType()), newSourceName, targetName);
+        } else {
+            objecMapping = Mapper.objectMapping(targetField, targetField.getFieldType(), targetName, sourceField, sourceField.getFieldType(), sourceField.getFieldType(), newSourceName);
         }
 
-        return Common.instanceOfMap( sourceName, newSourceName, sourceClass, classExcluded, objecMapping.toString(),Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
+        return Common.instanceOfMap(sourceName, newSourceName, sourceClass, classExcluded, objecMapping.toString(), Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
     }
 
 }

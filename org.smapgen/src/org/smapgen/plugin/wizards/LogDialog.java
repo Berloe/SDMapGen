@@ -15,37 +15,41 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class LogDialog extends Dialog {
-    private String errorMsg;
-    /**
-     * Create the dialog.
-     * @param parentShell
-     */
-    public LogDialog(Shell parentShell,String errorMsg) {
-        super(parentShell);
-        this.errorMsg=errorMsg;
-    }
+    private final String errorMsg;
 
     /**
-     * Create contents of the dialog.
-     * @param parent
+     * Create the dialog.
+     * 
+     * @param parentShell
      */
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite container = (Composite) super.createDialogArea(parent);
-        
-        StyledText styledText = new StyledText(container, SWT.BORDER);
-        styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-        styledText.setText(errorMsg);
-        return container;
+    public LogDialog(final Shell parentShell, final String errorMsg) {
+        super(parentShell);
+        this.errorMsg = errorMsg;
     }
 
     /**
      * Create contents of the button bar.
+     * 
      * @param parent
      */
     @Override
-    protected void createButtonsForButtonBar(Composite parent) {
+    protected void createButtonsForButtonBar(final Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+    }
+
+    /**
+     * Create contents of the dialog.
+     * 
+     * @param parent
+     */
+    @Override
+    protected Control createDialogArea(final Composite parent) {
+        final Composite container = (Composite) super.createDialogArea(parent);
+
+        final StyledText styledText = new StyledText(container, SWT.BORDER);
+        styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        styledText.setText(errorMsg);
+        return container;
     }
 
     /**

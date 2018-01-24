@@ -19,7 +19,7 @@ public class ObjectMap extends Mapper implements IMapper {
      * @see org.smapgen.sdm.map.IMapper#isAplicable(org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
+    public Boolean isAplicable(final MappingField sourceField, final MappingField targetField) {
         return MappingType.OBJECT.equals(sourceField.getGetterGenericType()) && (MappingType.OBJECT.equals(targetField.getSetterGenericType()) || Utils.isAbstract(sourceField.getFieldType()));
     }
 
@@ -28,13 +28,10 @@ public class ObjectMap extends Mapper implements IMapper {
      * @see org.smapgen.sdm.map.IMapper#map(java.lang.String, java.lang.String, org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public StringBuffer map(final String sourceName, final String targetName, MappingField sourceField,
-            MappingField targetField) throws Throwable {
+    public StringBuffer map(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) throws Throwable {
         final String newSourceName = Common.genName(sourceField.getFieldType(), Boolean.TRUE);
-        String objMapCode = objectMapping(targetField, targetField.getFieldType(), targetName, sourceField,
-                sourceField.getFieldType(), sourceField.getCalculatedFieldType(), newSourceName).toString();
-        return Common.objMap(sourceField, newSourceName, objMapCode,
-                Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
+        final String objMapCode = Mapper.objectMapping(targetField, targetField.getFieldType(), targetName, sourceField, sourceField.getFieldType(), sourceField.getCalculatedFieldType(), newSourceName).toString();
+        return Common.objMap(sourceField, newSourceName, objMapCode, Dconf.getInstance().containsNotNullAnot(targetField.getAnotations()));
     }
 
 }

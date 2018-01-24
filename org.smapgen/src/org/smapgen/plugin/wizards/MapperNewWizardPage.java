@@ -28,14 +28,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.ResourceManager;
 import org.smapgen.config.preferences.PreferenceConstants;
 import org.smapgen.plugin.Activator;
 import org.smapgen.plugin.etc.MapperWizardHelper;
-import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * @author Alberto Fuentes Gómez
@@ -47,10 +47,10 @@ public class MapperNewWizardPage extends WizardPage {
      */
     private static String KEY_PRESS = "Ctrl+Space";
 
-    private Boolean automaticMode = Boolean.FALSE;
+    private final Boolean automaticMode = Boolean.FALSE;
 
     private MapperSelectionListener gen;
-    private ICompilationUnit javaClass;
+    private final ICompilationUnit javaClass;
     /**
      * CLabel lblNewLabel .
      */
@@ -79,19 +79,19 @@ public class MapperNewWizardPage extends WizardPage {
 
     /**
      * Constructor for SampleNewWizardPage.
-     * 
+     *
      * @param javaclass
-     * 
+     *
      * @param pageName
      */
-    public MapperNewWizardPage(final String[] selection, final MapperWizardHelper suport, ICompilationUnit javacls) {
+    public MapperNewWizardPage(final String[] selection, final MapperWizardHelper suport, final ICompilationUnit javacls) {
         super("wizardPage");
         setTitle(Messages.MapperNewWizardPage_2);
         this.selection = selection;
         support = suport;
         getPackageRoots();
 
-        this.javaClass = javacls;
+        javaClass = javacls;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MapperNewWizardPage extends WizardPage {
         labelCombo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
         labelCombo.setText(Messages.MapperNewWizardPage_4);
 
-        Text text = new Text(container, SWT.BORDER);
+        final Text text = new Text(container, SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         setAutoCompletion(text, null);
         text.addKeyListener(new KeyListener() {
@@ -123,10 +123,10 @@ public class MapperNewWizardPage extends WizardPage {
             }
         });
 
-        Button button_1 = new Button(container, SWT.NONE);
+        final Button button_1 = new Button(container, SWT.NONE);
         button_1.setToolTipText(Messages.MapperNewWizardPage_button_1_toolTipText);
 
-        GridData gd_button_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        final GridData gd_button_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         gd_button_1.widthHint = 30;
         button_1.setLayoutData(gd_button_1);
         button_1.setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/elcl16/synced.png"));
@@ -136,7 +136,7 @@ public class MapperNewWizardPage extends WizardPage {
         labelCombo2.setText(Messages.MapperNewWizardPage_5);
         setControl(container);
 
-        Text text_1 = new Text(container, SWT.BORDER);
+        final Text text_1 = new Text(container, SWT.BORDER);
         text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
         setAutoCompletion(text_1, null);
         text_1.addKeyListener(new KeyListener() {
@@ -152,20 +152,20 @@ public class MapperNewWizardPage extends WizardPage {
         });
         button_1.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                String tmp = text_1.getText();
+            public void widgetSelected(final SelectionEvent e) {
+                final String tmp = text_1.getText();
                 text_1.setText(text.getText());
                 text.setText(tmp);
             }
         });
         new Label(container, SWT.NONE);
-        Button btnRadioButton = new Button(container, SWT.RADIO);
+        final Button btnRadioButton = new Button(container, SWT.RADIO);
         btnRadioButton.setVisible(false);
         btnRadioButton.setSelection(true);
         btnRadioButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 gen.setAutomaticMode(false);
                 text.setEnabled(true);
                 text_1.setEnabled(true);
@@ -175,14 +175,14 @@ public class MapperNewWizardPage extends WizardPage {
         btnRadioButton.setSelection(true);
         btnRadioButton.setText(Messages.MapperNewWizardPage_btnRadioButton_text);
 
-        Button btnRadioButton_1 = new Button(container, SWT.RADIO);
+        final Button btnRadioButton_1 = new Button(container, SWT.RADIO);
         btnRadioButton_1.setText(Messages.MapperNewWizardPage_btnRadioButton_1_text);
         new Label(container, SWT.NONE);
         new Label(container, SWT.NONE);
         btnRadioButton_1.setVisible(false);
         btnRadioButton_1.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 gen.setAutomaticMode(true);
                 text.setEnabled(false);
                 text.setText("");
@@ -201,9 +201,9 @@ public class MapperNewWizardPage extends WizardPage {
         if (javaClass != null) {
             lblPackageRoot.setVisible(false);
         }
-        Combo combo = new Combo(container, SWT.NONE);
+        final Combo combo = new Combo(container, SWT.NONE);
 
-        GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+        final GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
         gd_combo.widthHint = 115;
         combo.setLayoutData(gd_combo);
         combo.setItems(rootPackages);
@@ -219,22 +219,21 @@ public class MapperNewWizardPage extends WizardPage {
         button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         new Label(container, SWT.NONE);
 
-        Combo combo_1 = new Combo(container, SWT.NONE);
+        final Combo combo_1 = new Combo(container, SWT.NONE);
         combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
         combo_1.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
+            public void widgetSelected(final SelectionEvent e) {
                 final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
                 final String repo = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
                 try {
-                    Map<String, File> dependencies = support
-                            .getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo);
+                    final Map<String, File> dependencies = support.getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo);
                     dependencies.get(combo_1.getText());
                     support.getSimpleCl().loadlib(dependencies.get(combo_1.getText()).getPath());
                     updateDeps();
                     lblNewLabel.setText(combo_1.getText() + Messages.MapperNewWizardPage_19);
-                } catch (Throwable e1) {
+                } catch (final Throwable e1) {
                     e1.printStackTrace();
                 }
             }
@@ -242,12 +241,11 @@ public class MapperNewWizardPage extends WizardPage {
         final IPreferenceStore prop = Activator.getDefault().getPreferenceStore();
         final String repo = prop.getString(PreferenceConstants.P_PATHCLASSREPO);
         try {
-            Set<String> dependencies = support
-                    .getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo).keySet();
-            String[] items = dependencies.toArray(new String[0]);
+            final Set<String> dependencies = support.getResolvedDependendencies(support.getRepoConfig(support.getProject()), repo).keySet();
+            final String[] items = dependencies.toArray(new String[0]);
             Arrays.sort(items);
             combo_1.setItems(items);
-        } catch (Throwable e1) {
+        } catch (final Throwable e1) {
             e1.printStackTrace();
         }
         new Label(container, SWT.NONE);
@@ -260,18 +258,17 @@ public class MapperNewWizardPage extends WizardPage {
         final Button btnGeneraMtodo = new Button(container, SWT.NONE);
         btnGeneraMtodo.setToolTipText(Messages.MapperNewWizardPage_btnGeneraMtodo_toolTipText_1);
         btnGeneraMtodo.setGrayed(true);
-        btnGeneraMtodo
-                .setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/obj16/generic_elements.gif"));
-        GridData gd_btnGeneraMtodo = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
+        btnGeneraMtodo.setImage(ResourceManager.getPluginImage("org.eclipse.ui", "/icons/full/obj16/generic_elements.gif"));
+        final GridData gd_btnGeneraMtodo = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
         gd_btnGeneraMtodo.widthHint = 29;
         btnGeneraMtodo.setLayoutData(gd_btnGeneraMtodo);
         btnGeneraMtodo.setText(Messages.MapperNewWizardPage_13);
         final Label label_1 = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-        GridData gd_label_1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
+        final GridData gd_label_1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 4, 1);
         gd_label_1.widthHint = 125;
         label_1.setLayoutData(gd_label_1);
-        ProgressBar progressBar = new ProgressBar(container, SWT.SMOOTH);
-        GridData gd_progressBar = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 4, 1);
+        final ProgressBar progressBar = new ProgressBar(container, SWT.SMOOTH);
+        final GridData gd_progressBar = new GridData(SWT.FILL, SWT.BOTTOM, false, false, 4, 1);
         gd_progressBar.widthHint = 125;
         progressBar.setLayoutData(gd_progressBar);
         progressBar.setVisible(true);
@@ -284,7 +281,7 @@ public class MapperNewWizardPage extends WizardPage {
         new Label(container, SWT.NONE);
         gen = new MapperSelectionListener(progressBar, automaticMode, javaClass, support, combo, text, text_1);
         new Label(container, SWT.NONE);
-        container.setTabList(new Control[]{text, button_1, text_1, btnRadioButton, btnRadioButton_1, button, combo_1, btnGeneraMtodo, combo, lblNewLabel, progressBar});
+        container.setTabList(new Control[] { text, button_1, text_1, btnRadioButton, btnRadioButton_1, button, combo_1, btnGeneraMtodo, combo, lblNewLabel, progressBar });
         btnGeneraMtodo.addSelectionListener(gen);
 
         combo.addSelectionListener(new SelectionAdapter() {
@@ -295,21 +292,22 @@ public class MapperNewWizardPage extends WizardPage {
 
             /**
              * .
-             * 
+             *
              * @return void
              */
             private void getPackagesElements() {
                 IPackageFragmentRoot[] roots;
-                final List<String> paths = new ArrayList<String>();
+                final List<String> paths = new ArrayList<>();
                 try {
                     roots = support.getProject().getPackageFragmentRoots();
-                    for (final IPackageFragmentRoot root : roots)
-                        if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE
-                                && combo.getText().equals(root.getPath().toOSString())) {
+                    for (final IPackageFragmentRoot root : roots) {
+                        if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE && combo.getText().equals(root.getPath().toOSString())) {
                             final IJavaElement[] chs = root.getChildren();
-                            for (final IJavaElement iJavaElement : chs)
+                            for (final IJavaElement iJavaElement : chs) {
                                 paths.add(iJavaElement.getPath().toString().replace("/", ".")); //$NON-NLS-1$ //$NON-NLS-2$
+                            }
                         }
+                    }
                 } catch (final JavaModelException e) {
                     e.printStackTrace();
                 }
@@ -352,12 +350,12 @@ public class MapperNewWizardPage extends WizardPage {
      * @param selection
      *            the selection to set
      */
-    public void setSelection(String[] selection) {
+    public void setSelection(final String[] selection) {
         loadJars.setSelection(selection);
     }
 
     /**
-     * 
+     *
      * @param String
      *            value.
      * @return String[]
@@ -366,13 +364,16 @@ public class MapperNewWizardPage extends WizardPage {
         if (loadJars != null) {
             selection = loadJars.getSelection();
         }
-        final List<String> result = new ArrayList<String>();
-        if (value == null || value.trim().length() <= 0)
+        final List<String> result = new ArrayList<>();
+        if (value == null || value.trim().length() <= 0) {
             result.addAll(Arrays.asList(selection));
-        else
-            for (final String string : selection)
-                if (string.substring(string.lastIndexOf('.') + 1, string.length()).startsWith(value))
+        } else {
+            for (final String string : selection) {
+                if (string.substring(string.lastIndexOf('.') + 1, string.length()).startsWith(value)) {
                     result.add(string);
+                }
+            }
+        }
         final String[] $ = result.toArray(new String[0]);
         Arrays.sort($);
         return $;
@@ -380,17 +381,19 @@ public class MapperNewWizardPage extends WizardPage {
 
     /**
      * .
-     * 
+     *
      * @return void
      */
     private void getPackageRoots() {
         IPackageFragmentRoot[] roots;
-        final List<String> rootPaths = new ArrayList<String>();
+        final List<String> rootPaths = new ArrayList<>();
         try {
             roots = support.getProject().getPackageFragmentRoots();
-            for (final IPackageFragmentRoot root : roots)
-                if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE)
+            for (final IPackageFragmentRoot root : roots) {
+                if (root.getRawClasspathEntry().getEntryKind() == IClasspathEntry.CPE_SOURCE) {
                     rootPaths.add(root.getPath().toOSString());
+                }
+            }
         } catch (final JavaModelException e) {
             e.printStackTrace();
         }
@@ -398,7 +401,7 @@ public class MapperNewWizardPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * @param Text
      *            text.
      * @param String
@@ -411,8 +414,7 @@ public class MapperNewWizardPage extends WizardPage {
             final String[] defaultProposals = getClasses(value);
             final SimpleContentProposalProvider scp = new SimpleContentProposalProvider(defaultProposals);
             scp.setProposals(defaultProposals);
-            final org.eclipse.jface.bindings.keys.KeyStroke ks = org.eclipse.jface.bindings.keys.KeyStroke
-                    .getInstance(KEY_PRESS);
+            final org.eclipse.jface.bindings.keys.KeyStroke ks = org.eclipse.jface.bindings.keys.KeyStroke.getInstance(MapperNewWizardPage.KEY_PRESS);
             adapter = new ContentProposalAdapter(t, new TextContentAdapter(), scp, ks, null);
             adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
         } catch (final Exception e) {
@@ -422,7 +424,7 @@ public class MapperNewWizardPage extends WizardPage {
 
     /**
      * .
-     * 
+     *
      * @return void
      * @throws Throwable
      */

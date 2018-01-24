@@ -18,65 +18,20 @@ import javax.xml.stream.XMLStreamReader;
  */
 public final class LoadPomDeps {
 
-    /**
-     * 
-     */
-    private LoadPomDeps() {
-        super();
-    }
+    private static final String ALPHANUMERIC = "[a-zA-Z0-9 ]+";
 
-    /**
-     * @param conf
-     * @return
-     * @throws FileNotFoundException
-     * @throws XMLStreamException
-     */
-    protected static ArrayList<Artifact> loadDepsXmlFile(File conf) throws FileNotFoundException, XMLStreamException {
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
-        while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
-                artifacts.addAll(dependencyBlock(reader, event));
-            }
-            if (XMLStreamConstants.START_ELEMENT == event
-                    && Constants.DEPENDENCY_MANAGEMENT.equals(reader.getLocalName())) {
-                artifacts.addAll(dependencyBlock(reader, event));
-            }
-        }
-        return artifacts;
-    }
-    /**
-     * @param conf
-     * @return
-     * @throws FileNotFoundException
-     * @throws XMLStreamException
-     */
-    protected static ArrayList<Artifact> loadExcludedXmlFile(File conf) throws FileNotFoundException, XMLStreamException {
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
-        while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
-                artifacts.addAll(excludeBlock(reader, event));
-            }
-        }
-        return artifacts;
-    }
     /**
      * @param artifacts
      * @param reader
      * @param event
      * @throws XMLStreamException
      */
-    public static ArrayList<Artifact> dependencyBlock(XMLStreamReader reader, int ev) throws XMLStreamException {
+    public static ArrayList<Artifact> dependencyBlock(final XMLStreamReader reader, final int ev) throws XMLStreamException {
         int event = ev;
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
         while (reader.hasNext()) {
             if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
-                artifacts.addAll(loadDependencies(reader));
+                artifacts.addAll(LoadPomDeps.loadDependencies(reader));
                 break;
             }
             if (XMLStreamConstants.END_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
@@ -93,12 +48,12 @@ public final class LoadPomDeps {
      * @param event
      * @throws XMLStreamException
      */
-    public static ArrayList<Artifact> excludeBlock(XMLStreamReader reader, int ev) throws XMLStreamException {
+    public static ArrayList<Artifact> excludeBlock(final XMLStreamReader reader, final int ev) throws XMLStreamException {
         int event = ev;
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
         while (reader.hasNext()) {
             if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
-                artifacts.addAll(loadExclusion(reader));
+                artifacts.addAll(LoadPomDeps.loadExclusion(reader));
                 break;
             }
             if (XMLStreamConstants.END_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
@@ -108,128 +63,40 @@ public final class LoadPomDeps {
         }
         return artifacts;
     }
-    /**
-     * @param reader
-     * @return
-     * @throws XMLStreamException
-     */
-    private static ArrayList<Artifact> loadDependencies(XMLStreamReader reader) throws XMLStreamException {
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
+
+    public static Artifact loadParentXmlFile(final File conf) throws FileNotFoundException, XMLStreamException {
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
         while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCY.equals(reader.getLocalName())) {
-                artifacts.add(loadDependency(reader));
-            }
-            if (XMLStreamConstants.END_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
-                return artifacts;
+            try {
+                final int event = reader.next();
+                if (XMLStreamConstants.START_ELEMENT == event && Constants.PARENT.equals(reader.getLocalName())) {
+                    return LoadPomDeps.loadParent(reader);
+
+                }
+            } catch (final Exception e) {
+                // On error parsing, omit
+                return null;
             }
         }
-        return artifacts;
-
-    }
-    /**
-     * @param reader
-     * @return
-     * @throws XMLStreamException
-     */
-    private static ArrayList<Artifact> loadExclusion(XMLStreamReader reader) throws XMLStreamException {
-        ArrayList<Artifact> artifacts = new ArrayList<Artifact>();
-        while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSION.equals(reader.getLocalName())) {
-                artifacts.add(loadDependency(reader));
-            }
-            if (XMLStreamConstants.END_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
-                return artifacts;
-            }
-        }
-        return artifacts;
-
+        return null;
     }
 
-    /**
-     * @param reader
-     * @return
-     * @throws XMLStreamException
-     */
-    private static Artifact loadDependency(XMLStreamReader reader) throws XMLStreamException {
-        Artifact artfact = new Artifact();
+    public static Map<String, String> loadVarsXmlFile(final File conf) throws FileNotFoundException, XMLStreamException {
+        final HashMap<String, String> prop = new HashMap<>();
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
         while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event) {
-                switch (reader.getLocalName()) {
-                    case Constants.GROUP_ID:
-                        artfact.setGroup(getContent(reader));
-                        break;
-                    case Constants.ARTIFACT_ID:
-                        artfact.setArtifact(getContent(reader));
-                        break;
-                    case Constants.VERSION:
-                        artfact.setVersion(getContent(reader));
-                        break;
-                    case Constants.SCOPE:
-                        String scop = getContent(reader);
-                        if (scop == null || !scop.matches("[a-zA-Z0-9 ]+")) {
-                            scop = Constants.COMPILE;
-                        }
-                        artfact.setScope(scop);
-                        break;
-                    default:
-                        break;
-                }
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.PROPERTIES.equals(reader.getLocalName())) {
+                prop.putAll(LoadPomDeps.loadProperties(reader));
+                break;
             }
-            if (XMLStreamConstants.END_ELEMENT == event){
-                if (Constants.DEPENDENCY.equals(reader.getLocalName())) {
-                    if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
-                        String scop = Constants.COMPILE;
-                        artfact.setScope(scop);
-                    }
-                    return artfact;
-                }else if( Constants.EXCLUSION.equals(reader.getLocalName())) {
-                    if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
-                        String scop = Constants.COMPILE;
-                        artfact.setScope(scop);
-                    }
-                    return artfact;
-                }
-            }
-           
-        }
-        if (artfact.getScope() == null || artfact.getScope().matches("[a-zA-Z0-9 ]+")) {
-            String scop = Constants.COMPILE;
-            artfact.setScope(scop);
-        }
-        return artfact;
-    }
-
-    /**
-     * @param reader
-     * @return
-     * @throws XMLStreamException
-     */
-    private static Artifact loadParent(XMLStreamReader reader) throws XMLStreamException {
-        Artifact artfact = new Artifact();
-        while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event) {
-                switch (reader.getLocalName()) {
-                    case Constants.GROUP_ID:
-                        artfact.setGroup(getContent(reader));
-                        break;
-                    case Constants.ARTIFACT_ID:
-                        artfact.setArtifact(getContent(reader));
-                        break;
-                    case Constants.VERSION:
-                        artfact.setVersion(getContent(reader));
-                        break;
-                    default: break;
-                }
-            }
-            if (XMLStreamConstants.END_ELEMENT == event && Constants.PARENT.equals(reader.getLocalName())) {
-                return artfact;
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.PROPERTIES.equals(reader.getLocalName())) {
+                return prop;
             }
         }
-        return artfact;
+        return prop;
     }
 
     /**
@@ -238,7 +105,7 @@ public final class LoadPomDeps {
      * @return
      * @throws XMLStreamException
      */
-    private static String getContent(XMLStreamReader reader) throws XMLStreamException {
+    private static String getContent(final XMLStreamReader reader) throws XMLStreamException {
         int event = 0;
         String result = null;
         while (reader.hasNext() && XMLStreamConstants.END_ELEMENT != event) {
@@ -250,47 +117,138 @@ public final class LoadPomDeps {
         return result;
     }
 
-    public static Artifact loadParentXmlFile(File conf) throws FileNotFoundException, XMLStreamException {
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    private static ArrayList<Artifact> loadDependencies(final XMLStreamReader reader) throws XMLStreamException {
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
         while (reader.hasNext()) {
-            try {
-                int event = reader.next();
-                if (XMLStreamConstants.START_ELEMENT == event && Constants.PARENT.equals(reader.getLocalName())) {
-                    return loadParent(reader);
-
-                }
-            } catch (Exception e) {
-                // On error parsing, omit
-                return null;
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCY.equals(reader.getLocalName())) {
+                artifacts.add(LoadPomDeps.loadDependency(reader));
+            }
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
+                return artifacts;
             }
         }
-        return null;
+        return artifacts;
+
     }
 
-    public static Map<String, String> loadVarsXmlFile(File conf) throws FileNotFoundException, XMLStreamException {
-        HashMap<String, String> prop = new HashMap<String, String>();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    private static Artifact loadDependency(final XMLStreamReader reader) throws XMLStreamException {
+        final Artifact artfact = new Artifact();
         while (reader.hasNext()) {
-            int event = reader.next();
-            if (XMLStreamConstants.START_ELEMENT == event && Constants.PROPERTIES.equals(reader.getLocalName())) {
-                prop.putAll(loadProperties(reader));
-                break;
-            }
-            if (XMLStreamConstants.END_ELEMENT == event && Constants.PROPERTIES.equals(reader.getLocalName())) {
-                return prop;
-            }
-        }
-        return prop;
-    }
-
-    private static Map<String, String> loadProperties(XMLStreamReader reader) throws XMLStreamException {
-        HashMap<String, String> prop = new HashMap<String, String>();
-        while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
             if (XMLStreamConstants.START_ELEMENT == event) {
-                prop.put(reader.getLocalName(), getContent(reader));
+                switch (reader.getLocalName()) {
+                    case Constants.GROUP_ID:
+                        artfact.setGroup(LoadPomDeps.getContent(reader));
+                        break;
+                    case Constants.ARTIFACT_ID:
+                        artfact.setArtifact(LoadPomDeps.getContent(reader));
+                        break;
+                    case Constants.VERSION:
+                        artfact.setVersion(LoadPomDeps.getContent(reader));
+                        break;
+                    case Constants.SCOPE:
+                        String scop = LoadPomDeps.getContent(reader);
+                        if (scop == null || !scop.matches(LoadPomDeps.ALPHANUMERIC)) {
+                            scop = Constants.COMPILE;
+                        }
+                        artfact.setScope(scop);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (XMLStreamConstants.END_ELEMENT == event) {
+                if (Constants.DEPENDENCY.equals(reader.getLocalName())) {
+                    if (artfact.getScope() == null || artfact.getScope().matches(LoadPomDeps.ALPHANUMERIC)) {
+                        final String scop = Constants.COMPILE;
+                        artfact.setScope(scop);
+                    }
+                    return artfact;
+                } else if (Constants.EXCLUSION.equals(reader.getLocalName())) {
+                    if (artfact.getScope() == null || artfact.getScope().matches(LoadPomDeps.ALPHANUMERIC)) {
+                        final String scop = Constants.COMPILE;
+                        artfact.setScope(scop);
+                    }
+                    return artfact;
+                }
+            }
+
+        }
+        if (artfact.getScope() == null || artfact.getScope().matches(LoadPomDeps.ALPHANUMERIC)) {
+            final String scop = Constants.COMPILE;
+            artfact.setScope(scop);
+        }
+        return artfact;
+    }
+
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    private static ArrayList<Artifact> loadExclusion(final XMLStreamReader reader) throws XMLStreamException {
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSION.equals(reader.getLocalName())) {
+                artifacts.add(LoadPomDeps.loadDependency(reader));
+            }
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                return artifacts;
+            }
+        }
+        return artifacts;
+
+    }
+
+    /**
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    private static Artifact loadParent(final XMLStreamReader reader) throws XMLStreamException {
+        final Artifact artfact = new Artifact();
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event) {
+                switch (reader.getLocalName()) {
+                    case Constants.GROUP_ID:
+                        artfact.setGroup(LoadPomDeps.getContent(reader));
+                        break;
+                    case Constants.ARTIFACT_ID:
+                        artfact.setArtifact(LoadPomDeps.getContent(reader));
+                        break;
+                    case Constants.VERSION:
+                        artfact.setVersion(LoadPomDeps.getContent(reader));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (XMLStreamConstants.END_ELEMENT == event && Constants.PARENT.equals(reader.getLocalName())) {
+                return artfact;
+            }
+        }
+        return artfact;
+    }
+
+    private static Map<String, String> loadProperties(final XMLStreamReader reader) throws XMLStreamException {
+        final HashMap<String, String> prop = new HashMap<>();
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event) {
+                prop.put(reader.getLocalName(), LoadPomDeps.getContent(reader));
             }
 
             if (XMLStreamConstants.END_ELEMENT == event && Constants.PROPERTIES.equals(reader.getLocalName())) {
@@ -298,6 +256,54 @@ public final class LoadPomDeps {
             }
         }
         return prop;
+    }
+
+    /**
+     * @param conf
+     * @return
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    protected static ArrayList<Artifact> loadDepsXmlFile(final File conf) throws FileNotFoundException, XMLStreamException {
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCIES.equals(reader.getLocalName())) {
+                artifacts.addAll(LoadPomDeps.dependencyBlock(reader, event));
+            }
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.DEPENDENCY_MANAGEMENT.equals(reader.getLocalName())) {
+                artifacts.addAll(LoadPomDeps.dependencyBlock(reader, event));
+            }
+        }
+        return artifacts;
+    }
+
+    /**
+     * @param conf
+     * @return
+     * @throws FileNotFoundException
+     * @throws XMLStreamException
+     */
+    protected static ArrayList<Artifact> loadExcludedXmlFile(final File conf) throws FileNotFoundException, XMLStreamException {
+        final ArrayList<Artifact> artifacts = new ArrayList<>();
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(conf));
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            if (XMLStreamConstants.START_ELEMENT == event && Constants.EXCLUSIONS.equals(reader.getLocalName())) {
+                artifacts.addAll(LoadPomDeps.excludeBlock(reader, event));
+            }
+        }
+        return artifacts;
+    }
+
+    /**
+     *
+     */
+    private LoadPomDeps() {
+        super();
     }
 
 }

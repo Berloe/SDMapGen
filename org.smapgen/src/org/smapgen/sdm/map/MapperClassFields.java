@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.smapgen.sdm.map;
 
@@ -14,16 +14,14 @@ import org.smapgen.sdm.metadata.MappingField;
  *
  */
 public class MapperClassFields {
-    
-    public static StringBuffer mapperFields( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
-            final String sourceName, final String targetName) throws ClassNotFoundException, IllegalArgumentException,
-            InstantiationException, IllegalAccessException, InvocationTargetException, Throwable, ClassLoaderException {
-        
-        StringBuffer b = new StringBuffer();
+
+    public static StringBuffer mapperFields(final MappingField[] mapSource, final HashMap<String, MappingField> maptarget, final String sourceName, final String targetName) throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, Throwable, ClassLoaderException {
+
+        final StringBuffer b = new StringBuffer();
         for (final MappingField sourceField : mapSource) {
             if (maptarget.containsKey(sourceField.getName())) {
                 final MappingField targetField = maptarget.get(sourceField.getName());
-                b .append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
+                b.append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
                 targetField.setMapped(Boolean.TRUE);
             }
             sourceField.setMapped(Boolean.TRUE);

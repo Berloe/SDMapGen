@@ -18,48 +18,46 @@ import org.smapgen.sdm.map.mappers.common.IMapper;
  */
 public final class Dconf {
     private static Dconf dconf;
-    private List<IMapper> mapper = new ArrayList<IMapper>();
-    private List<IMapper> mapperAbs = new ArrayList<IMapper>();
+
+    private final List<String> ignoreNullAnotation = new ArrayList<>();
+
+    private final List<IMapper> mapper = new ArrayList<>();
+
+    private final List<IMapper> mapperAbs = new ArrayList<>();
     private IRepoProvider repoImpl;
-    private List<String> ignoreNullAnotation = new ArrayList<String>();
-    
-    private Dconf() {
-        super();
-    }
-    
+
     /**
      * @return
      * @throws Throwable
      */
     public static synchronized Dconf getInstance() throws Throwable {
-        if (null != dconf) {
-            return dconf;
+        if (null != Dconf.dconf) {
+            return Dconf.dconf;
         }
-        dconf = new Dconf();
+        Dconf.dconf = new Dconf();
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory
-                .createXMLStreamReader(Dconf.class.getResource("mapperConfig.xml").openStream());
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        final XMLStreamReader reader = factory.createXMLStreamReader(Dconf.class.getResource("mapperConfig.xml").openStream());
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
             if (XMLStreamConstants.START_ELEMENT == event && "repoLoader".equals(reader.getLocalName())) {
-                String className = getContent(reader);
-                dconf.repoImpl = (IRepoProvider) Class.forName(className).newInstance();
+                final String className = Dconf.getContent(reader);
+                Dconf.dconf.repoImpl = (IRepoProvider) Class.forName(className).newInstance();
             }
             if (XMLStreamConstants.START_ELEMENT == event && "mapper".equals(reader.getLocalName())) {
-                String className = getContent(reader);
-                dconf.mapper.add((IMapper) Class.forName(className).newInstance());
+                final String className = Dconf.getContent(reader);
+                Dconf.dconf.mapper.add((IMapper) Class.forName(className).newInstance());
             }
             if (XMLStreamConstants.START_ELEMENT == event && "mapperAbs".equals(reader.getLocalName())) {
-                String className = getContent(reader);
-                dconf.mapperAbs.add((IMapper) Class.forName(className).newInstance());
+                final String className = Dconf.getContent(reader);
+                Dconf.dconf.mapperAbs.add((IMapper) Class.forName(className).newInstance());
             }
             if (XMLStreamConstants.START_ELEMENT == event && "notNullAnot".equals(reader.getLocalName())) {
-                String className = getContent(reader);
-                dconf.ignoreNullAnotation.add(className);
+                final String className = Dconf.getContent(reader);
+                Dconf.dconf.ignoreNullAnotation.add(className);
             }
         }
-        return dconf;
+        return Dconf.dconf;
     }
 
     /**
@@ -67,7 +65,7 @@ public final class Dconf {
      * @return
      * @throws XMLStreamException
      */
-    private static String getContent(XMLStreamReader reader) throws XMLStreamException {
+    private static String getContent(final XMLStreamReader reader) throws XMLStreamException {
         int event = 0;
         String result = null;
         while (reader.hasNext() && XMLStreamConstants.END_ELEMENT != event) {
@@ -80,11 +78,24 @@ public final class Dconf {
         return result;
     }
 
+    private Dconf() {
+        super();
+    }
+
+    public boolean containsNotNullAnot(final ArrayList<String> anotations) {
+        for (final String anot : anotations) {
+            if (ignoreNullAnotation.contains(anot)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
-     * 
+     *
      */
     public void dispose() {
-        dconf = null;
+        Dconf.dconf = null;
     }
 
     /**
@@ -113,19 +124,10 @@ public final class Dconf {
      * @return
      * @throws Throwable
      */
-    public IRepoProvider getRepoNewInstance(Path path) throws Throwable {
-        dconf.repoImpl = Dconf.getInstance().getRepoImpl().getClass().getConstructor(Path.class).newInstance(path);
-        return dconf.repoImpl;
+    public IRepoProvider getRepoNewInstance(final Path path) throws Throwable {
+        Dconf.dconf.repoImpl = Dconf.getInstance().getRepoImpl().getClass().getConstructor(Path.class).newInstance(path);
+        return Dconf.dconf.repoImpl;
 
-    }
-
-    public boolean containsNotNullAnot(ArrayList<String> anotations){
-        for (String anot : anotations) {
-            if(this.ignoreNullAnotation.contains(anot)){
-                return true;
-            }
-        }
-       return false;
     }
 
 }

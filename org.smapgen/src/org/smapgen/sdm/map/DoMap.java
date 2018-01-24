@@ -27,13 +27,11 @@ public class DoMap {
      * @throws Throwable
      * @throws ClassLoaderException
      */
-    public static StringBuffer mapSourceIntoTarget( final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField)
-            throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException,
-            InvocationTargetException, Throwable, ClassLoaderException {
-        List<IMapper> mops = Dconf.getInstance().getMapper();
-        StringBuffer b = new StringBuffer();
-        for (IMapper mapperOps : mops) {
-            if (mapperOps.isAplicable(sourceField, targetField)){
+    public static StringBuffer mapSourceIntoTarget(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, Throwable, ClassLoaderException {
+        final List<IMapper> mops = Dconf.getInstance().getMapper();
+        final StringBuffer b = new StringBuffer();
+        for (final IMapper mapperOps : mops) {
+            if (mapperOps.isAplicable(sourceField, targetField)) {
                 b.append(mapperOps.map(sourceName, targetName, sourceField, targetField));
                 return b;
             }
@@ -42,7 +40,7 @@ public class DoMap {
     }
 
     /**
-     * 
+     *
      */
     private DoMap() {
         super();

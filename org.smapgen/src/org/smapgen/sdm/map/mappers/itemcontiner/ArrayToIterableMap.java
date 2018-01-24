@@ -14,24 +14,23 @@ import org.smapgen.sdm.metadata.MappingType;
  */
 public class ArrayToIterableMap implements IMapper {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#isAplicable(org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        return MappingType.COLLECTION.equals(sourceField.getGetterGenericType())
-                && MappingType.ARRAY.equals(targetField.getSetterGenericType());
+    public Boolean isAplicable(final MappingField sourceField, final MappingField targetField) {
+        return MappingType.COLLECTION.equals(sourceField.getGetterGenericType()) && MappingType.ARRAY.equals(targetField.getSetterGenericType());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#map(java.lang.String, java.lang.String, org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public StringBuffer map(final String sourceName,String targetName,
-            MappingField sourceField, MappingField targetField) throws Throwable {
+    public StringBuffer map(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) throws Throwable {
 
-        if (targetField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName())
-                || sourceField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName())) {
+        if (targetField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName()) || sourceField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName())) {
             return new StringBuffer();
         }
         if (targetField.getCalculatedFieldType().equals(sourceField.getCalculatedFieldType())) {
@@ -39,7 +38,7 @@ public class ArrayToIterableMap implements IMapper {
         }
 
         final StringBuffer auxSb = new StringBuffer();
-        Object datoTarget = ObjectFactory.loader(targetField.getCalculatedFieldType());
+        final Object datoTarget = ObjectFactory.loader(targetField.getCalculatedFieldType());
         final String newtargetName = Common.createNewVarCollection(auxSb, datoTarget, targetField);
         auxSb.append(mapperCollectionsfromArray(sourceField, targetField, sourceName, newtargetName));
 
@@ -58,18 +57,17 @@ public class ArrayToIterableMap implements IMapper {
         final StringBuffer b = new StringBuffer();
         // If source is an array, classTarget must be an array too
         pre(sourceField, sourceName, b);
-        b.append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, 
-                targetName));
+        b.append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, targetName));
         post(b, targetName, targetField);
         return b;
     }
 
     /**
      * @param b
-     * @param newtargetName 
-     * @param targetField 
+     * @param newtargetName
+     * @param targetField
      */
-    private void post(final StringBuffer b, String newtargetName, MappingField targetField) {
+    private void post(final StringBuffer b, final String newtargetName, final MappingField targetField) {
         b.append('}').append(Common.valueAssign(newtargetName, targetField)).append('}');
     }
 
@@ -79,8 +77,6 @@ public class ArrayToIterableMap implements IMapper {
      * @param b
      */
     private void pre(final MappingField sourceField, final String sourceName, final StringBuffer b) {
-        b.append("if(").append(sourceName).append(".length>0 ){for(")
-            .append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el")
-            .append(sourceName).append(" : ").append(sourceName).append("){");
+        b.append("if(").append(sourceName).append(".length>0 ){for(").append(sourceField.getCalculatedFieldType().getCanonicalName()).append(" el").append(sourceName).append(" : ").append(sourceName).append("){");
     }
 }
