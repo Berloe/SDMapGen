@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.smapgen.sdm.map.mappers.common;
 
@@ -25,6 +25,5 @@ public interface IMapper {
      * @return
      * @throws Throwable
      */
-    StringBuffer map(String sourceName, String targetName, MappingField sourceField,
-            MappingField targetField) throws Throwable;
+    StringBuffer map(String sourceName, String targetName, MappingField sourceField, MappingField targetField) throws Throwable;
 }

@@ -14,16 +14,7 @@ import org.smapgen.scl.exception.ClassLoaderException;
 public final class ObjectFactory {
 
     /**
-     * .
-     * 
-     * @return void
-     */
-    private ObjectFactory() {
-        super();
-    }
-
-    /**
-     * 
+     *
      * @param Class<?>
      *            classTarget
      * @return Object
@@ -36,10 +27,8 @@ public final class ObjectFactory {
      * @throws SecurityException
      * @throws NoSuchMethodException
      */
-    public static Object loader(final Class<?> classTarget)
-            throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException,
-            ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
-        Constructor<?> defConstructor = getConstructor(classTarget);
+    public static Object loader(final Class<?> classTarget) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException, ClassLoaderException, NoSuchMethodException {
+        final Constructor<?> defConstructor = ObjectFactory.getConstructor(classTarget);
         // Verificamos si estamos ante un array
 
         if (defConstructor == null && classTarget.isArray()) {
@@ -47,18 +36,18 @@ public final class ObjectFactory {
         }
 
         if (defConstructor != null) {
-            Object $ = defConstructor.newInstance(new Object[0]);
+            final Object $ = defConstructor.newInstance(new Object[0]);
             try {
                 $.getClass().getMethods();
                 return $;
             } catch (final NoClassDefFoundError e) {
                 try {
-                    String classname = extractDependency(e);
+                    final String classname = ObjectFactory.extractDependency(e);
                     ((SimpleClassLoader) classTarget.getClassLoader()).loadClassByName(classname);
                 } catch (final Exception e2) {
                     throw e;
                 }
-                return loader($.getClass());
+                return ObjectFactory.loader($.getClass());
             }
         }
 
@@ -86,13 +75,11 @@ public final class ObjectFactory {
      * @return
      * @throws SecurityException
      */
-    private static Constructor<?> getConstructor(final Class<?> classTarget)
-            throws SecurityException {
+    private static Constructor<?> getConstructor(final Class<?> classTarget) throws SecurityException {
         Constructor<?> defConstructor = null;
         try {
-            defConstructor  = classTarget.getConstructor();
-        } catch (final NoSuchMethodException | SecurityException e) {
-        }
+            defConstructor = classTarget.getConstructor();
+        } catch (final NoSuchMethodException | SecurityException e) {}
         if (defConstructor == null) {
             final Constructor<?>[] targetLoad = classTarget.getConstructors();
             for (final Constructor<?> constructor : targetLoad) {
@@ -103,6 +90,15 @@ public final class ObjectFactory {
             }
         }
         return defConstructor;
+    }
+
+    /**
+     * .
+     *
+     * @return void
+     */
+    private ObjectFactory() {
+        super();
     }
 
 }

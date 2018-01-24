@@ -28,18 +28,47 @@ public class MappingField {
     private Method setterMethod;
     /** Constructor. */
     private String varName;
-//    /**Resolved Class**/
-//    private Class<?> resolvedAbsClss;
-    
+    // /**Resolved Class**/
+    // private Class<?> resolvedAbsClss;
+
     private Boolean mapped;
-    private ArrayList<String> anotations = new ArrayList<String>();
+    private ArrayList<String> anotations = new ArrayList<>();
+
+    /**
+     * @return
+     */
+    public MappingField cloneMappingField() {
+        final MappingField newMappingField = new MappingField();
+        newMappingField.setCalculatedFieldType(getCalculatedFieldType());
+        newMappingField.setField(getField());
+        newMappingField.setFieldType(getFieldType());
+        newMappingField.setGetterGenericType(getGetterGenericType());
+        newMappingField.setGetterMethod(getGetterMethod());
+        newMappingField.setMapped(getMapped());
+        newMappingField.setName(getName());
+        newMappingField.setSetterGenericType(getSetterGenericType());
+        newMappingField.setSetterMethod(getSetterMethod());
+        newMappingField.setVarName(getVarName());
+        return newMappingField;
+    }
+
+    /**
+     * @return the anotations
+     */
+    public ArrayList<String> getAnotations() {
+        return anotations;
+    }
+
+    public Class<?> getCalculatedFieldType() {
+        return calculatedFieldType;
+    }
 
     public Field getField() {
         return field;
     }
 
-    public Class<?> getCalculatedFieldType() {
-        return calculatedFieldType;
+    public Class<?> getFieldType() {
+        return fieldType;
     }
 
     public MappingType getGetterGenericType() {
@@ -50,12 +79,15 @@ public class MappingField {
         return getterMethod;
     }
 
-    public String getName() {
-        return name;
+    /**
+     * @return the mapped
+     */
+    public Boolean getMapped() {
+        return mapped;
     }
 
-    public Class<?> getFieldType() {
-        return fieldType;
+    public String getName() {
+        return name;
     }
 
     public MappingType getSetterGenericType() {
@@ -73,12 +105,23 @@ public class MappingField {
         return varName;
     }
 
-    public void setField(final Field f) {
-        this.field = f;
+    /**
+     * @param anotationsTypes
+     */
+    public void setAnotations(final ArrayList<String> anotationsTypes) {
+        anotations = anotationsTypes;
     }
 
     public void setCalculatedFieldType(final Class<?> fieldType) {
-        this.calculatedFieldType = fieldType;
+        calculatedFieldType = fieldType;
+    }
+
+    public void setField(final Field f) {
+        field = f;
+    }
+
+    public void setFieldType(final Class<?> objClass) {
+        fieldType = objClass;
     }
 
     public void setGetterGenericType(final MappingType t) {
@@ -89,12 +132,16 @@ public class MappingField {
         this.getterMethod = getterMethod;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    /**
+     * @param mapped
+     *            the mapped to set
+     */
+    public void setMapped(final Boolean mapped) {
+        this.mapped = mapped;
     }
 
-    public void setFieldType(final Class<?> objClass) {
-        this.fieldType = objClass;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public void setSetterGenericType(final MappingType t) {
@@ -110,52 +157,6 @@ public class MappingField {
      */
     public void setVarName(final String varName) {
         this.varName = varName;
-    }
-
-	/**
-	 * @return the mapped
-	 */
-	public Boolean getMapped() {
-		return mapped;
-	}
-
-	/**
-	 * @param mapped the mapped to set
-	 */
-	public void setMapped(Boolean mapped) {
-		this.mapped = mapped;
-	}
-	
-	/**
-	 * @param anotationsTypes
-	 */
-	public void setAnotations(ArrayList<String> anotationsTypes) {
-	    this.anotations = anotationsTypes;
-    }
-	
-    /**
-     * @return the anotations
-     */
-    public ArrayList<String> getAnotations() {
-        return anotations;
-    }
-    
-    /**
-     * @return
-     */
-    public MappingField cloneMappingField() {
-        MappingField newMappingField = new MappingField();
-        newMappingField.setCalculatedFieldType(getCalculatedFieldType());
-        newMappingField.setField(getField());
-        newMappingField.setFieldType(getFieldType());
-        newMappingField.setGetterGenericType(getGetterGenericType());
-        newMappingField.setGetterMethod(getGetterMethod());
-        newMappingField.setMapped(getMapped());
-        newMappingField.setName(getName());
-        newMappingField.setSetterGenericType(getSetterGenericType());
-        newMappingField.setSetterMethod(getSetterMethod());
-        newMappingField.setVarName(getVarName());
-        return newMappingField;
     }
 
 }

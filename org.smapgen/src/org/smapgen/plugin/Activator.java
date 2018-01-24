@@ -26,7 +26,7 @@ public class Activator extends AbstractUIPlugin {
      * @return the shared instance
      */
     public static Activator getDefault() {
-        return plugin;
+        return Activator.plugin;
     }
 
     /**
@@ -37,11 +37,11 @@ public class Activator extends AbstractUIPlugin {
      * @return the image descriptor
      */
     public static ImageDescriptor getImageDescriptor(final String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+        return AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, path);
     }
 
     /**
-     * 
+     *
      * @param BundleContext
      *            context.
      * @return void
@@ -49,17 +49,16 @@ public class Activator extends AbstractUIPlugin {
      */
     /*
      * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
      */
     @Override
     public void start(final BundleContext c) throws Exception {
         super.start(c);
-        plugin = this;
+        Activator.plugin = this;
     }
 
     /**
-     * 
+     *
      * @param BundleContext
      *            context.
      * @return void
@@ -67,12 +66,11 @@ public class Activator extends AbstractUIPlugin {
      */
     /*
      * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
      */
     @Override
     public void stop(final BundleContext c) throws Exception {
-        plugin = null;
+        Activator.plugin = null;
         super.stop(c);
     }
 }

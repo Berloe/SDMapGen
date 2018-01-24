@@ -81,14 +81,13 @@ public final class Messages extends NLS {
     /** $NON-NLS-1$. */
     static {
         // initialize resource bundle
-        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+        NLS.initializeMessages(Messages.BUNDLE_NAME, Messages.class);
     }
 
     /**
      * .
-     * 
+     *
      * @return void
      */
-    private Messages() {
-    }
+    private Messages() {}
 }

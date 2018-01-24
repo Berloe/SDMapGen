@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class SimpleClassLoader extends ClassLoader {
      * SimpleClassLoader repoClassLoader .
      */
     private SimpleClassLoader repoClassLoader;
-    private boolean ignoreClassNotFound = false;
+    private boolean ignoreClassNotFound;
 
     public SimpleClassLoader() {}
 
@@ -737,16 +738,25 @@ public class SimpleClassLoader extends ClassLoader {
                 final Enumeration<JarEntry> e = jarFile.entries();
                 while (e.hasMoreElements()) {
                     final JarEntry je = e.nextElement();
-                    if (!je.isDirectory() && je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
-                        final String className = je.getName().substring(0, je.getName().length() - 6);
-                        // className = className.replace("/", ".");
-                        final URL ur = new URL(
-                                "jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
-                        addDependencyPath(className, ur);
-                    }
+                    addJarEntry(pathToJar, je);
 
                 }
             }
+        }
+    }
+
+    /**
+     * @param pathToJar
+     * @param je
+     * @throws MalformedURLException
+     */
+    private void addJarEntry(final String pathToJar, final JarEntry je) throws MalformedURLException {
+        if (!je.isDirectory() && je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
+            final String className = je.getName().substring(0, je.getName().length() - 6);
+            // className = className.replace("/", ".");
+            final URL ur = new URL(
+                    "jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
+            addDependencyPath(className, ur);
         }
     }
 

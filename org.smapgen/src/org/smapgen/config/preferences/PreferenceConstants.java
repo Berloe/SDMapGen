@@ -15,18 +15,19 @@ public final class PreferenceConstants {
      */
     public static final String INPUT_SUFFIX = "inputSuffix";
     public static final String LASTUSEDPATH = "LastUsedPath";
-    
+
     /**
      * String OUTPUT_SUFFIX .
      */
     public static final String OUTPUT_SUFFIX = "outputSuffix";
-    
+
     /**
      * String P_PATHCLASSREPO .
      */
     public static final String P_PATHCLASSREPO = "pathClassRepo";
-    
+
     public static final String COMPAT_THRESHOLD = "classNameCompatThreshold";
+
     /**
      * constructor
      */

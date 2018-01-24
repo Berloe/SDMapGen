@@ -12,16 +12,6 @@ import java.util.Map.Entry;
  */
 public class ArtifactsBlock implements IArtifactsBlock {
 
-    private static final char $ = "$".charAt(0);
-    /**
-     * Pom properties
-     */
-    private Map<String, String> properties = new HashMap<String, String>();
-    /**
-     * ArtiFact list
-     */
-    private HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<Entry<String, String>, Artifact>();
-
     /**
      * @author Alberto Fuentes Gómez
      *
@@ -33,45 +23,40 @@ public class ArtifactsBlock implements IArtifactsBlock {
          * @param key
          * @param value
          */
-        public ArtifactEntry(String key, String value) {
+        public ArtifactEntry(final String key, final String value) {
             super(key, value);
         }
 
     }
+
+    private static final char $ = "$".charAt(0);
+    /**
+     * Pom properties
+     */
+    private final Map<String, String> properties = new HashMap<>();
+
+    /**
+     * ArtiFact list
+     */
+    private final HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<>();
+
     /*
      * (non-Javadoc)
      * @see org.smapgen.scl.repo.maven.IArtifactsBlock#add(org.smapgen.scl.repo.maven.Artifact)
      */
     @Override
-    public Artifact add(Artifact a) {
+    public Artifact add(final Artifact a) {
         completeArtifact(a);
         return fixArtifact(a);
     }
 
-    /**
-     * @param a
-     * @return
+    /*
+     * (non-Javadoc)
+     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#addProperties(java.util.Map)
      */
-    private Artifact put(Artifact a) {
-        return artiFactList.put(new ArtifactEntry(a.getGroup(), a.getArtifact()), a);
-    }
-
-    /**
-     * @param a
-     */
-    private void completeArtifact(Artifact a) {
-        if (a.getScope() == null) {
-            a.setScope(Constants.COMPILE);
-        }
-        if (null == a.getVersion()) {
-            String ver = properties.get(a.getArtifact() + "." + Constants.VERSION);
-            if (null != ver) {
-                a.setVersion(ver);
-            }
-        } else if (a.getVersion() != null && a.getVersion().startsWith("${")
-                && properties.containsKey(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
-            a.setVersion(properties.get(a.getVersion().subSequence(2, a.getVersion().length() - 1)));
-        }
+    @Override
+    public void addProperties(final Map<String, String> prop) {
+        properties.putAll(prop);
     }
 
     /*
@@ -79,11 +64,83 @@ public class ArtifactsBlock implements IArtifactsBlock {
      * @see org.smapgen.scl.repo.maven.IArtifactsBlock#contains(org.smapgen.scl.repo.maven.Artifact)
      */
     @Override
-    public boolean contains(Artifact a) {
-        Entry<String, String> ga = getKey(a);
-        boolean value = artiFactList.containsKey(ga);
+    public boolean contains(final Artifact a) {
+        final Entry<String, String> ga = getKey(a);
+        final boolean value = artiFactList.containsKey(ga);
         fixArtifact(a);
         return value;
+    }
+
+    @Override
+    public void fixArtifacts() {
+        final Artifact[] artifacts = artiFactList.values().toArray(new Artifact[0]);
+        for (final Artifact it : artifacts) {
+            completeArtifact(it);
+            artiFactList.put(getKey(it), it);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#get(org.smapgen.scl.repo.maven.Artifact)
+     */
+    @Override
+    public Artifact get(final Artifact a) {
+        return artiFactList.get(new ArtifactEntry(a.getGroup(), a.getArtifact()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#get(java.lang.String, java.lang.String)
+     */
+    @Override
+    public Artifact get(final String g, final String a) {
+        return artiFactList.get(new ArtifactEntry(g, a));
+    }
+
+    @Override
+    public boolean remove(final Artifact a) {
+        final Entry<String, String> ga = getKey(a);
+        final Artifact artfact = artiFactList.remove(ga);
+        return null != artfact;
+    }
+
+    @Override
+    public boolean removeAll(final IArtifactsBlock a) {
+        boolean ret = true;
+        for (final Artifact element : a.values()) {
+            if (!remove(element)) {
+                ret = false;
+            }
+        }
+        return ret;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#values()
+     */
+    @Override
+    public ArrayList<Artifact> values() {
+        final ArrayList<Artifact> result = new ArrayList<>(artiFactList.values());
+        return result;
+    }
+
+    /**
+     * @param a
+     */
+    private void completeArtifact(final Artifact a) {
+        if (a.getScope() == null) {
+            a.setScope(Constants.COMPILE);
+        }
+        if (null == a.getVersion()) {
+            final String ver = properties.get(a.getArtifact() + "." + Constants.VERSION);
+            if (null != ver) {
+                a.setVersion(ver);
+            }
+        } else if (a.getVersion() != null && a.getVersion().startsWith("${") && properties.containsKey(a.getVersion().subSequence(2, a.getVersion().length() - 1))) {
+            a.setVersion(properties.get(a.getVersion().subSequence(2, a.getVersion().length() - 1)));
+        }
     }
 
     /**
@@ -91,21 +148,20 @@ public class ArtifactsBlock implements IArtifactsBlock {
      * @param ga
      * @return
      */
-    private Artifact fixArtifact(Artifact a) {
+    private Artifact fixArtifact(final Artifact a) {
         Artifact artifact = a;
-        Entry<String, String> ga = getKey(a);
+        final Entry<String, String> ga = getKey(a);
         completeArtifact(a);
         if (artiFactList.containsKey(ga)) {
             artifact = artiFactList.get(ga);
-            if ((Constants.COMPILE.equals(a.getScope()) || Constants.IMPORT.equals(a.getScope()))
-                    && !Constants.COMPILE.equals(artifact.getScope())) {
+            if ((Constants.COMPILE.equals(a.getScope()) || Constants.IMPORT.equals(a.getScope())) && !Constants.COMPILE.equals(artifact.getScope())) {
                 artifact.setScope(a.getScope());
             }
             if (artifact.getVersion() == null && a.getVersion() != null) {
                 artifact.setVersion(a.getVersion());
-            } else if (artifact.getVersion() != null && a.getVersion() != null
-                    && artifact.getVersion().compareTo(a.getVersion()) < 0 && a.getVersion().charAt(0) != ArtifactsBlock.$)
+            } else if (artifact.getVersion() != null && a.getVersion() != null && artifact.getVersion().compareTo(a.getVersion()) < 0 && a.getVersion().charAt(0) != ArtifactsBlock.$) {
                 artifact.setVersion(a.getVersion());
+            }
 
         }
         return put(artifact);
@@ -115,73 +171,16 @@ public class ArtifactsBlock implements IArtifactsBlock {
      * @param a
      * @return
      */
-    private Entry<String, String> getKey(Artifact a) {
-        Entry<String, String> ga = new ArtifactEntry(a.getGroup(), a.getArtifact());
+    private Entry<String, String> getKey(final Artifact a) {
+        final Entry<String, String> ga = new ArtifactEntry(a.getGroup(), a.getArtifact());
         return ga;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#get(java.lang.String, java.lang.String)
+    /**
+     * @param a
+     * @return
      */
-    @Override
-    public Artifact get(String g, String a) {
-        return artiFactList.get(new ArtifactEntry(g, a));
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#get(org.smapgen.scl.repo.maven.Artifact)
-     */
-    @Override
-    public Artifact get(Artifact a) {
-        return artiFactList.get(new ArtifactEntry(a.getGroup(), a.getArtifact()));
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#values()
-     */
-    @Override
-    public ArrayList<Artifact> values() {
-        ArrayList<Artifact> result = new ArrayList<Artifact>(artiFactList.values());
-        return result;
-    }
-
-    
-    /*
-     * (non-Javadoc)
-     * @see org.smapgen.scl.repo.maven.IArtifactsBlock#addProperties(java.util.Map)
-     */
-    @Override
-    public void addProperties(Map<String, String> prop) {
-            properties.putAll(prop);
-    }
-
-    @Override
-    public boolean remove(Artifact a) {
-        Entry<String, String> ga = getKey(a);
-        Artifact artfact = artiFactList.remove(ga);
-        return null!=artfact;
-    }
-
-    @Override
-    public boolean removeAll(IArtifactsBlock a) {
-        boolean ret = true;
-        for (Artifact element : a.values()) {
-            if(!remove(element)){
-                ret= false;
-            }
-        }
-        return ret;
-    }
-
-    @Override
-    public void fixArtifacts(){
-        Artifact[] artifacts = (Artifact[]) artiFactList.values().toArray(new Artifact[0]);
-        for (Artifact it : artifacts) {
-            completeArtifact(it);
-            artiFactList.put(getKey(it), it);
-        }
+    private Artifact put(final Artifact a) {
+        return artiFactList.put(new ArtifactEntry(a.getGroup(), a.getArtifact()), a);
     }
 }

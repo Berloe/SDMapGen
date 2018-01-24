@@ -14,22 +14,22 @@ import org.smapgen.sdm.metadata.MappingType;
  */
 public class IterableToArrayMap implements IMapper {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#isAplicable(org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        return MappingType.ARRAY.equals(sourceField.getGetterGenericType())
-                && MappingType.COLLECTION.equals(targetField.getSetterGenericType());
+    public Boolean isAplicable(final MappingField sourceField, final MappingField targetField) {
+        return MappingType.ARRAY.equals(sourceField.getGetterGenericType()) && MappingType.COLLECTION.equals(targetField.getSetterGenericType());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#map(java.lang.String, java.lang.String, org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public StringBuffer map( final String sourceName,String targetName,
-            MappingField sourceField, MappingField targetField) throws Throwable {
-        
+    public StringBuffer map(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) throws Throwable {
+
         if (sourceField.getCalculatedFieldType().getCanonicalName().equals(Object.class.getCanonicalName())) {
             return new StringBuffer();
         }
@@ -40,10 +40,10 @@ public class IterableToArrayMap implements IMapper {
         Object datoTarget;
         // Mapping Collection
         final StringBuffer auxSb = new StringBuffer();
-        datoTarget = ObjectFactory.loader(targetField.getFieldType()/*.getResolvedAbsClss()*/);
+        datoTarget = ObjectFactory.loader(targetField.getFieldType()/* .getResolvedAbsClss() */);
         final String newtargetName = Common.createNewVarArray(auxSb, datoTarget);
         auxSb.append(mapperArrayfromCollection(sourceField, targetField, sourceName, newtargetName));
-            
+
         return auxSb;
     }
 
@@ -55,19 +55,10 @@ public class IterableToArrayMap implements IMapper {
      * @return
      * @throws Throwable
      */
-    private StringBuffer mapperArrayfromCollection(final MappingField sourceField, final MappingField targetField,
-             final String sourceName, final String targetName) throws Throwable {
-        final StringBuffer b = new StringBuffer("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName())
-                .append("> list").append(targetName).append(" = new java.util.ArrayList<")
-                .append(targetField.getCalculatedFieldType().getCanonicalName()).append(">(); for(")
-                .append(sourceField.getFieldType().getComponentType().getCanonicalName()).append(" el")
-                .append(sourceName).append(" : ").append(sourceName).append("){")
-                
-                .append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName,targetName))
-                .append('}').append(targetName).append(" = list").append(targetName).append(".toArray(new ")
-                .append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);")
-                .append(Common.valueAssign(targetName, targetField))
-                .append('}');
+    private StringBuffer mapperArrayfromCollection(final MappingField sourceField, final MappingField targetField, final String sourceName, final String targetName) throws Throwable {
+        final StringBuffer b = new StringBuffer("if(!").append(sourceName).append(".isEmpty()){ java.util.List<").append(targetField.getCalculatedFieldType().getCanonicalName()).append("> list").append(targetName).append(" = new java.util.ArrayList<").append(targetField.getCalculatedFieldType().getCanonicalName()).append(">(); for(").append(sourceField.getFieldType().getComponentType().getCanonicalName()).append(" el").append(sourceName).append(" : ").append(sourceName).append("){")
+
+                .append(ItemContinerMap.mapItemElement(sourceField, targetField, ConstantValues.ClassMapper_elementPrefix + sourceName, targetName)).append('}').append(targetName).append(" = list").append(targetName).append(".toArray(new ").append(targetField.getFieldType().getComponentType().getCanonicalName()).append("[0]);").append(Common.valueAssign(targetName, targetField)).append('}');
         return b;
     }
 }

@@ -14,20 +14,22 @@ import org.smapgen.sdm.metadata.MappingType;
  */
 public class CalendarMap extends Mapper implements IMapper {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#isAplicable(org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public Boolean isAplicable(MappingField sourceField, MappingField targetField) {
-        return MappingType.CALENDAR.equals(targetField.getSetterGenericType()) && (MappingType.DATE.equals(sourceField.getGetterGenericType())|| MappingType.CALENDAR.equals(sourceField.getGetterGenericType()));
+    public Boolean isAplicable(final MappingField sourceField, final MappingField targetField) {
+        return MappingType.CALENDAR.equals(targetField.getSetterGenericType()) && (MappingType.DATE.equals(sourceField.getGetterGenericType()) || MappingType.CALENDAR.equals(sourceField.getGetterGenericType()));
     }
-   
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see org.smapgen.sdm.map.IMapper#map(java.lang.String, java.lang.String, org.smapgen.sdm.metadata.MappingField, org.smapgen.sdm.metadata.MappingField)
      */
     @Override
-    public StringBuffer map(final String sourceName, final String targetName,MappingField sourceField, MappingField targetField) {
-        StringBuffer buffer = new StringBuffer();
+    public StringBuffer map(final String sourceName, final String targetName, final MappingField sourceField, final MappingField targetField) {
+        final StringBuffer buffer = new StringBuffer();
         if (!MappingType.DATE.equals(sourceField.getGetterGenericType())) {
             buffer.append(Common.valueAssign(sourceField, targetField));
         } else {
@@ -38,5 +40,5 @@ public class CalendarMap extends Mapper implements IMapper {
         }
         return buffer;
     }
-    
+
 }

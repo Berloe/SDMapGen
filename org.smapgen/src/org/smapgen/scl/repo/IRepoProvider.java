@@ -18,6 +18,11 @@ import org.smapgen.scl.repo.maven.Artifact;
 public interface IRepoProvider {
 
     /**
+     * @return
+     */
+    String getConfigFileName();
+
+    /**
      * @param conf
      * @return
      * @throws FileNotFoundException
@@ -27,11 +32,12 @@ public interface IRepoProvider {
 
     /**
      * @param conf
+     * @param repo
      * @return
      * @throws FileNotFoundException
      * @throws XMLStreamException
      */
-    List<?> getTransitiveDependencies(File conf) throws FileNotFoundException, XMLStreamException;
+    List<Artifact> getDependenciesTree(File conf, Path repo) throws FileNotFoundException, XMLStreamException;
 
     /**
      * @param artifacts
@@ -40,20 +46,14 @@ public interface IRepoProvider {
      * @throws FileNotFoundException
      * @throws XMLStreamException
      */
-    Map<String,URI> getResolveDependenciesURL(List<?> artifacts, Path repo)
-            throws FileNotFoundException, XMLStreamException;
-    /**
-     * @return
-     */
-    String getConfigFileName();
+    Map<String, URI> getResolveDependenciesURL(List<?> artifacts, Path repo) throws FileNotFoundException, XMLStreamException;
 
     /**
      * @param conf
-     * @param repo
      * @return
      * @throws FileNotFoundException
      * @throws XMLStreamException
      */
-    List<Artifact> getDependenciesTree(File conf, Path repo) throws FileNotFoundException, XMLStreamException;
+    List<?> getTransitiveDependencies(File conf) throws FileNotFoundException, XMLStreamException;
 
 }

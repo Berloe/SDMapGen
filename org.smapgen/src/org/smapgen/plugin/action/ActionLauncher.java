@@ -25,7 +25,7 @@ public class ActionLauncher extends ActionDelegate implements IObjectActionDeleg
     private IWorkbench workbench;
 
     /**
-     * 
+     *
      * @param IAction
      *            arg0.
      * @return void
@@ -44,7 +44,7 @@ public class ActionLauncher extends ActionDelegate implements IObjectActionDeleg
 
     @Override
     public void selectionChanged(final IAction a, final ISelection s) {
-        this.selection = s;
+        selection = s;
     }
 
     @Override

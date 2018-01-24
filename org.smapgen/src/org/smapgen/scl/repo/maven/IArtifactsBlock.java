@@ -16,22 +16,23 @@ public interface IArtifactsBlock {
     Artifact add(Artifact a);
 
     /**
-     * @param a
-     * @return
+     * @param prop
      */
-    boolean contains(Artifact a);
+    void addProperties(Map<String, String> prop);
 
     /**
      * @param a
      * @return
      */
-    boolean remove(Artifact a);
-    
+    boolean contains(Artifact a);
+
+    void fixArtifacts();
+
     /**
      * @param a
      * @return
      */
-    boolean removeAll(IArtifactsBlock a);
+    Artifact get(Artifact a);
 
     /**
      * @param g
@@ -44,18 +45,17 @@ public interface IArtifactsBlock {
      * @param a
      * @return
      */
-    Artifact get(Artifact a);
+    boolean remove(Artifact a);
+
+    /**
+     * @param a
+     * @return
+     */
+    boolean removeAll(IArtifactsBlock a);
 
     /**
      * @return
      */
     ArrayList<Artifact> values();
-
-    /**
-     * @param prop
-     */
-    void addProperties(Map<String, String> prop);
-
-    void fixArtifacts();
 
 }

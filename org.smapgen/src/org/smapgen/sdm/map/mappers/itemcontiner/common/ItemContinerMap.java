@@ -21,8 +21,7 @@ public class ItemContinerMap extends Mapper {
      * @return
      * @throws Throwable
      */
-    public static StringBuffer mapItemElement(final MappingField sourceField, final MappingField targetField,
-            final String sourceName, final String targetName) throws Throwable {
+    public static StringBuffer mapItemElement(final MappingField sourceField, final MappingField targetField, final String sourceName, final String targetName) throws Throwable {
         final StringBuffer buffer = new StringBuffer();
         final String newTargetName;
         if (Utils.isAbstract(targetField.getFieldType())) {
@@ -31,8 +30,7 @@ public class ItemContinerMap extends Mapper {
         } else {
             newTargetName = Common.createNewVar(buffer, ObjectFactory.loader(targetField.getFieldType()));
 
-            buffer.append(objectMapping(targetField, targetField.getFieldType(), newTargetName, sourceField,
-                    sourceField.getFieldType(), sourceField.getFieldType(), sourceName));
+            buffer.append(Mapper.objectMapping(targetField, targetField.getFieldType(), newTargetName, sourceField, sourceField.getFieldType(), sourceField.getFieldType(), sourceName));
         }
         buffer.append("list").append(targetName).append(".add(").append(newTargetName).append(");");
         return buffer;

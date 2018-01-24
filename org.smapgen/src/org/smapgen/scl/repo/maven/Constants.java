@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 package org.smapgen.scl.repo.maven;
 
 /**
- * @author afuentesg
+ * @author Alberto Fuentes Gómez
  *
  */
 public final class Constants {
@@ -21,10 +21,10 @@ public final class Constants {
     public static final String DEPENDENCY_MANAGEMENT = "dependencyManagement";
     public static final String DEPENDENCIES = "dependencies";
     public static final String IMPORT = "import";
+
     /**
-     * 
+     *
      */
-    private Constants() {
-    }
+    private Constants() {}
 
 }

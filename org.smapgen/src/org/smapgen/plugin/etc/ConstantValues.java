@@ -13,9 +13,8 @@ public final class ConstantValues extends NLS {
     private static final String BUNDLE_NAME = "org.smapgen.plugin.etc.constantValues"; //$NON-NLS-1$
     static {
         // initialize resource bundle
-        NLS.initializeMessages(BUNDLE_NAME, ConstantValues.class);
+        NLS.initializeMessages(ConstantValues.BUNDLE_NAME, ConstantValues.class);
     }
 
-    private ConstantValues() {
-    }
+    private ConstantValues() {}
 }

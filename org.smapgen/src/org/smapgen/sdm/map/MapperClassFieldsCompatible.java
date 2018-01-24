@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.smapgen.sdm.map;
 
@@ -15,7 +15,6 @@ import org.smapgen.sdm.utils.Utils;
  *
  */
 public class MapperClassFieldsCompatible {
-    
 
     /**
      * @param mapSource
@@ -31,15 +30,12 @@ public class MapperClassFieldsCompatible {
      * @throws Throwable
      * @throws ClassLoaderException
      */
-    public static StringBuffer mapperFieldsCompatible( final  MappingField[] mapSource, final  HashMap<String, MappingField> maptarget,
-            final String sourceName, final String targetName)
-            throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException,
-            InvocationTargetException, Throwable, ClassLoaderException {
-        StringBuffer b = new StringBuffer();
-        for (MappingField sourceField : mapSource) {
-            for (MappingField targetField : maptarget.values()) {
+    public static StringBuffer mapperFieldsCompatible(final MappingField[] mapSource, final HashMap<String, MappingField> maptarget, final String sourceName, final String targetName) throws ClassNotFoundException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, Throwable, ClassLoaderException {
+        final StringBuffer b = new StringBuffer();
+        for (final MappingField sourceField : mapSource) {
+            for (final MappingField targetField : maptarget.values()) {
                 if (!targetField.getMapped() && !sourceField.getMapped() && Utils.isCompatibleName(targetField.getName(), sourceField.getName())) {
-                    b.append(DoMap.mapSourceIntoTarget( sourceName, targetName, sourceField, targetField));
+                    b.append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
                     targetField.setMapped(Boolean.TRUE);
                     sourceField.setMapped(Boolean.TRUE);
                 }
@@ -48,9 +44,9 @@ public class MapperClassFieldsCompatible {
         }
         return b;
     }
- 
+
     /**
-     * 
+     *
      */
     private MapperClassFieldsCompatible() {
         super();
