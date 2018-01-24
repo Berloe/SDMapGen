@@ -31,14 +31,14 @@ public class ArtifactsBlock implements IArtifactsBlock {
 
     private static final char $ = "$".charAt(0);
     /**
-     * Pom properties
-     */
-    private final Map<String, String> properties = new HashMap<>();
-
-    /**
      * ArtiFact list
      */
     private final HashMap<Entry<String, String>, Artifact> artiFactList = new HashMap<>();
+
+    /**
+     * Pom properties
+     */
+    private final Map<String, String> properties = new HashMap<>();
 
     /*
      * (non-Javadoc)

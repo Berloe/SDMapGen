@@ -37,30 +37,6 @@ import org.eclipse.swt.widgets.Display;
  * @author Dan Rubel
  */
 public class SWTResourceManager {
-    ////////////////////////////////////////////////////////////////////////////
-    //
-    // Color
-    //
-    ////////////////////////////////////////////////////////////////////////////
-    private static Map<RGB, Color> m_colorMap = new HashMap<>();
-    ////////////////////////////////////////////////////////////////////////////
-    //
-    // Image
-    //
-    ////////////////////////////////////////////////////////////////////////////
-    /**
-     * Maps image paths to images.
-     */
-    private static Map<String, Image> m_imageMap = new HashMap<>();
-    private static final int MISSING_IMAGE_SIZE = 10;
-    /**
-     * Style constant for placing decorator image in top left corner of base image.
-     */
-    public static final int TOP_LEFT = 1;
-    /**
-     * Style constant for placing decorator image in top right corner of base image.
-     */
-    public static final int TOP_RIGHT = 2;
     /**
      * Style constant for placing decorator image in bottom left corner of base image.
      */
@@ -70,9 +46,19 @@ public class SWTResourceManager {
      */
     public static final int BOTTOM_RIGHT = 4;
     /**
-     * Internal value.
+     * Style constant for placing decorator image in top left corner of base image.
      */
-    protected static final int LAST_CORNER_KEY = 5;
+    public static final int TOP_LEFT = 1;
+    /**
+     * Style constant for placing decorator image in top right corner of base image.
+     */
+    public static final int TOP_RIGHT = 2;
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // Color
+    //
+    ////////////////////////////////////////////////////////////////////////////
+    private static Map<RGB, Color> m_colorMap = new HashMap<>();
     /**
      * Maps images to decorated images.
      */
@@ -100,6 +86,20 @@ public class SWTResourceManager {
      * Maps IDs to cursors.
      */
     private static Map<Integer, Cursor> m_idToCursorMap = new HashMap<>();
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // Image
+    //
+    ////////////////////////////////////////////////////////////////////////////
+    /**
+     * Maps image paths to images.
+     */
+    private static Map<String, Image> m_imageMap = new HashMap<>();
+    private static final int MISSING_IMAGE_SIZE = 10;
+    /**
+     * Internal value.
+     */
+    protected static final int LAST_CORNER_KEY = 5;
 
     /**
      * Returns an {@link Image} composed of a base image decorated by another image.

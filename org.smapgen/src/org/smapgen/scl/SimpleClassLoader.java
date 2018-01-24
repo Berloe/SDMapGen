@@ -27,13 +27,13 @@ import org.smapgen.scl.exception.ClassLoaderException;
  *
  */
 public class SimpleClassLoader extends ClassLoader {
+    private static final char BACKSLASH = "\\".charAt(0);
+    private static final String CLASS_EXTENSION = ".class";
+    private static final char DOT_CHAR = ".".charAt(0);
+    private static final String JAR_EXTENSION = ".jar";
     private static final String LINE_SEPARATOR = System.getProperty("file.separator");
     private static final char SHARP_CHAR = "#".charAt(0);
     private static final char SLASH_CHAR = "/".charAt(0);
-    private static final char DOT_CHAR = ".".charAt(0);
-    private static final char BACKSLASH = "\\".charAt(0);
-    private static final String CLASS_EXTENSION = ".class";
-    private static final String JAR_EXTENSION = ".jar";
     /**
      * Class cache
      * 
@@ -43,6 +43,7 @@ public class SimpleClassLoader extends ClassLoader {
      * Dependency paths .
      */
     private Map<String, URL> depsPath = new HashMap<String, URL>();
+    private boolean ignoreClassNotFound;
     /**
      * String libpath .
      */
@@ -59,7 +60,6 @@ public class SimpleClassLoader extends ClassLoader {
      * SimpleClassLoader repoClassLoader .
      */
     private SimpleClassLoader repoClassLoader;
-    private boolean ignoreClassNotFound;
 
     public SimpleClassLoader() {}
 
@@ -118,6 +118,15 @@ public class SimpleClassLoader extends ClassLoader {
         return response;
     }
 
+    public InputStream getClassAsStream(String name) {
+        final URL pkgToUri = depsPath.get(name);
+        try {
+            return new FileInputStream(pkgToUri.getPath());
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
     /**
      * 
      * @param String
@@ -160,11 +169,6 @@ public class SimpleClassLoader extends ClassLoader {
             e.printStackTrace();
         }
         setignoreClassNotFound(false);
-    }
-
-    private void setignoreClassNotFound(Boolean ignore) {
-        ignoreClassNotFound = ignore.booleanValue();
-
     }
 
     /**
@@ -228,43 +232,6 @@ public class SimpleClassLoader extends ClassLoader {
             }
         }
         return true;
-    }
-
-    /**
-     * @param dependencias
-     * @return
-     */
-    private Set<String> formatDepsCanonicalNames(final ArrayList<String> dependencias) {
-        final Set<String> eval = new HashSet<String>();
-        for (final String key : dependencias) {
-            if (depsPath.containsKey(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR))) {
-                eval.add(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR));
-            }
-            if (depsPath.containsKey(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR))) {
-                eval.add(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
-            }
-        }
-        return eval;
-    }
-
-    /**
-     * @param key
-     * @throws NoClassDefFoundError
-     */
-    private boolean ldepsFromDepsPath(final String key) throws NoClassDefFoundError {
-        try {
-            final String name = key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR);
-            final URL ur = depsPath.get(key);
-            final InputStream imput = ur.openStream();
-            final byte[] classData = loadClassData(imput);
-            imput.close();
-            addClassCache(defineClass(name, classData, 0, classData.length));
-            return true;
-        } catch (final NoClassDefFoundError e) {
-            throw e;
-        } catch (final Throwable e) {
-            return false;
-        }
     }
 
     /**
@@ -361,6 +328,31 @@ public class SimpleClassLoader extends ClassLoader {
             e.printStackTrace();
         }
         clasesField.setAccessible(acc);
+    }
+
+    /**
+     * @param className
+     * @param ur
+     */
+    private void addDependencyPath(final String className, final URL ur) {
+        if (!depsPath.containsKey(className)) {
+            depsPath.put(className, ur);
+        }
+    }
+
+    /**
+     * @param pathToJar
+     * @param je
+     * @throws MalformedURLException
+     */
+    private void addJarEntry(final String pathToJar, final JarEntry je) throws MalformedURLException {
+        if (!je.isDirectory() && je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
+            final String className = je.getName().substring(0, je.getName().length() - 6);
+            // className = className.replace("/", ".");
+            final URL ur = new URL(
+                    "jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
+            addDependencyPath(className, ur);
+        }
     }
 
     /**
@@ -469,6 +461,23 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     /**
+     * @param dependencias
+     * @return
+     */
+    private Set<String> formatDepsCanonicalNames(final ArrayList<String> dependencias) {
+        final Set<String> eval = new HashSet<String>();
+        for (final String key : dependencias) {
+            if (depsPath.containsKey(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR))) {
+                eval.add(key.replace(SimpleClassLoader.DOT_CHAR, SimpleClassLoader.SLASH_CHAR));
+            }
+            if (depsPath.containsKey(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR))) {
+                eval.add(key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR));
+            }
+        }
+        return eval;
+    }
+
+    /**
      * @param classname
      * @param path
      * @return
@@ -508,15 +517,6 @@ public class SimpleClassLoader extends ClassLoader {
             return clazz;
         } catch (final Exception e) {
             throw new ClassLoaderException(classname);
-        }
-    }
-
-    public InputStream getClassAsStream(String name) {
-        final URL pkgToUri = depsPath.get(name);
-        try {
-            return new FileInputStream(pkgToUri.getPath());
-        } catch (FileNotFoundException e) {
-            return null;
         }
     }
 
@@ -616,6 +616,26 @@ public class SimpleClassLoader extends ClassLoader {
             return super.findSystemClass(classname);
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return null;
+        }
+    }
+
+    /**
+     * @param key
+     * @throws NoClassDefFoundError
+     */
+    private boolean ldepsFromDepsPath(final String key) throws NoClassDefFoundError {
+        try {
+            final String name = key.replace(SimpleClassLoader.SLASH_CHAR, SimpleClassLoader.DOT_CHAR);
+            final URL ur = depsPath.get(key);
+            final InputStream imput = ur.openStream();
+            final byte[] classData = loadClassData(imput);
+            imput.close();
+            addClassCache(defineClass(name, classData, 0, classData.length));
+            return true;
+        } catch (final NoClassDefFoundError e) {
+            throw e;
+        } catch (final Throwable e) {
+            return false;
         }
     }
 
@@ -745,28 +765,8 @@ public class SimpleClassLoader extends ClassLoader {
         }
     }
 
-    /**
-     * @param pathToJar
-     * @param je
-     * @throws MalformedURLException
-     */
-    private void addJarEntry(final String pathToJar, final JarEntry je) throws MalformedURLException {
-        if (!je.isDirectory() && je.getName().endsWith(SimpleClassLoader.CLASS_EXTENSION)) {
-            final String className = je.getName().substring(0, je.getName().length() - 6);
-            // className = className.replace("/", ".");
-            final URL ur = new URL(
-                    "jar:file:" + pathToJar + "!/" + className + SimpleClassLoader.CLASS_EXTENSION);
-            addDependencyPath(className, ur);
-        }
-    }
+    private void setignoreClassNotFound(Boolean ignore) {
+        ignoreClassNotFound = ignore.booleanValue();
 
-    /**
-     * @param className
-     * @param ur
-     */
-    private void addDependencyPath(final String className, final URL ur) {
-        if (!depsPath.containsKey(className)) {
-            depsPath.put(className, ur);
-        }
     }
 }

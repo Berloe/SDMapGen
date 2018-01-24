@@ -14,16 +14,16 @@ import org.smapgen.sdm.utils.Utils;
  */
 public final class Common implements ISimpleDataObjMapper {
 
-    private static final char LESS_THAN = '<';
-    private static final char GREATER_THAN = '>';
     private static final char DOT = '.';
-    private static final char PARENTHESIS_L = '(';
-    private static final char KEY_R = '}';
-    private static final char SPACE = ' ';
-    private static final char SEMICOLON = ';';
-    private static final char PARENTHESIS_R = ')';
+    private static final char GREATER_THAN = '>';
     private static final String INSTANCEOF = " instanceof ";
+    private static final char KEY_R = '}';
+    private static final char LESS_THAN = '<';
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final char PARENTHESIS_L = '(';
+    private static final char PARENTHESIS_R = ')';
+    private static final char SEMICOLON = ';';
+    private static final char SPACE = ' ';
     private static final String STR_Equals = " = ";
 
     /**

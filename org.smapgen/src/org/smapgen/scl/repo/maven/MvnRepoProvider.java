@@ -21,10 +21,10 @@ import org.smapgen.scl.repo.IRepoProvider;
  *
  */
 public class MvnRepoProvider implements IRepoProvider {
-    private Path repo;
-    private final ExecutorService threadPool = Executors.newWorkStealingPool();
     private final IArtifactsBlock artifactBlock = new ArtifactsBlock();
     private final IArtifactsBlock artifactBlockBlackList = new ArtifactsBlock();
+    private Path repo;
+    private final ExecutorService threadPool = Executors.newWorkStealingPool();
 
     public MvnRepoProvider() {
         super();

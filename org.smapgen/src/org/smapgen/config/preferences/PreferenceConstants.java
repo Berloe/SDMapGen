@@ -5,6 +5,7 @@ package org.smapgen.config.preferences;
  *
  */
 public final class PreferenceConstants {
+    public static final String COMPAT_THRESHOLD = "classNameCompatThreshold";
     /**
      * String DEPTH .
      */
@@ -14,6 +15,7 @@ public final class PreferenceConstants {
      * String INPUT_SUFFIX .
      */
     public static final String INPUT_SUFFIX = "inputSuffix";
+
     public static final String LASTUSEDPATH = "LastUsedPath";
 
     /**
@@ -25,8 +27,6 @@ public final class PreferenceConstants {
      * String P_PATHCLASSREPO .
      */
     public static final String P_PATHCLASSREPO = "pathClassRepo";
-
-    public static final String COMPAT_THRESHOLD = "classNameCompatThreshold";
 
     /**
      * constructor

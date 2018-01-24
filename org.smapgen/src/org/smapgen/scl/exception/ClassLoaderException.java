@@ -8,8 +8,8 @@ public class ClassLoaderException extends Throwable {
 
     private static final long serialVersionUID = 1L;
 
-    private String className;
     private String classCanonicalName;
+    private String className;
 
     public ClassLoaderException() {}
 

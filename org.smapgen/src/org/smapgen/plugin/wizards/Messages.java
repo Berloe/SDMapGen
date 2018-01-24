@@ -55,29 +55,29 @@ public final class Messages extends NLS {
      * String MapperNewWizardPage_9 .
      */
     public static String MapperNewWizardPage_9;
+    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText;
+    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText_1;
     public static String MapperNewWizardPage_btnRadioButton_1_text;
     public static String MapperNewWizardPage_btnRadioButton_2_text;
     public static String MapperNewWizardPage_btnRadioButton_text;
     public static String MapperNewWizardPage_btnSelectCustomDependencies_text;
+    public static String MapperNewWizardPage_button_1_text;
+    public static String MapperNewWizardPage_button_1_toolTipText;
+    public static String MapperNewWizardPage_button_toolTipText;
+    public static String MapperNewWizardPage_button_toolTipText_1;
+    public static String MapperNewWizardPage_tbtmMapping_text;
+    public static String MapperNewWizardPage_tbtmNewItem_1_text;
+    public static String MapperNewWizardPage_tbtmNewItem_1_text_1;
+    public static String MapperNewWizardPage_tbtmNewItem_text;
+    public static String MapperNewWizardPage_tbtmNewItem_text_1;
+    public static String MapperNewWizardPage_tbtmNewItem_text_2;
+    public static String MapperNewWizardPage_tltmDropdownItem_1_text;
+    public static String MapperNewWizardPage_tltmDropdownItem_text;
+    public static String MapperNewWizardPage_xpndtmLog_text;
     /**
      * String BUNDLE_NAME .
      */
     private static final String BUNDLE_NAME = "org.smapgen.plugin.wizards.messages";
-    public static String MapperNewWizardPage_xpndtmLog_text;
-    public static String MapperNewWizardPage_tbtmMapping_text;
-    public static String MapperNewWizardPage_tbtmNewItem_text;
-    public static String MapperNewWizardPage_tbtmNewItem_text_1;
-    public static String MapperNewWizardPage_tbtmNewItem_1_text;
-    public static String MapperNewWizardPage_tltmDropdownItem_text;
-    public static String MapperNewWizardPage_tltmDropdownItem_1_text;
-    public static String MapperNewWizardPage_tbtmNewItem_text_2;
-    public static String MapperNewWizardPage_tbtmNewItem_1_text_1;
-    public static String MapperNewWizardPage_button_1_text;
-    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText;
-    public static String MapperNewWizardPage_button_toolTipText;
-    public static String MapperNewWizardPage_button_toolTipText_1;
-    public static String MapperNewWizardPage_btnGeneraMtodo_toolTipText_1;
-    public static String MapperNewWizardPage_button_1_toolTipText;
     /** $NON-NLS-1$. */
     static {
         // initialize resource bundle

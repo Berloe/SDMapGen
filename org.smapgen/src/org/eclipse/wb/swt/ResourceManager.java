@@ -43,6 +43,11 @@ public class ResourceManager extends SWTResourceManager {
         URL getEntry(String symbolicName, String path);
     }
 
+    /**
+     * Maps images to decorated images.
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[SWTResourceManager.LAST_CORNER_KEY];
     ////////////////////////////////////////////////////////////////////////////
     //
     // Image
@@ -50,10 +55,9 @@ public class ResourceManager extends SWTResourceManager {
     ////////////////////////////////////////////////////////////////////////////
     private static Map<ImageDescriptor, Image> m_descriptorImageMap = new HashMap<>();
     /**
-     * Maps images to decorated images.
+     * Instance of {@link PluginResourceProvider}, used by WindowBuilder at design time.
      */
-    @SuppressWarnings("unchecked")
-    private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[SWTResourceManager.LAST_CORNER_KEY];
+    private static PluginResourceProvider m_designTimePluginResourceProvider = null;
     ////////////////////////////////////////////////////////////////////////////
     //
     // Plugin images support
@@ -63,10 +67,6 @@ public class ResourceManager extends SWTResourceManager {
      * Maps URL to images.
      */
     private static Map<String, Image> m_URLImageMap = new HashMap<>();
-    /**
-     * Instance of {@link PluginResourceProvider}, used by WindowBuilder at design time.
-     */
-    private static PluginResourceProvider m_designTimePluginResourceProvider = null;
 
     /**
      * Returns an {@link Image} composed of a base image decorated by another image.

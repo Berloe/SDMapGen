@@ -15,6 +15,21 @@ public final class Registry {
     private static Registry registry;
 
     /**
+     * Registered Function List.
+     */
+    private List<StringBuffer> functionList;
+
+    /**
+     * Functions Registry.
+     */
+    private HashMap<String, HashMap<String, String>> functionsRegistry;
+
+    /**
+     * Names Registry.
+     */
+    private HashMap<String, Integer> namesRegistry;
+
+    /**
      * @param fn
      */
     public static void addFunctionToList(final StringBuffer fn) {
@@ -57,7 +72,6 @@ public final class Registry {
 
         return Registry.registry;
     }
-
     /**
      * @param baseName
      * @return
@@ -72,7 +86,6 @@ public final class Registry {
         Registry.getInstance().namesRegistry.put(baseName, count);
         return baseName + count;
     }
-
     /**
      * @param source
      * @param target
@@ -91,19 +104,6 @@ public final class Registry {
             }
         }
     }
-
-    /**
-     * Registered Function List.
-     */
-    private List<StringBuffer> functionList;
-    /**
-     * Functions Registry.
-     */
-    private HashMap<String, HashMap<String, String>> functionsRegistry;
-    /**
-     * Names Registry.
-     */
-    private HashMap<String, Integer> namesRegistry;
 
     /**
      *

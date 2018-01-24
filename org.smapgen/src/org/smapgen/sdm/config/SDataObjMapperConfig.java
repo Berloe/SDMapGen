@@ -5,6 +5,8 @@ package org.smapgen.sdm.config;
  *
  */
 public class SDataObjMapperConfig {
+    private Integer compatThreshold;
+
     /**
      * String INSufix.
      */
@@ -14,8 +16,6 @@ public class SDataObjMapperConfig {
      * String OUTSufix.
      */
     private String OUTSufix;
-
-    private Integer compatThreshold;
 
     public SDataObjMapperConfig(final String input, final String output, final Integer compatThreshold) {
         INSufix = input;

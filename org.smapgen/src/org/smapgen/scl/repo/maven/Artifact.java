@@ -6,10 +6,10 @@ package org.smapgen.scl.repo.maven;
  */
 public class Artifact {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private String group;
     private String artifact;
-    private String version;
+    private String group;
     private String scope;
+    private String version;
 
     public String getPomName() {
         return getArtifact().concat("-").concat(getVersion()).concat(".pom");

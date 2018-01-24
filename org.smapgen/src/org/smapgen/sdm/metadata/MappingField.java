@@ -10,29 +10,29 @@ import java.util.ArrayList;
  */
 public class MappingField {
 
-    /** Field for mapping. */
-    private Field field;
+    private ArrayList<String> anotations = new ArrayList<>();
     /** Field type. */
     private Class<?> calculatedFieldType;
+    /** Field for mapping. */
+    private Field field;
+    /** Field class. */
+    private Class<?> fieldType;
     /** Getter return type. */
     private MappingType getterGenericType;
     /** Getter Method. */
     private Method getterMethod;
+    private Boolean mapped;
     /** Field Name. */
     private String name;
-    /** Field class. */
-    private Class<?> fieldType;
     /** Setter p�rameter type. */
     private MappingType setterGenericType;
+
     /** Setter Method. */
     private Method setterMethod;
     /** Constructor. */
     private String varName;
     // /**Resolved Class**/
     // private Class<?> resolvedAbsClss;
-
-    private Boolean mapped;
-    private ArrayList<String> anotations = new ArrayList<>();
 
     /**
      * @return

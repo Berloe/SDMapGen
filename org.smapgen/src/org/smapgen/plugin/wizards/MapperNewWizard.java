@@ -35,6 +35,18 @@ import org.smapgen.scl.SimpleClassLoader;
  *
  */
 public class MapperNewWizard extends Wizard implements INewWizard {
+    private ICompilationUnit javaclass;
+
+    /**
+     * String[] selectionData .
+     */
+    private String[] selectionData;
+
+    /**
+     * SupportMapper suport .
+     */
+    private final MapperWizardHelper suport;
+
     /**
      *
      * @param IJavaProject
@@ -91,18 +103,6 @@ public class MapperNewWizard extends Wizard implements INewWizard {
 
         return $;
     }
-
-    private ICompilationUnit javaclass;
-
-    /**
-     * String[] selectionData .
-     */
-    private String[] selectionData;
-
-    /**
-     * SupportMapper suport .
-     */
-    private final MapperWizardHelper suport;
 
     /**
      * Constructor for MapperNewWizard.

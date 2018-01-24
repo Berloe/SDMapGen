@@ -19,6 +19,13 @@ import org.smapgen.sdm.map.mappers.common.IMapper;
 public final class Dconf {
     private static Dconf dconf;
 
+    private final List<String> ignoreNullAnotation = new ArrayList<>();
+
+    private final List<IMapper> mapper = new ArrayList<>();
+
+    private final List<IMapper> mapperAbs = new ArrayList<>();
+    private IRepoProvider repoImpl;
+
     /**
      * @return
      * @throws Throwable
@@ -70,13 +77,6 @@ public final class Dconf {
         }
         return result;
     }
-
-    private final List<IMapper> mapper = new ArrayList<>();
-    private final List<IMapper> mapperAbs = new ArrayList<>();
-
-    private IRepoProvider repoImpl;
-
-    private final List<String> ignoreNullAnotation = new ArrayList<>();
 
     private Dconf() {
         super();
