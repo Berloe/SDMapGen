@@ -96,7 +96,7 @@ public final class FieldUtils {
         }
         return response;
     }
-
+  
     /**
      * @param methodNameRoot
      * @param loadClass
@@ -200,7 +200,7 @@ public final class FieldUtils {
         try {
             field = loadClass.getDeclaredField(getterName.substring(0, 1).toLowerCase() + getterName.substring(1));
         } catch (final NoSuchFieldException e) {
-            field = FieldUtils.findSimilar(getterName.substring(0, 1).toLowerCase() + getterName.substring(1), loadClass, method.getReturnType());
+            field = FieldUtils.findSimilar(getterName.substring(0, 1).toLowerCase() + getterName.substring(1), loadClass, method.getParameterCount()==1?method.getParameterTypes()[0]:method.getReturnType());
         }
         return field;
     }

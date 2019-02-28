@@ -21,10 +21,12 @@ public class MapperClassFields {
         for (final MappingField sourceField : mapSource) {
             if (maptarget.containsKey(sourceField.getName())) {
                 final MappingField targetField = maptarget.get(sourceField.getName());
-                b.append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
-                targetField.setMapped(Boolean.TRUE);
+                if(!targetField.getMapped()) {
+                	b.append(DoMap.mapSourceIntoTarget(sourceName, targetName, sourceField, targetField));
+                	targetField.setMapped(Boolean.TRUE);
+                }
+                sourceField.setMapped(Boolean.TRUE);
             }
-            sourceField.setMapped(Boolean.TRUE);
         }
         return b;
     }

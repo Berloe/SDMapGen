@@ -510,14 +510,25 @@ public class SimpleClassLoader extends ClassLoader {
                 }
             } catch (final Exception ex) {}
             final InputStream classImput = new FileInputStream(path);
-            final byte[] classData = loadClassData(classImput);
-            classImput.close();
-            final Class<?> clazz = defineClass(null,classData, 0, classData.length);
-            addClassCache(clazz);
-            return clazz;
+            return fromStream(classImput);
         } catch (final Exception e) {
             throw new ClassLoaderException(classname);
         }
+    }
+
+    /**
+     * @param classImput
+     * @return
+     * @throws Exception
+     * @throws IOException
+     * @throws ClassFormatError
+     */
+    public Class<?> fromStream(final InputStream classImput) throws Exception, IOException, ClassFormatError {
+        final byte[] classData = loadClassData(classImput);
+        classImput.close();
+        final Class<?> clazz = defineClass(null,classData, 0, classData.length);
+        addClassCache(clazz);
+        return clazz;
     }
 
     /**
