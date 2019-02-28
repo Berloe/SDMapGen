@@ -103,7 +103,7 @@ public final class Utils implements ISimpleDataObjMapper {
     public static HashMap<String, MappingField> getTargetMappingField(final Object target, final String targetName) {
         return FieldUtils.hashSetFieldLoader(target.getClass(), targetName);
     }
-
+    
     /**
      * @param objClass
      * @return
@@ -113,7 +113,8 @@ public final class Utils implements ISimpleDataObjMapper {
     }
 
     public static boolean isCompatibleName(final String simpleName, final String simpleName2) {
-        return simpleName.equals(simpleName2) || simpleName.startsWith(simpleName2) || simpleName.endsWith(simpleName2) || simpleName2.startsWith(simpleName) || simpleName2.endsWith(simpleName) || Utils.matchPercent(simpleName, simpleName2);
+        return simpleName.equals(simpleName2) || simpleName.toLowerCase().equals(simpleName2.toLowerCase()) || simpleName.startsWith(simpleName2) || simpleName.endsWith(simpleName2) || 
+        		simpleName2.startsWith(simpleName) || simpleName2.endsWith(simpleName) || Utils.matchPercent(simpleName, simpleName2);
     }
 
     /**
